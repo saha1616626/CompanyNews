@@ -21,6 +21,8 @@ namespace CompanyNews.Models.Extended
 		/// </summary>
 		public int accountId { get; set; }
 
+		public Account Account { get; set; }
+
 		/// <summary>
 		/// Тело сообщения пользователя
 		/// </summary>

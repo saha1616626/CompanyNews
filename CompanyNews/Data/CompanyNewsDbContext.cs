@@ -26,8 +26,8 @@ namespace CompanyNews.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfiguration(new AccountConfiguration());
-			modelBuilder.ApplyConfiguration(new  WorkDepartmentConfiguration());
-			modelBuilder.ApplyConfiguration(new  NewsCategoryConfiguration());
+			modelBuilder.ApplyConfiguration(new WorkDepartmentConfiguration());
+			modelBuilder.ApplyConfiguration(new NewsCategoryConfiguration());
 			modelBuilder.ApplyConfiguration(new AvailableCategoriesUserConfiguration());
 			modelBuilder.ApplyConfiguration(new NewsPostConfiguration());
 			modelBuilder.ApplyConfiguration(new MessageUserConfiguration());
