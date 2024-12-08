@@ -18,12 +18,12 @@ namespace CompanyNews.Models
         /// <summary>
         /// Фото к посту
         /// </summary>
-        public byte[] image { get; set; }
+        public byte[]? image { get; set; }
         
         /// <summary>
         /// Тело сообщения поста
         /// </summary>
-        public string message { get; set; }
+        public string? message { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с категорией

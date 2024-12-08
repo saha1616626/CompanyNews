@@ -18,6 +18,10 @@ namespace CompanyNews.Data
 
         public DbSet<Account> Accounts { get; set; }
 		public DbSet<WorkDepartment> WorkDepartments { get; set; }
+		public DbSet<NewsCategory> NewsCategories { get; set; }
+		public DbSet<AvailableCategoriesUser> AvailableCategoriesUsers { get; set; }
+		public DbSet<NewsPost> NewsPosts { get; set; }
+		public DbSet<MessageUser> MessageUsers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

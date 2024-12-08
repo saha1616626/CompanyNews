@@ -36,7 +36,7 @@ namespace CompanyNews.Repositories.Accounts
 		Task<AccountExtended> GetAccountByIdAsync(int id);
 
 		/// <summary>
-		/// Получение списка аккаунтов по id
+		/// Получение списка аккаунтов
 		/// </summary>
 		/// <returns></returns>
 		Task<IEnumerable<AccountExtended>> GetAllAccountsAsync();

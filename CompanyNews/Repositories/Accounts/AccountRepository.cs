@@ -93,13 +93,14 @@ namespace CompanyNews.Repositories.Accounts
 
 		#endregion
 
+		#region GettingData
+
 		/// <summary>
 		/// Получение аккаунта по id
 		/// </summary>
 		public async Task<AccountExtended?> GetAccountByIdAsync(int id)
 		{
 			Account? account = await _context.Accounts.FindAsync(id);
-
 			if (account == null) { return null; }
 
 			try
@@ -107,11 +108,68 @@ namespace CompanyNews.Repositories.Accounts
 				// Преобразование идентификатора на соответствующие значение из БД 
 				return await AcountConvert(account);
 			}
-			catch (Exception ex)
-			{
-				return null;
-			}
+			catch (Exception ex){ return null; }
 		}
 
+		/// <summary>
+		/// Получение списка аккаунтов
+		/// </summary>
+		public async Task<IEnumerable<AccountExtended>?> GetAllAccountsAsync()
+		{
+			// Получаем список аккаунтов
+			IEnumerable<Account> accounts = await _context.Accounts.ToListAsync();
+			if (accounts == null) { return null; }
+
+			try
+			{
+				// Список аккаунтов
+				List<AccountExtended> accountExtendeds = new List<AccountExtended>();
+
+				foreach (var account in accounts)
+				{
+					// Преобразование идентификатора на соответствующие значение из БД
+					AccountExtended accountExtended = await AcountConvert(account);
+					accountExtendeds.Add(accountExtended);
+				}
+
+				return accountExtendeds;
+			}
+			catch (Exception ex){ return null; }
+		}
+
+		#endregion
+
+		#region WorkingData
+
+		/// <summary>
+		/// Добавить аккаунт
+		/// </summary>
+		public async Task AddAccountAsync(Account account)
+		{
+			_context.Accounts.Add(account);
+			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Изменить аккаунт
+		/// </summary>
+		public async Task UpdateAccountAsync(Account account)
+		{
+			_context.Accounts.Update(account);
+			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Удалить аккаунт
+		/// </summary>
+		public async Task DeleteAccountAsync(int id)
+		{
+			var account = await _context.Accounts.FindAsync(id);
+			if (account == null) { return; }
+			_context.Accounts.Remove(account);
+			await _context.SaveChangesAsync();
+		}
+
+		#endregion
 	}
 }

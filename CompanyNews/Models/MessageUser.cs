@@ -37,7 +37,7 @@ namespace CompanyNews.Models
         /// <summary>
         /// Причина отклонения прохождения модерации
         /// </summary>
-        public string rejectionReason { get; set; }
+        public string? rejectionReason { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с постом
