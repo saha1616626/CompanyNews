@@ -39,8 +39,8 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 			availableCategoriesUserExtended.accountId = availableCategoriesUser.accountId;
 			availableCategoriesUserExtended.newsCategoryId = availableCategoriesUser.newsCategoryId;
 			// Получение названия категории по id
-			NewsCategory? newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(ac => ac.id == availableCategoriesUser.newsCategoryId);
-			if (newsCategory == null) { availableCategoriesUserExtended.id = availableCategoriesUser.id; availableCategoriesUserExtended.newsCategoryName = null; }
+			Models.NewsCategory? newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(ac => ac.id == availableCategoriesUser.newsCategoryId);
+			if (newsCategory == null) { return null; }
 			else
 			{
 				availableCategoriesUserExtended.id = availableCategoriesUser.id;
@@ -56,7 +56,7 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 		public async Task<AvailableCategoriesUser?> AvailableCategoriesUserExtendedConvert
 			(AvailableCategoriesUserExtended? availableCategoriesUserExtended)
 		{
-			// Проверяем, не равен ли availableCategoriesUser null
+			// Проверяем, не равен ли availableCategoriesUserExtended null
 			if (availableCategoriesUserExtended == null) { return null; }
 
 			AvailableCategoriesUser availableCategoriesUser = new AvailableCategoriesUser();
@@ -99,7 +99,7 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
 				if (await AvailableCategoriesUserConvert(availableCategory) == null) { continue; }
-				AvailableCategoriesUserExtended availableCategoriesUserExtended = 
+				AvailableCategoriesUserExtended? availableCategoriesUserExtended = 
 					await AvailableCategoriesUserConvert(availableCategory);
 				availableCategoriesUserExtendeds.Add(availableCategoriesUserExtended);
 			}
