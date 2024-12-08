@@ -24,6 +24,7 @@ namespace CompanyNews.Data.Configuration
 			builder.Property(account => account.name).HasColumnName("name").HasMaxLength(100);
 			builder.Property(account => account.surname).HasColumnName("surname").HasMaxLength(100);
 			builder.Property(account => account.patronymic).HasColumnName("patronymic").HasMaxLength(100).IsRequired(false);
+			builder.Property(account => account.image).HasColumnName("image").IsRequired(false);
 			builder.Property(account => account.isProfileBlocked).HasColumnName("isProfileBlocked");
 			builder.Property(account => account.reasonBlockingAccount).HasColumnName("reasonBlockingAccount").HasMaxLength(1000).IsRequired(false);
 			builder.Property(account => account.isCanLeaveComments).HasColumnName("isCanLeaveComments");

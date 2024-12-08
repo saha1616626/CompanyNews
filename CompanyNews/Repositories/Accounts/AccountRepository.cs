@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CompanyNews.Repositories.Accounts
 {
 	/// <summary>
-	/// Реализация интерфейса управления учетными записями через ApplicationDbContext
+	/// Реализация интерфейса управления учетными записями через CompanyNewsDbContext
 	/// </summary>
 	public class AccountRepository : IAccountRepository
     {
@@ -56,6 +56,7 @@ namespace CompanyNews.Repositories.Accounts
 			accountExtended.phoneNumber = account.phoneNumber;
 			accountExtended.name = account.name;
 			accountExtended.surname = account.surname;
+			if (account.image != null) { accountExtended.image = account.image; }
 			if (account.patronymic != null) { accountExtended.patronymic = account.patronymic; }
 			accountExtended.isProfileBlocked = account.isProfileBlocked;
 			if (account.reasonBlockingAccount != null) { accountExtended.reasonBlockingAccount = account.reasonBlockingAccount; }
@@ -82,6 +83,7 @@ namespace CompanyNews.Repositories.Accounts
 			account.phoneNumber = accountExtended.phoneNumber;
 			account.name = accountExtended.name;
 			account.surname = accountExtended.surname;
+			if (accountExtended.image != null) { account.image = accountExtended.image; }
 			if (accountExtended.patronymic != null) { account.patronymic = accountExtended.patronymic; }
 			account.isProfileBlocked = accountExtended.isProfileBlocked;
 			if (accountExtended.reasonBlockingAccount != null) { account.reasonBlockingAccount = accountExtended.reasonBlockingAccount; }

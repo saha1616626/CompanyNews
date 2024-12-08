@@ -38,6 +38,11 @@ namespace CompanyNews.Models.Extended
 		public string? patronymic { get; set; }
 
 		/// <summary>
+		/// Фото человека
+		/// </summary>
+		public byte[]? image { get; set; }
+
+		/// <summary>
 		/// Заблокирован профиль у пользователя?
 		/// </summary>
 		public bool isProfileBlocked { get; set; }
