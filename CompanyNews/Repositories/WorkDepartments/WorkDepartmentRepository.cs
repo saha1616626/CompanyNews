@@ -37,7 +37,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Получение списка рабочих отделов
 		/// </summary>
-		public async Task<IEnumerable<WorkDepartment>?> GetAllWorkDepartmentAsync()
+		public async Task<IEnumerable<WorkDepartment>?> GetAllWorkDepartmentsAsync()
 		{
 			// Получаем список рабочих отделов
 			IEnumerable<WorkDepartment> workDepartments = await _context.WorkDepartments.ToListAsync();

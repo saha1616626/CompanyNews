@@ -32,34 +32,29 @@ namespace CompanyNews.Repositories.Accounts
 		/// Получение аккаунта
 		/// </summary>
 		/// <param name="id">id пользователя</param>
-		/// <returns></returns>
 		Task<AccountExtended> GetAccountByIdAsync(int id);
 
 		/// <summary>
 		/// Получение списка аккаунтов
 		/// </summary>
-		/// <returns></returns>
 		Task<IEnumerable<AccountExtended>> GetAllAccountsAsync();
 
 		/// <summary>
 		/// Добавить аккаунт
 		/// </summary>
 		/// <param name="account">Данные нового аккаунта</param>
-		/// <returns></returns>
 		Task AddAccountAsync(Account account);
 
 		/// <summary>
 		/// Изменить аккаунт
 		/// </summary>
 		/// <param name="account">Измененные данные</param>
-		/// <returns></returns>
 		Task UpdateAccountAsync(Account account);
 
 		/// <summary>
 		/// Удалить аккаунт
 		/// </summary>
 		/// <param name="id">id пользователя</param>
-		/// <returns></returns>
 		Task DeleteAccountAsync(int id);
     }
 }
