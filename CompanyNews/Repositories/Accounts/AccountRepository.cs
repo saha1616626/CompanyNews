@@ -27,10 +27,10 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		public async Task<AccountExtended> AcountConvert(Account? account)
+		public async Task<AccountExtended?> AcountConvert(Account? account)
 		{
 			// Проверяем, не равен ли account null
-			if (account == null) { throw new ArgumentNullException(nameof(account)); }
+			if (account == null) { return null; }
 
 			AccountExtended accountExtended = new AccountExtended();
 			accountExtended.id = account.id;
@@ -69,10 +69,10 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
-		public async Task<Account> AcountConvert(AccountExtended? accountExtended)
+		public async Task<Account?> AccountExtendedConvert(AccountExtended? accountExtended)
 		{
 			// Проверяем, не равен ли accountExtended null
-			if (accountExtended == null) { throw new ArgumentNullException(nameof(accountExtended)); }
+			if (accountExtended == null) { return null; }
 
 			Account account = new Account();
 			account.id = accountExtended.id;
@@ -104,13 +104,9 @@ namespace CompanyNews.Repositories.Accounts
 		{
 			Account? account = await _context.Accounts.FindAsync(id);
 			if (account == null) { return null; }
-
-			try
-			{
-				// Преобразование идентификатора на соответствующие значение из БД 
-				return await AcountConvert(account);
-			}
-			catch (Exception ex){ return null; }
+	
+			// Преобразование идентификатора на соответствующие значение из БД 
+			return await AcountConvert(account);	
 		}
 
 		/// <summary>
@@ -122,21 +118,18 @@ namespace CompanyNews.Repositories.Accounts
 			IEnumerable<Account> accounts = await _context.Accounts.ToListAsync();
 			if (accounts == null) { return null; }
 
-			try
+			// Список аккаунтов
+			List<AccountExtended> accountExtendeds = new List<AccountExtended>();
+
+			foreach (var account in accounts)
 			{
-				// Список аккаунтов
-				List<AccountExtended> accountExtendeds = new List<AccountExtended>();
-
-				foreach (var account in accounts)
-				{
-					// Преобразование идентификатора на соответствующие значение из БД
-					AccountExtended accountExtended = await AcountConvert(account);
-					accountExtendeds.Add(accountExtended);
-				}
-
-				return accountExtendeds;
+				// Преобразование идентификатора на соответствующие значение из БД
+				if(await AcountConvert(account) == null) { continue; }
+				AccountExtended accountExtended = await AcountConvert(account);
+				accountExtendeds.Add(accountExtended);
 			}
-			catch (Exception ex){ return null; }
+
+			return accountExtendeds;
 		}
 
 		#endregion

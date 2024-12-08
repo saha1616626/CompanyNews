@@ -26,7 +26,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// </summary>
 		/// <param name="accountExtended"></param>
 		/// <returns></returns>
-		Task<Account> AcountConvert(AccountExtended accountExtended);
+		Task<Account> AccountExtendedConvert(AccountExtended accountExtended);
 
 		/// <summary>
 		/// Получение аккаунта

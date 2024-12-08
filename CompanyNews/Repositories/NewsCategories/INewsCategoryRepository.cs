@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 namespace CompanyNews.Repositories.NewsCategories
 {
 	/// <summary>
-	/// Интерфейс для репозитория категорий новостей, обеспечивающий основные CRUD и другие операции
+	/// Интерфейс для репозитория категорий новостей, обеспечивающий 
+	/// основные CRUD и другие операции
 	/// </summary>
 	public interface INewsCategoryRepository
     {
 		/// <summary>
 		/// Получение категории поста
 		/// </summary>
-		/// <param name="id">id пользователя</param>
+		/// <param name="id">id категории</param>
 		Task<NewsCategory> GetNewsCategoryByIdAsync(int id);
 
 		/// <summary>
@@ -27,7 +28,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Добавить категорию поста
 		/// </summary>
-		/// <param name="newsCategory">Данные нового поста</param>
+		/// <param name="newsCategory">Данные новой категории</param>
 		Task AddNewsCategoryAsync(NewsCategory newsCategory);
 
 		/// <summary>

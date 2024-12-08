@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CompanyNews.Models.Extended
 {
-	class AvailableCategoriesUserExtended
+	/// <summary>
+	/// Расширенная модель доступных категорий новостей для пользователя. Идентификаторы в базовой 
+	/// модели заменены на соответствующие значения
+	/// </summary>
+	public class AvailableCategoriesUserExtended
 	{
-		/// <summary>
-		/// Расширенная модель доступных категорий новостей для пользователя. Идентификаторы в базовой 
-		/// модели заменены на соответствующие значения
-		/// </summary>
 
 		public int id { get; set; }
 		public int accountId { get; set; }
