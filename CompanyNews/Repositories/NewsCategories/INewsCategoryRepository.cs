@@ -18,24 +18,24 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// Получение категории поста
 		/// </summary>
 		/// <param name="id">id категории</param>
-		Task<NewsCategory> GetNewsCategoryByIdAsync(int id);
+		Task<Models.NewsCategory> GetNewsCategoryByIdAsync(int id);
 
 		/// <summary>
 		/// Получение списка категорий постов
 		/// </summary>
-		Task<IEnumerable<NewsCategory>> GetAllNewsCategoriesAsync();
+		Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync();
 
 		/// <summary>
 		/// Добавить категорию поста
 		/// </summary>
 		/// <param name="newsCategory">Данные новой категории</param>
-		Task AddNewsCategoryAsync(NewsCategory newsCategory);
+		Task AddNewsCategoryAsync(Models.NewsCategory newsCategory);
 
 		/// <summary>
 		/// Изменить категорию поста
 		/// </summary>
 		/// <param name="newsCategory">Измененные данные</param>
-		Task UpdateNewsCategoryAsync(NewsCategory newsCategory);
+		Task UpdateNewsCategoryAsync(Models.NewsCategory newsCategory);
 
 		/// <summary>
 		/// Удалить категорию поста

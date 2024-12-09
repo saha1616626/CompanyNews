@@ -133,7 +133,7 @@ namespace CompanyNews.Repositories.MessageUsers
 			var existingMessageUser = await _context.MessageUsers.FindAsync(messageUser);
 			if (existingMessageUser == null) throw new KeyNotFoundException($"Комментарий с ID {messageUser.id} не найден.");
 
-			// Обновление данных
+			// Обновление данных. Данным методом можно обновить только указанные поля в messageUser
 			_context.Entry(existingMessageUser).CurrentValues.SetValues(messageUser);
 			await _context.SaveChangesAsync();
 		}

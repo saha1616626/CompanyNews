@@ -43,7 +43,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// Добавить аккаунт
 		/// </summary>
 		/// <param name="account">Данные нового аккаунта</param>
-		Task AddAccountAsync(Account account);
+		Task<Account> AddAccountAsync(Account account);
 
 		/// <summary>
 		/// Изменить аккаунт

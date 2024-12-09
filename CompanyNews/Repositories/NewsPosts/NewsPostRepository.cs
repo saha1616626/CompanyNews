@@ -131,7 +131,7 @@ namespace CompanyNews.Repositories.NewsPosts
 			var existingPost = await _context.NewsPosts.FindAsync(newsPost.id);
 			if (existingPost == null) throw new KeyNotFoundException($"Пост с ID {newsPost.id} не найден.");
 
-			// Обновление данных
+			// Обновление данных. Данным методом можно обновить только указанные поля в newsPost
 			_context.Entry(existingPost).CurrentValues.SetValues(newsPost);
 			await _context.SaveChangesAsync();
 		}

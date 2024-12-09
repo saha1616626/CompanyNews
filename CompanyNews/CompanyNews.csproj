@@ -14,8 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="ViewModels\ClientApp\" />
+    <Folder Include="Views\AdminApp\" />
+    <Folder Include="Views\ClientApp\" />
   </ItemGroup>
 
   <ItemGroup>

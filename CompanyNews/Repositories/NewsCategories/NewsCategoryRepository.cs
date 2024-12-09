@@ -25,9 +25,9 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Получение категории поста по идентификатору
 		/// </summary>
-		public async Task<NewsCategory?> GetNewsCategoryByIdAsync(int id)
+		public async Task<Models.NewsCategory?> GetNewsCategoryByIdAsync(int id)
 		{
-			NewsCategory? newsCategory = await _context.NewsCategories.FindAsync(id);
+			Models.NewsCategory? newsCategory = await _context.NewsCategories.FindAsync(id);
 			if (newsCategory == null) { return null; }
 
 			return newsCategory;
@@ -36,9 +36,9 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Получение списка всех категорий постов
 		/// </summary>
-		public async Task<IEnumerable<NewsCategory>?> GetAllNewsCategoriesAsync()
+		public async Task<IEnumerable<Models.NewsCategory>?> GetAllNewsCategoriesAsync()
 		{
-			IEnumerable<NewsCategory> newsCategories = await _context.NewsCategories.ToListAsync();
+			IEnumerable<Models.NewsCategory> newsCategories = await _context.NewsCategories.ToListAsync();
 			if(newsCategories == null) { return null; }
 
 			return newsCategories;
@@ -51,7 +51,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Добавление новой категории поста
 		/// </summary>
-		public async Task AddNewsCategoryAsync(NewsCategory newsCategory)
+		public async Task AddNewsCategoryAsync(Models.NewsCategory newsCategory)
 		{
 			_context.NewsCategories.Add(newsCategory);
 			await _context.SaveChangesAsync();
@@ -60,9 +60,16 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Обновление существующей категории поста
 		/// </summary>
-		public async Task UpdateNewsCategoryAsync(NewsCategory newsCategory)
+		public async Task UpdateNewsCategoryAsync(Models.NewsCategory newsCategory)
 		{
-			_context.NewsCategories.Update(newsCategory);
+			if (newsCategory == null) throw new ArgumentNullException(nameof(newsCategory));
+
+			// Убедимся, что категория существует
+			var existingNewsCategory = await _context.NewsCategories.FindAsync(newsCategory.id);
+			if (existingNewsCategory == null) throw new KeyNotFoundException($"Категория с ID {existingNewsCategory.id} не найдена.");
+
+			// Обновление данных. Данным методом можно обновить только указанные поля в newsCategory
+			_context.Entry(existingNewsCategory).CurrentValues.SetValues(newsCategory);
 			await _context.SaveChangesAsync();
 		}
 

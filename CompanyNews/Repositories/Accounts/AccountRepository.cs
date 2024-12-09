@@ -139,10 +139,11 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Добавить аккаунт
 		/// </summary>
-		public async Task AddAccountAsync(Account account)
+		public async Task<Account> AddAccountAsync(Account account)
 		{
 			_context.Accounts.Add(account);
 			await _context.SaveChangesAsync();
+			return account; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>
@@ -150,7 +151,14 @@ namespace CompanyNews.Repositories.Accounts
 		/// </summary>
 		public async Task UpdateAccountAsync(Account account)
 		{
-			_context.Accounts.Update(account);
+			if (account == null) throw new ArgumentNullException(nameof(account));
+
+			// Убедимся, что учетная запись существует
+			var existingAccount = await _context.Accounts.FindAsync(account.id);
+			if (existingAccount == null) throw new KeyNotFoundException($"Учетная запись с ID {existingAccount.id} не найдена.");
+
+			// Обновление данных. Данным методом можно обновить только указанные поля в account
+			_context.Entry(existingAccount).CurrentValues.SetValues(account);
 			await _context.SaveChangesAsync();
 		}
 
