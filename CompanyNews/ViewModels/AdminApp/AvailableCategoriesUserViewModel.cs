@@ -10,77 +10,64 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
-	public class AccountViewModel : INotifyPropertyChanged
+	public class AvailableCategoriesUserViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
 		/// </summary>
-		private readonly AccountService _accountService;
+		private readonly AvailableCategoriesUserService _availableCategoriesUserService;
 
 		/// <summary>
-		/// Отображаемый список учетных записей в UI
+		/// Отображаемый список доступных категорий пользователей в UI
 		/// </summary>
-		public ObservableCollection<AccountExtended> ListAccountExtendeds;
+		public ObservableCollection<AvailableCategoriesUserExtended> ListAvailableCategoriesUserExtendeds;
 
-		public AccountViewModel()
+		public AvailableCategoriesUserViewModel()
 		{
-			_accountService = ServiceLocator.GetService<AccountService>();
-			ListAccountExtendeds = new ObservableCollection<AccountExtended>();
-			LoadAccount(); // Выводим список на экран
+			_availableCategoriesUserService = ServiceLocator.GetService<AvailableCategoriesUserService>();
+			ListAvailableCategoriesUserExtendeds = new ObservableCollection<AvailableCategoriesUserExtended>();
+			LoadAvailableCategoriesUser(); // Выводим список на экран
 		}
 
 		#region CRUD Operations
 
 		/// <summary>
-		/// Вывод списка всех учетных записей в UI.
+		/// Вывод списка всех доступных категорий у каждого пользователя в UI.
 		/// </summary>
-		private async Task LoadAccount()
+		private async Task LoadAvailableCategoriesUser()
 		{
-			var accounts = await _accountService.GetAllAccountsAsync();
-			foreach (var account in accounts)
+			var availableCategoriesUsers = await _availableCategoriesUserService.GetAvailableCategoriesUserExtendedAsync();
+			foreach (var availableCategoriesUser in availableCategoriesUsers)
 			{
-				ListAccountExtendeds.Add(account);
+				ListAvailableCategoriesUserExtendeds.Add(availableCategoriesUser);
 			}
 		}
 
 		/// <summary>
-		/// Добавить аккаунт
+		/// Добавить категорию из списка доступных
 		/// </summary>
-		public async Task AddAccountAsync(Account account)
+		public async Task AddAvailableCategoriesUserAsync(AvailableCategoriesUser availableCategoriesUser)
 		{
-			var addedAccount = await _accountService.AddAccountAsync(account); // Добавление в БД + возврат обновленного объекта
-			ListAccountExtendeds.Add(await _accountService.AcountConvert(addedAccount)); // Обновление коллекции
+			var addedAccount = await _availableCategoriesUserService.AddAvailableCategoriesUserAsync(availableCategoriesUser); // Добавление в БД + возврат обновленного объекта
+			ListAvailableCategoriesUserExtendeds.Add(await _availableCategoriesUserService.AvailableCategoriesUserConvert(addedAccount)); // Обновление коллекции
 		}
 
 		/// <summary>
-		/// Изменить аккаунт
+		/// Удалить категорию из списка доступных
 		/// </summary>
-		public async Task UpdateAccountAsync(Account account)
+		public async Task DeleteAvailableCategoriesUserAsync(AvailableCategoriesUser availableCategoriesUser)
 		{
-			await _accountService.UpdateAccountAsync(account); // Обновление данных в БД
+			await _availableCategoriesUserService.DeleteAvailableCategoriesUserAsync(availableCategoriesUser.id); // Удаление из БД
 
-			// Находим учетную запись в списке для отображения в UI и заменяем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { accountExtended = await _accountService.AcountConvert(account); }
-		}
-
-		/// <summary>
-		/// Удалить аккаунт
-		/// </summary>
-		public async Task DeleteAccountAsync(Account account)
-		{
-			await _accountService.DeleteAccountAsync(account.id); // Удаление из БД
-
-			// Находим учетную запись в списке для отображения в UI и удаляем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }	
+			// Находим категорию в списке для отображения в UI и удаляем объект
+			AvailableCategoriesUserExtended? availableCategoriesUserExtended = ListAvailableCategoriesUserExtendeds.FirstOrDefault(a => a.id == availableCategoriesUser.id);
+			if (availableCategoriesUserExtended != null) { ListAvailableCategoriesUserExtendeds.Remove(availableCategoriesUserExtended); }
 		}
 
 		#endregion
@@ -88,15 +75,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		#region UI RelayCommand Operations
 
 		/// <summary>
-		/// Кнопка "добавить" аккаунт в UI
+		/// Кнопка "добавить" категорию в UI
 		/// </summary>
-		private RelayCommand _addAccount { get; set; }
-		public RelayCommand AddAccount
+		private RelayCommand _addAvailableCategoriesUser { get; set; }
+		public RelayCommand AddAvailableCategoriesUser
 		{
 			get
 			{
-				return _addAccount ??
-					(_addAccount = new RelayCommand(async (obj) =>
+				return _addAvailableCategoriesUser ??
+					(_addAvailableCategoriesUser = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
 
@@ -105,15 +92,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "изменить" аккаунт в UI
+		/// Кнопка "изменить" категорию в UI. (Изменить категории у конкретного пользователя. Массово)
 		/// </summary>
-		private RelayCommand _editAccount { get; set; }
-		public RelayCommand EditAccount
+		private RelayCommand _editAvailableCategoriesUser { get; set; }
+		public RelayCommand EditAvailableCategoriesUser
 		{
 			get
 			{
-				return _editAccount ??
-					(_editAccount = new RelayCommand(async (obj) =>
+				return _editAvailableCategoriesUser ??
+					(_editAvailableCategoriesUser = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
 
@@ -123,15 +110,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "удалить" аккаунт в UI
+		/// Кнопка "удалить" категорию в UI
 		/// </summary>
-		private RelayCommand _deleteAccount { get; set; }
-		public RelayCommand DeleteAccount
+		private RelayCommand _deleteAvailableCategoriesUser { get; set; }
+		public RelayCommand DeleteAvailableCategoriesUser
 		{
 			get
 			{
-				return _deleteAccount ??
-					(_deleteAccount = new RelayCommand(async (obj) =>
+				return _deleteAvailableCategoriesUser ??
+					(_deleteAvailableCategoriesUser = new RelayCommand(async (obj) =>
 					{
 
 					}, (obj) => true));
@@ -139,7 +126,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI
+		/// Кнопка сохранения новых или изменения старых данных категорий в UI
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -189,7 +176,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-			
+
 		}
 
 		#endregion
@@ -209,13 +196,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Выбранный аккаунт в UI
+		/// Выбранная доступная категория пользователя в UI
 		/// </summary>
-		private AccountExtended _selectedAccount {  get; set; }
-		public AccountExtended SelectedAccount
+		private AvailableCategoriesUserExtended _selectedAvailableCategoriesUser { get; set; }
+		public AvailableCategoriesUserExtended SelectedAvailableCategoriesUser
 		{
-			get { return _selectedAccount; }
-			set { _selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
+			get { return _selectedAvailableCategoriesUser; }
+			set
+			{
+				_selectedAvailableCategoriesUser = value; OnPropertyChanged(nameof(SelectedAvailableCategoriesUser));
 				OnPropertyChanged(nameof(IsWorkButtonEnable));
 			}
 		}
@@ -226,7 +215,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		private bool _isWorkButtonEnable { get; set; }
 		public bool IsWorkButtonEnable
 		{
-			get { return SelectedAccount != null; } // Если в таблице выбранн объект, то кнопки доступны
+			get { return SelectedAvailableCategoriesUser != null; } // Если в таблице выбранн объект, то кнопки доступны
 			set { _isWorkButtonEnable = value; OnPropertyChanged(nameof(IsWorkButtonEnable)); }
 		}
 

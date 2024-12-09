@@ -15,9 +15,15 @@ namespace CompanyNews.Models.Extended
 	{
 
 		public int id { get; set; }
-		public int accountId { get; set; }
-		public int newsCategoryId { get; set; }
-		[Required(ErrorMessage = "Категория обязательна для выбора!")]
-		public string newsCategoryName { get; set; }
+
+		/// <summary>
+		/// Учетная запись пользователя
+		/// </summary>
+		public Account account { get; set; }
+
+		/// <summary>
+		/// Список категорий у пользователя
+		/// </summary>
+		public IEnumerable<NewsCategoryExtended>? categories { get; set; }
 	}
 }

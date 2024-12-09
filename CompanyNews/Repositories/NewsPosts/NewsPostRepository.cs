@@ -112,12 +112,13 @@ namespace CompanyNews.Repositories.NewsPosts
 		/// <summary>
 		/// Добавление нового поста.
 		/// </summary>
-		public async Task AddNewsPostAsync(NewsPost newsPost)
+		public async Task<NewsPost> AddNewsPostAsync(NewsPost newsPost)
 		{
 			if (newsPost == null) throw new ArgumentNullException(nameof(newsPost));
 
 			await _context.NewsPosts.AddAsync(newsPost);
 			await _context.SaveChangesAsync();
+			return newsPost; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>

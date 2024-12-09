@@ -16,11 +16,15 @@ namespace CompanyNews.Models
 		[Required(ErrorMessage = "Название обязательно для заполнения!")]
 		public string name { get; set; }
         public string? description { get; set; }
-
         /// <summary>
-        /// Навигационное свойство для связи с категориями доступными пользователям
+        /// Категория в архиве?
         /// </summary>
-        public ICollection<AvailableCategoriesUser> availableCategoriesUsers { get; set; }
+        public bool isArchived { get; set; }
+
+		/// <summary>
+		/// Навигационное свойство для связи с категориями доступными пользователям
+		/// </summary>
+		public ICollection<AvailableCategoriesUser> availableCategoriesUsers { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с постами

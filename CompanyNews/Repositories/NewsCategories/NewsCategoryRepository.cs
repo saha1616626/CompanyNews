@@ -51,10 +51,11 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Добавление новой категории поста
 		/// </summary>
-		public async Task AddNewsCategoryAsync(Models.NewsCategory newsCategory)
+		public async Task<Models.NewsCategory> AddNewsCategoryAsync(Models.NewsCategory newsCategory)
 		{
 			_context.NewsCategories.Add(newsCategory);
 			await _context.SaveChangesAsync();
+			return newsCategory; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>
@@ -81,6 +82,23 @@ namespace CompanyNews.Repositories.NewsCategories
 			var newsCategory = await _context.NewsCategories.FindAsync(id);
 			if (newsCategory == null) { return; }
 			_context.NewsCategories.Remove(newsCategory);
+			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Добавляет или убирает из архива (инверсия действия)
+		/// </summary>
+		public async Task WorkingWithArchive(Models.NewsCategory newsCategory)
+		{
+			if (newsCategory == null) throw new ArgumentNullException(nameof(newsCategory));
+			
+			// Убедимся, что категория существует
+			var existingNewsCategory = await _context.NewsCategories.FindAsync(newsCategory.id);
+			if (existingNewsCategory == null) throw new KeyNotFoundException($"Категория с ID {existingNewsCategory.id} не найдена.");
+
+			// Обновление данных. Данным методом можно обновить только указанные поля в newsCategory
+			newsCategory.isArchived = !newsCategory.isArchived; // инверсия значения
+			_context.Entry(existingNewsCategory).CurrentValues.SetValues(newsCategory);
 			await _context.SaveChangesAsync();
 		}
 

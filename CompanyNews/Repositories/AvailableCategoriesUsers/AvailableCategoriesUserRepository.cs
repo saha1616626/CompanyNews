@@ -36,35 +36,40 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 
 			AvailableCategoriesUserExtended availableCategoriesUserExtended = new AvailableCategoriesUserExtended();
 			availableCategoriesUserExtended.id = availableCategoriesUser.id;
-			availableCategoriesUserExtended.accountId = availableCategoriesUser.accountId;
-			availableCategoriesUserExtended.newsCategoryId = availableCategoriesUser.newsCategoryId;
-			// Получение названия категории по id
-			Models.NewsCategory? newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(ac => ac.id == availableCategoriesUser.newsCategoryId);
-			if (newsCategory == null) { return null; }
-			else
+
+			// Получение учетной записи пользователя
+			Account? account = await _context.Accounts.FindAsync(availableCategoriesUser.accountId);
+			if(account == null) { return null; }
+			availableCategoriesUserExtended.account = account;
+
+			// Получение доступных категорий пользователя
+			List<Models.AvailableCategoriesUser>? availableCategoriesUsers = await _context.AvailableCategoriesUsers
+				.Where(acu => acu.accountId == availableCategoriesUser.accountId).ToListAsync();
+			if(availableCategoriesUser == null) { return null; }
+
+			// Список доступных категорий
+			List<NewsCategoryExtended> newsCategoryExtendeds = new List<NewsCategoryExtended>();
+
+			foreach (var item in availableCategoriesUsers)
 			{
-				availableCategoriesUserExtended.id = availableCategoriesUser.id;
-				availableCategoriesUserExtended.newsCategoryName = newsCategory.name;
+				// Получаем категорию, которая доступна пользователю и добавляем в список
+				Models.NewsCategory? newsCategory = await _context.NewsCategories.FindAsync(item.newsCategoryId);
+				if (newsCategory == null) { continue; }
+
+				// Вносим данные полученной категории в модифицированную категорию
+				NewsCategoryExtended newsCategoryExtended = new NewsCategoryExtended();
+				newsCategoryExtended.id = newsCategory.id;
+				newsCategoryExtended.name = newsCategory.name;
+				newsCategoryExtended.description = newsCategory.description;
+				newsCategoryExtended.isArchived = newsCategory.isArchived;
+				newsCategoryExtended.availableCategoriesUserExtendedId = item.id; // Идентификатор доступной категории пользователя
+
+				newsCategoryExtendeds.Add(newsCategoryExtended);
 			}
 
+			availableCategoriesUserExtended.categories = newsCategoryExtendeds;
+
 			return availableCategoriesUserExtended;
-		}
-
-		/// <summary>
-		/// Замена значения на соответствующий идентификатор из БД 
-		/// </summary>
-		public async Task<AvailableCategoriesUser?> AvailableCategoriesUserExtendedConvert
-			(AvailableCategoriesUserExtended? availableCategoriesUserExtended)
-		{
-			// Проверяем, не равен ли availableCategoriesUserExtended null
-			if (availableCategoriesUserExtended == null) { return null; }
-
-			AvailableCategoriesUser availableCategoriesUser = new AvailableCategoriesUser();
-			availableCategoriesUser.id = availableCategoriesUserExtended.id;
-			availableCategoriesUser.accountId = availableCategoriesUserExtended.accountId;
-			availableCategoriesUser.newsCategoryId = availableCategoriesUserExtended.newsCategoryId;
-
-			return availableCategoriesUser;
 		}
 
 		#endregion
@@ -114,11 +119,12 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 		/// <summary>
 		/// Добавить категорию поста пользователю
 		/// </summary>
-		public async Task AddAvailableCategoriesUserAsync
+		public async Task<AvailableCategoriesUser> AddAvailableCategoriesUserAsync
 			(AvailableCategoriesUser availableCategoriesUser)
 		{
 			_context.AvailableCategoriesUsers.Add(availableCategoriesUser);
 			await _context.SaveChangesAsync();
+			return availableCategoriesUser;
 		}
 
 		/// <summary>

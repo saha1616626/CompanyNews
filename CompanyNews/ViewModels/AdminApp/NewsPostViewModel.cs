@@ -10,77 +10,76 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
-	public class AccountViewModel : INotifyPropertyChanged
+	public class NewsPostViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
 		/// </summary>
-		private readonly AccountService _accountService;
+		private readonly NewsPostService _newsPostService;
 
 		/// <summary>
-		/// Отображаемый список учетных записей в UI
+		/// Отображаемый список постов в UI
 		/// </summary>
-		public ObservableCollection<AccountExtended> ListAccountExtendeds;
+		public ObservableCollection<NewsPostExtended> ListNewsPostExtendeds;
 
-		public AccountViewModel()
+		public NewsPostViewModel()
 		{
-			_accountService = ServiceLocator.GetService<AccountService>();
-			ListAccountExtendeds = new ObservableCollection<AccountExtended>();
-			LoadAccount(); // Выводим список на экран
+			_newsPostService = ServiceLocator.GetService<NewsPostService>();
+			ListNewsPostExtendeds = new ObservableCollection<NewsPostExtended>();
+			LoadNewsPost(); // Выводим список на экран
 		}
 
 		#region CRUD Operations
 
 		/// <summary>
-		/// Вывод списка всех учетных записей в UI.
+		/// Вывод списка всех постов в UI.
 		/// </summary>
-		private async Task LoadAccount()
+		private async Task LoadNewsPost()
 		{
-			var accounts = await _accountService.GetAllAccountsAsync();
-			foreach (var account in accounts)
+			var newsPosts = await _newsPostService.GetAllNewsPostsAsync();
+			foreach (var newsPost in newsPosts)
 			{
-				ListAccountExtendeds.Add(account);
+				ListNewsPostExtendeds.Add(newsPost);
 			}
 		}
 
 		/// <summary>
-		/// Добавить аккаунт
+		/// Добавить пост
 		/// </summary>
-		public async Task AddAccountAsync(Account account)
+		public async Task AddAccountAsync(NewsPost newsPost)
 		{
-			var addedAccount = await _accountService.AddAccountAsync(account); // Добавление в БД + возврат обновленного объекта
-			ListAccountExtendeds.Add(await _accountService.AcountConvert(addedAccount)); // Обновление коллекции
+			var addedNewsPost = await _newsPostService.AddNewsPostAsync(newsPost); // Добавление в БД + возврат обновленного объекта
+			ListNewsPostExtendeds.Add(await _newsPostService.NewsPostConvert(addedNewsPost)); // Обновление коллекции
 		}
 
 		/// <summary>
-		/// Изменить аккаунт
+		/// Изменить пост
 		/// </summary>
-		public async Task UpdateAccountAsync(Account account)
+		public async Task UpdateAccountAsync(NewsPost newsPost)
 		{
-			await _accountService.UpdateAccountAsync(account); // Обновление данных в БД
+			await _newsPostService.UpdateNewsPostAsync(newsPost); // Обновление данных в БД
 
-			// Находим учетную запись в списке для отображения в UI и заменяем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { accountExtended = await _accountService.AcountConvert(account); }
+			// Находим пост в списке для отображения в UI и заменяем объект
+			NewsPostExtended? newsPostExtended = ListNewsPostExtendeds.FirstOrDefault(a => a.id == newsPost.id);
+			if (newsPostExtended != null) { newsPostExtended = await _newsPostService.NewsPostConvert(newsPost); }
 		}
 
 		/// <summary>
-		/// Удалить аккаунт
+		/// Удалить пост
 		/// </summary>
-		public async Task DeleteAccountAsync(Account account)
+		public async Task DeleteAccountAsync(NewsPost newsPost)
 		{
-			await _accountService.DeleteAccountAsync(account.id); // Удаление из БД
+			await _newsPostService.DeleteNewsPostAsync(newsPost.id); // Удаление из БД
 
-			// Находим учетную запись в списке для отображения в UI и удаляем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }	
+			// Находим пост в списке для отображения в UI и удаляем объект
+			NewsPostExtended? newsPostExtended = ListNewsPostExtendeds.FirstOrDefault(a => a.id == newsPost.id);
+			if (newsPostExtended != null) { ListNewsPostExtendeds.Remove(newsPostExtended); }
 		}
 
 		#endregion
@@ -88,15 +87,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		#region UI RelayCommand Operations
 
 		/// <summary>
-		/// Кнопка "добавить" аккаунт в UI
+		/// Кнопка "добавить" пост в UI
 		/// </summary>
-		private RelayCommand _addAccount { get; set; }
-		public RelayCommand AddAccount
+		private RelayCommand _addNewsPost { get; set; }
+		public RelayCommand AddNewsPost
 		{
 			get
 			{
-				return _addAccount ??
-					(_addAccount = new RelayCommand(async (obj) =>
+				return _addNewsPost ??
+					(_addNewsPost = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
 
@@ -105,15 +104,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "изменить" аккаунт в UI
+		/// Кнопка "изменить" пост в UI
 		/// </summary>
-		private RelayCommand _editAccount { get; set; }
-		public RelayCommand EditAccount
+		private RelayCommand _editNewsPost { get; set; }
+		public RelayCommand EditNewsPost
 		{
 			get
 			{
-				return _editAccount ??
-					(_editAccount = new RelayCommand(async (obj) =>
+				return _editNewsPost ??
+					(_editNewsPost = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
 
@@ -123,15 +122,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "удалить" аккаунт в UI
+		/// Кнопка "удалить" пост в UI
 		/// </summary>
-		private RelayCommand _deleteAccount { get; set; }
-		public RelayCommand DeleteAccount
+		private RelayCommand _deleteNewsPost { get; set; }
+		public RelayCommand DeleteNewsPost
 		{
 			get
 			{
-				return _deleteAccount ??
-					(_deleteAccount = new RelayCommand(async (obj) =>
+				return _deleteNewsPost ??
+					(_deleteNewsPost = new RelayCommand(async (obj) =>
 					{
 
 					}, (obj) => true));
@@ -139,7 +138,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI
+		/// Кнопка сохранения новых или изменения старых данных поста в UI
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -189,7 +188,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-			
+
 		}
 
 		#endregion
@@ -209,13 +208,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Выбранный аккаунт в UI
+		/// Выбранный пост в UI
 		/// </summary>
-		private AccountExtended _selectedAccount {  get; set; }
-		public AccountExtended SelectedAccount
+		private NewsPostExtended _selectedNewsPost { get; set; }
+		public NewsPostExtended SelectedNewsPost
 		{
-			get { return _selectedAccount; }
-			set { _selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
+			get { return _selectedNewsPost; }
+			set
+			{
+				_selectedNewsPost = value; OnPropertyChanged(nameof(SelectedNewsPost));
 				OnPropertyChanged(nameof(IsWorkButtonEnable));
 			}
 		}
@@ -226,7 +227,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		private bool _isWorkButtonEnable { get; set; }
 		public bool IsWorkButtonEnable
 		{
-			get { return SelectedAccount != null; } // Если в таблице выбранн объект, то кнопки доступны
+			get { return SelectedNewsPost != null; } // Если в таблице выбранн объект, то кнопки доступны
 			set { _isWorkButtonEnable = value; OnPropertyChanged(nameof(IsWorkButtonEnable)); }
 		}
 

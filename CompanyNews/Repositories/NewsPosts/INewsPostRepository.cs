@@ -41,7 +41,7 @@ namespace CompanyNews.Repositories.NewsCategory
 		/// Добавление нового поста новости.
 		/// </summary>
 		/// <param name="newsPost">Данные нового поста новости.</param>
-		Task AddNewsPostAsync(NewsPost newsPost);
+		Task<NewsPost> AddNewsPostAsync(NewsPost newsPost);
 
 		/// <summary>
 		/// Обновление существующего поста новости.

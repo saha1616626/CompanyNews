@@ -20,11 +20,7 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 		/// </summary>
 		Task<AvailableCategoriesUserExtended> AvailableCategoriesUserConvert(AvailableCategoriesUser availableCategoriesUser);
 
-		/// <summary>
-		/// Получение AvailableCategoriesUser из AvailableCategoriesUserExtended. 
-		/// Замена значения на соответствующий идентификатор из БД 
-		/// </summary>
-		Task<AvailableCategoriesUser> AvailableCategoriesUserExtendedConvert(AvailableCategoriesUserExtended availableCategoriesUserExtended);
+		
 
 		/// <summary>
 		/// Получение доступной категории пользователю по идентификатору
@@ -41,7 +37,7 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 		/// Добавить категорию поста пользователю
 		/// </summary>
 		/// <param name="newsCategory">Данные нового категории</param>
-		Task AddAvailableCategoriesUserAsync(AvailableCategoriesUser availableCategoriesUser);
+		Task<AvailableCategoriesUser> AddAvailableCategoriesUserAsync(AvailableCategoriesUser availableCategoriesUser);
 
 		/// <summary>
 		/// Удалить категорию поста у пользователя по идентификатору

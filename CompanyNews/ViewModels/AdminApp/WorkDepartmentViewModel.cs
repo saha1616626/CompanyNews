@@ -10,77 +10,76 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
-	public class AccountViewModel : INotifyPropertyChanged
+	public class WorkDepartmentViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
 		/// </summary>
-		private readonly AccountService _accountService;
+		private readonly WorkDepartmentService _workDepartmentService;
 
 		/// <summary>
-		/// Отображаемый список учетных записей в UI
+		/// Отображаемый список рабочих отделов в UI
 		/// </summary>
-		public ObservableCollection<AccountExtended> ListAccountExtendeds;
+		public ObservableCollection<WorkDepartment> ListWorkDepartments;
 
-		public AccountViewModel()
+		public WorkDepartmentViewModel()
 		{
-			_accountService = ServiceLocator.GetService<AccountService>();
-			ListAccountExtendeds = new ObservableCollection<AccountExtended>();
-			LoadAccount(); // Выводим список на экран
+			_workDepartmentService = ServiceLocator.GetService<WorkDepartmentService>();
+			ListWorkDepartments = new ObservableCollection<WorkDepartment>();
+			LoadWorkDepartment(); // Выводим список на экран
 		}
 
 		#region CRUD Operations
 
 		/// <summary>
-		/// Вывод списка всех учетных записей в UI.
+		/// Вывод списка всех рабочих отделов в UI.
 		/// </summary>
-		private async Task LoadAccount()
+		private async Task LoadWorkDepartment()
 		{
-			var accounts = await _accountService.GetAllAccountsAsync();
-			foreach (var account in accounts)
+			var workDepartments = await _workDepartmentService.GetAllWorkDepartmentsAsync();
+			foreach (var account in workDepartments)
 			{
-				ListAccountExtendeds.Add(account);
+				ListWorkDepartments.Add(account);
 			}
 		}
 
 		/// <summary>
-		/// Добавить аккаунт
+		/// Добавить рабочий отдел
 		/// </summary>
-		public async Task AddAccountAsync(Account account)
+		public async Task AddWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
-			var addedAccount = await _accountService.AddAccountAsync(account); // Добавление в БД + возврат обновленного объекта
-			ListAccountExtendeds.Add(await _accountService.AcountConvert(addedAccount)); // Обновление коллекции
+			var addedWorkDepartment = await _workDepartmentService.AddWorkDepartmentAsync(workDepartment); // Добавление в БД + возврат обновленного объекта
+			ListWorkDepartments.Add(await _workDepartmentService.AddWorkDepartmentAsync(addedWorkDepartment)); // Обновление коллекции
 		}
 
 		/// <summary>
-		/// Изменить аккаунт
+		/// Изменить рабочий отдел
 		/// </summary>
-		public async Task UpdateAccountAsync(Account account)
+		public async Task UpdateWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
-			await _accountService.UpdateAccountAsync(account); // Обновление данных в БД
+			await _workDepartmentService.UpdateWorkDepartmentAsync(workDepartment); // Обновление данных в БД
 
-			// Находим учетную запись в списке для отображения в UI и заменяем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { accountExtended = await _accountService.AcountConvert(account); }
+			// Находим рабочий отдел в списке для отображения в UI и заменяем объект
+			WorkDepartment? workDepartmentSearch = ListWorkDepartments.FirstOrDefault(a => a.id == workDepartment.id);
+			if (workDepartmentSearch != null) { workDepartmentSearch = await _workDepartmentService.AddWorkDepartmentAsync(workDepartment); }
 		}
 
 		/// <summary>
-		/// Удалить аккаунт
+		/// Удалить рабочий отдел
 		/// </summary>
-		public async Task DeleteAccountAsync(Account account)
+		public async Task DeleteWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
-			await _accountService.DeleteAccountAsync(account.id); // Удаление из БД
+			await _workDepartmentService.DeleteWorkDepartmentAsync(workDepartment.id); // Удаление из БД
 
-			// Находим учетную запись в списке для отображения в UI и удаляем объект
-			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }	
+			// Находим рабочий отдел в списке для отображения в UI и удаляем объект
+			WorkDepartment? workDepartmentSearch = ListWorkDepartments.FirstOrDefault(a => a.id == workDepartment.id);
+			if (workDepartmentSearch != null) { ListWorkDepartments.Remove(workDepartmentSearch); }
 		}
 
 		#endregion
@@ -88,15 +87,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		#region UI RelayCommand Operations
 
 		/// <summary>
-		/// Кнопка "добавить" аккаунт в UI
+		/// Кнопка "добавить" рабочий отдел в UI
 		/// </summary>
-		private RelayCommand _addAccount { get; set; }
-		public RelayCommand AddAccount
+		private RelayCommand _addWorkDepartment { get; set; }
+		public RelayCommand AddWorkDepartment
 		{
 			get
 			{
-				return _addAccount ??
-					(_addAccount = new RelayCommand(async (obj) =>
+				return _addWorkDepartment ??
+					(_addWorkDepartment = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
 
@@ -105,15 +104,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "изменить" аккаунт в UI
+		/// Кнопка "изменить" рабочий отдел в UI
 		/// </summary>
-		private RelayCommand _editAccount { get; set; }
-		public RelayCommand EditAccount
+		private RelayCommand _editWorkDepartment { get; set; }
+		public RelayCommand EditWorkDepartment
 		{
 			get
 			{
-				return _editAccount ??
-					(_editAccount = new RelayCommand(async (obj) =>
+				return _editWorkDepartment ??
+					(_editWorkDepartment = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
 
@@ -123,15 +122,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка "удалить" аккаунт в UI
+		/// Кнопка "удалить" рабочий отдел в UI
 		/// </summary>
-		private RelayCommand _deleteAccount { get; set; }
-		public RelayCommand DeleteAccount
+		private RelayCommand _deleteWorkDepartment { get; set; }
+		public RelayCommand DeleteWorkDepartment
 		{
 			get
 			{
-				return _deleteAccount ??
-					(_deleteAccount = new RelayCommand(async (obj) =>
+				return _deleteWorkDepartment ??
+					(_deleteWorkDepartment = new RelayCommand(async (obj) =>
 					{
 
 					}, (obj) => true));
@@ -139,7 +138,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI
+		/// Кнопка сохранения новых или изменения старых данных рабочего отдела в UI
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -189,7 +188,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-			
+
 		}
 
 		#endregion
@@ -209,13 +208,15 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Выбранный аккаунт в UI
+		/// Выбранный рабочий отдел в UI
 		/// </summary>
-		private AccountExtended _selectedAccount {  get; set; }
-		public AccountExtended SelectedAccount
+		private WorkDepartment _selectedWorkDepartment { get; set; }
+		public WorkDepartment SelectedWorkDepartment
 		{
-			get { return _selectedAccount; }
-			set { _selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
+			get { return _selectedWorkDepartment; }
+			set
+			{
+				_selectedWorkDepartment = value; OnPropertyChanged(nameof(SelectedWorkDepartment));
 				OnPropertyChanged(nameof(IsWorkButtonEnable));
 			}
 		}
@@ -226,7 +227,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		private bool _isWorkButtonEnable { get; set; }
 		public bool IsWorkButtonEnable
 		{
-			get { return SelectedAccount != null; } // Если в таблице выбранн объект, то кнопки доступны
+			get { return SelectedWorkDepartment != null; } // Если в таблице выбранн объект, то кнопки доступны
 			set { _isWorkButtonEnable = value; OnPropertyChanged(nameof(IsWorkButtonEnable)); }
 		}
 

@@ -29,7 +29,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// Добавить категорию поста
 		/// </summary>
 		/// <param name="newsCategory">Данные новой категории</param>
-		Task AddNewsCategoryAsync(Models.NewsCategory newsCategory);
+		Task<Models.NewsCategory> AddNewsCategoryAsync(Models.NewsCategory newsCategory);
 
 		/// <summary>
 		/// Изменить категорию поста
@@ -42,5 +42,10 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// </summary>
 		/// <param name="id">id категории поста</param>
 		Task DeleteNewsCategoryAsync(int id);
+
+		/// <summary>
+		/// Добавляет или убирает из архива (инверсия действия)
+		/// </summary>
+		Task WorkingWithArchive(Models.NewsCategory newsCategory);
 	}
 }

@@ -27,7 +27,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// Добавить рабочий отдел
 		/// </summary>
 		/// <param name="workDepartment">Данные нового рабочего отдела</param>
-		Task AddWorkDepartmentAsync(WorkDepartment workDepartment);
+		Task<WorkDepartment> AddWorkDepartmentAsync(WorkDepartment workDepartment);
 
 		/// <summary>
 		/// Изменить аккаунт

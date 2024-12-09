@@ -28,12 +28,12 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		public async Task<MessageUserExtendet?> MessageUserConvert(MessageUser? messageUser)
+		public async Task<MessageUserExtended?> MessageUserConvert(MessageUser? messageUser)
 		{
 			// Проверяем, не равен ли messageUser null
 			if (messageUser == null) { return null; }
 
-			MessageUserExtendet messageUserExtendet = new MessageUserExtendet();
+			MessageUserExtended messageUserExtendet = new MessageUserExtended();
 			messageUserExtendet.id = messageUser.id;	
 			messageUserExtendet.datePublication = messageUser.datePublication;
 			messageUserExtendet.newsPostId = messageUser.newsPostId;
@@ -53,7 +53,7 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
 		public async Task<MessageUser?> MessageUserExtendetConvert
-			(MessageUserExtendet? messageUserExtendet)
+			(MessageUserExtended? messageUserExtendet)
 		{
 			// Проверяем, не равен ли messageUserExtendet null
 			if (messageUserExtendet == null) { return null; }
@@ -77,7 +77,7 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Получение сообщения по идентификатору.
 		/// </summary>
-		public async Task<MessageUserExtendet?> GetMessageUserByIdAsync(int id)
+		public async Task<MessageUserExtended?> GetMessageUserByIdAsync(int id)
 		{
 			return await MessageUserConvert(await _context.MessageUsers.FindAsync(id)) ??
 				throw new KeyNotFoundException($"Сообщение с ID {id} не найден.");
@@ -86,19 +86,19 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Получение списка всех сообщений.
 		/// </summary>
-		public async Task<IEnumerable<MessageUserExtendet>?> GetAllMessageUserAsync()
+		public async Task<IEnumerable<MessageUserExtended>?> GetAllMessageUserAsync()
 		{
 			IEnumerable<MessageUser> messageUsers = await _context.MessageUsers.ToListAsync();
 			if (messageUsers == null) { return null; }
 
 			// Список сообщений
-			List<MessageUserExtendet> messageUsersExtendeds = new List<MessageUserExtendet>();
+			List<MessageUserExtended> messageUsersExtendeds = new List<MessageUserExtended>();
 
 			foreach (var item in messageUsers)
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
 				if (await MessageUserConvert(item) == null) { continue; }
-				MessageUserExtendet? messageUserExtendet = await MessageUserConvert(item);
+				MessageUserExtended? messageUserExtendet = await MessageUserConvert(item);
 				messageUsersExtendeds.Add(messageUserExtendet);
 			}
 
@@ -113,12 +113,13 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// Добавление нового сообщения к посту.
 		/// </summary>
 		/// <param name="messageUser">Данные нового сообщения.</param>
-		public async Task AddMessageUserAsync(MessageUser messageUser)
+		public async Task<MessageUser> AddMessageUserAsync(MessageUser messageUser)
 		{
 			if (messageUser == null) throw new ArgumentNullException(nameof(messageUser));
 
 			await _context.MessageUsers.AddAsync(messageUser);
 			await _context.SaveChangesAsync();
+			return messageUser; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>

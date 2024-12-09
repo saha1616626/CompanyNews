@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CompanyNews.Models.Extended
 {
-    public class MessageUserExtendet
+    public class MessageUserExtended
     {
 		public int id { get; set; }
 		public DateTime datePublication { get; set; }

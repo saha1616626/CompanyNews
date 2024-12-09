@@ -53,10 +53,11 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Добавить рабочий отдел
 		/// </summary>
-		public async Task AddWorkDepartmentAsync(WorkDepartment workDepartment)
+		public async Task<WorkDepartment> AddWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
 			_context.WorkDepartments.Add(workDepartment);
 			await _context.SaveChangesAsync();
+			return workDepartment; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>
