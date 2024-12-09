@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace CompanyNews.Models.Extended
     {
 		public int id { get; set; }
 		public int newsCategoryId { get; set; }
+		[Required(ErrorMessage = "Категория обязательна для выбора!")]
 		public string newsCategoryName { get; set; }
 		public DateTime datePublication { get; set; }
 

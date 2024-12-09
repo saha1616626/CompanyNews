@@ -15,20 +15,28 @@ namespace CompanyNews.Models
         public int id {  get; set; }
         [Required(ErrorMessage = "Логин обязателен для заполнения!")]
         public string login { get; set; }
-        public string password { get; set; }
+		[Required(ErrorMessage = "Пароль обязателен для заполнения!")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Пароль должен содержать не менее 8 символов!")]
+		public string password { get; set; }
 
         /// <summary>
         /// Роль пользователя в системе (Администратор, Редактор, Пользователь)
         /// </summary>
+        [Required(ErrorMessage = "Роль обязательна для заполнения!")]
         public string accountRole { get; set; }
 
-        /// <summary>
-        /// Внешний ключ для связи с отделом в котором работает сотрудник
-        /// </summary>
-        public int? workDepartmentId { get; set; } 
-        public string phoneNumber { get; set; }
-        public string name { get; set; }
-        public string surname { get; set; }
+		/// <summary>
+		/// Внешний ключ для связи с отделом в котором работает сотрудник
+		/// </summary>
+		[Required(ErrorMessage = "Рабочий отдел обязателен для выбора!")]
+		public int? workDepartmentId { get; set; }
+		[Required(ErrorMessage = "Номер телефона обязателен для заполнения!")]
+		[StringLength(11, MinimumLength = 11, ErrorMessage = "Номер телефона должен содержать 11 цифр!")]
+		public string phoneNumber { get; set; }
+		[Required(ErrorMessage = "Имя обязательно для заполнения!")]
+		public string name { get; set; }
+		[Required(ErrorMessage = "Фамилия обязательна для заполнения!")]
+		public string surname { get; set; }
         public string? patronymic { get; set; }
 
 		/// <summary>

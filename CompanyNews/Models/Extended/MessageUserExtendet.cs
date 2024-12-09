@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Пост для которого было написано сообщение
 		/// </summary>
+		[Required(ErrorMessage = "Пост обязателен для выбора!")]
 		public int newsPostId { get; set; }
 
 		/// <summary>
@@ -21,11 +23,13 @@ namespace CompanyNews.Models.Extended
 		/// </summary>
 		public int accountId { get; set; }
 
+		[Required(ErrorMessage = "Пользователь обязателен для выбора!")]
 		public Account Account { get; set; }
 
 		/// <summary>
 		/// Тело сообщения пользователя
 		/// </summary>
+		[Required(ErrorMessage = "Сообщение обязательно для ввода!")]
 		public string message { get; set; }
 
 		/// <summary>
