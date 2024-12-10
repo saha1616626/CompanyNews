@@ -25,7 +25,7 @@ namespace CompanyNews.Repositories.Authorizations
 		/// <summary>
 		/// Путь к JSON хранящего данные авторизованного пользователя
 		/// </summary>
-		private readonly string authorizationStatusPath = System.IO.Path.GetFullPath(@"\Data\Authorization\AuthorizationStatus.json");
+		private readonly string authorizationStatusPath = @"..\..\..\Data\Authorization\AuthorizationStatus.json";
 
 		private readonly CompanyNewsDbContext _context;
 

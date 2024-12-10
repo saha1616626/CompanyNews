@@ -11,7 +11,8 @@ namespace CompanyNews.Data
 {
     public class CompanyNewsDbContext : DbContext
     {
-		public CompanyNewsDbContext()
+		public CompanyNewsDbContext(DbContextOptions<CompanyNewsDbContext> options)
+        : base(options)
 		{
 			Database.EnsureCreated(); // Проверка наличия БД
 		}

@@ -15,11 +15,17 @@ namespace CompanyNews.Helpers.Validators
 	/// </summary>
 	public class NameWorkDepartamentUniquenessValidationRule : ValidationRule
 	{
+		private readonly CompanyNewsDbContext _context;
+
+		public NameWorkDepartamentUniquenessValidationRule(CompanyNewsDbContext context)
+		{
+			_context = context; // Контекст будет передан через контейнер
+		}
+
 		public override ValidationResult Validate(object value, CultureInfo cultureInfo)
 		{
 			string input = value as string;
 
-			CompanyNewsDbContext _context = new CompanyNewsDbContext();
 			List<WorkDepartment> workDepartment = _context.WorkDepartments.ToList();
 			if (workDepartment.Any(workDepartment => workDepartment.name.ToLowerInvariant()
 				== input.ToLowerInvariant().Trim()))

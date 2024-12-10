@@ -15,11 +15,17 @@ namespace CompanyNews.Helpers.Validators
 	/// </summary>
 	public class NameNewsCategoryUniquenessValidationRule : ValidationRule
 	{
+		private readonly CompanyNewsDbContext _context;
+
+		public NameNewsCategoryUniquenessValidationRule(CompanyNewsDbContext context)
+		{
+			_context = context; // Контекст будет передан через контейнер
+		}
+
 		public override ValidationResult Validate(object value, CultureInfo cultureInfo)
 		{
 			string input = value as string;
 
-			CompanyNewsDbContext _context = new CompanyNewsDbContext();
 			List<NewsCategory> newsCategories = _context.NewsCategories.ToList();
 			if (newsCategories.Any(newsCategory => newsCategory.name.ToLowerInvariant()
 				== input.ToLowerInvariant().Trim()))

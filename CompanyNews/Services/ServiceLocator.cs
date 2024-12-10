@@ -1,4 +1,5 @@
 ﻿using CompanyNews.Data;
+using CompanyNews.Helpers.Validators;
 using CompanyNews.Repositories.Accounts;
 using CompanyNews.Repositories.Authorizations;
 using CompanyNews.Repositories.AvailableCategoriesUsers;
@@ -62,6 +63,13 @@ namespace CompanyNews.Services
 			services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
 			services.AddScoped<AuthorizationService>();
 			services.AddScoped<AuthorizationViewModel>();
+
+			services.AddScoped<LoginUniquenessValidationRule>();
+			services.AddScoped<NameWorkDepartamentUniquenessValidationRule>();
+			services.AddScoped<NameNewsCategoryUniquenessValidationRule>();
+
+			// Создание ServiceProvider
+			_serviceProvider = services.BuildServiceProvider();
 		}
 
 		public static T GetService<T>() => _serviceProvider.GetRequiredService<T>();
