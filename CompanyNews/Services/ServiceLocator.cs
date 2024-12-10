@@ -1,11 +1,13 @@
 ﻿using CompanyNews.Data;
 using CompanyNews.Repositories.Accounts;
+using CompanyNews.Repositories.Authorizations;
 using CompanyNews.Repositories.AvailableCategoriesUsers;
 using CompanyNews.Repositories.MessageUsers;
 using CompanyNews.Repositories.NewsCategories;
 using CompanyNews.Repositories.NewsCategory;
 using CompanyNews.Repositories.NewsPosts;
 using CompanyNews.Repositories.WorkDepartments;
+using CompanyNews.ViewModels;
 using CompanyNews.ViewModels.AdminApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +58,10 @@ namespace CompanyNews.Services
 			services.AddScoped<IMessageUserRepository, MessageUserRepository>();
 			services.AddScoped<MessageUserService>();
 			services.AddScoped<MessageUserViewModel>();
+
+			services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
+			services.AddScoped<AuthorizationService>();
+			services.AddScoped<AuthorizationViewModel>();
 		}
 
 		public static T GetService<T>() => _serviceProvider.GetRequiredService<T>();

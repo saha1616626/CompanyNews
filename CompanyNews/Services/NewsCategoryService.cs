@@ -1,4 +1,6 @@
-﻿using CompanyNews.Repositories.NewsCategories;
+﻿using CompanyNews.Models;
+using CompanyNews.Models.Extended;
+using CompanyNews.Repositories.NewsCategories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +30,11 @@ namespace CompanyNews.Services
 		public async Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync()
 		{
 			return await _newsCategoryRepository.GetAllNewsCategoriesAsync();
+		}
+
+		public async Task<CategoryPostsExtended?> GetListNewsPostGroupedByCategory(Models.NewsCategory newsCategory)
+		{
+			return await _newsCategoryRepository.GetListNewsPostGroupedByCategory(newsCategory);
 		}
 
 		#endregion

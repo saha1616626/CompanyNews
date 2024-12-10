@@ -26,6 +26,11 @@ namespace CompanyNews.Repositories.NewsCategories
 		Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync();
 
 		/// <summary>
+		/// Получение списка всех постов новостей с группировкой по категории.
+		/// </summary>
+		Task<CategoryPostsExtended?> GetListNewsPostGroupedByCategory(Models.NewsCategory newsCategory);
+
+		/// <summary>
 		/// Добавить категорию поста
 		/// </summary>
 		/// <param name="newsCategory">Данные новой категории</param>

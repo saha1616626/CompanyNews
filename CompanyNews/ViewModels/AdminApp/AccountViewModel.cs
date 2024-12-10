@@ -20,9 +20,11 @@ namespace CompanyNews.ViewModels.AdminApp
 	public class AccountViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
-		/// Сервис для взаиодействия с бизнес-логикой
+		/// Сервисы для взаиодействия с бизнес-логикой
 		/// </summary>
-		private readonly AccountService _accountService;
+		private readonly AccountService _accountService; //Учетные записи
+
+		private readonly AuthorizationService _authorizationService; // Авторизация
 
 		/// <summary>
 		/// Отображаемый список учетных записей в UI
@@ -83,6 +85,19 @@ namespace CompanyNews.ViewModels.AdminApp
 			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }	
 		}
 
+		/// <summary>
+		/// Смена пароля
+		/// </summary>
+		/// <param name="account"> Учетная запись у которой меняется пароль. </param>
+		/// <param name="newPassword"> Новый пароль. </param>
+		/// <returns></returns>
+		public async Task<bool> ChangingPassword(Account account, string newPassword)
+		{
+			return await _authorizationService.ChangingPassword(account, newPassword);
+		}
+
+
+
 		#endregion
 
 		#region UI RelayCommand Operations
@@ -132,6 +147,22 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				return _deleteAccount ??
 					(_deleteAccount = new RelayCommand(async (obj) =>
+					{
+
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Кнопка смены пароля аккаунта в UI
+		/// </summary>
+		private RelayCommand _saveNewPassword { get; set; }
+		public RelayCommand SaveNewPassword
+		{
+			get
+			{
+				return _saveNewPassword ??
+					(_saveNewPassword = new RelayCommand(async (obj) =>
 					{
 
 					}, (obj) => true));

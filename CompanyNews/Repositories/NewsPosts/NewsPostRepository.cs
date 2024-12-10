@@ -104,7 +104,6 @@ namespace CompanyNews.Repositories.NewsPosts
 			return newsPostExtendeds;
 		}
 
-
 		#endregion
 
 		#region CRUD Operations

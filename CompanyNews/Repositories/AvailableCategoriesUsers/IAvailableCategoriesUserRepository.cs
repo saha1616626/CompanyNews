@@ -20,7 +20,7 @@ namespace CompanyNews.Repositories.AvailableCategoriesUsers
 		/// </summary>
 		Task<AvailableCategoriesUserExtended> AvailableCategoriesUserConvert(AvailableCategoriesUser availableCategoriesUser);
 
-		
+		// Проверка, доступна ли пользователю данная категория
 
 		/// <summary>
 		/// Получение доступной категории пользователю по идентификатору

@@ -36,8 +36,8 @@ namespace CompanyNews.Helpers
 		/// <summary>
 		/// Проверка пароля, введенного пользователем
 		/// </summary>
-		/// <param name="password">Новый пароль</param>
-		/// <param name="hashedPassword">Текущий пароль</param>
+		/// <param name="password">Введенный пароль</param>
+		/// <param name="hashedPassword">Существующий пароль</param>
 		/// <returns>Совпадает пароль или нет</returns>
 		public static bool VerifyPassword(string password, string hashedPassword)
 		{

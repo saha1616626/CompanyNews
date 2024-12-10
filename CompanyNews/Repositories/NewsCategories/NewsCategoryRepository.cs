@@ -1,5 +1,6 @@
 ﻿using CompanyNews.Data;
 using CompanyNews.Models;
+using CompanyNews.Models.Extended;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,32 @@ namespace CompanyNews.Repositories.NewsCategories
 			if(newsCategories == null) { return null; }
 
 			return newsCategories;
+		}
+
+		/// <summary>
+		/// Получение списка всех постов новостей с группировкой по категории.
+		/// </summary>
+		public async Task<CategoryPostsExtended?> GetListNewsPostGroupedByCategory(Models.NewsCategory newsCategory)
+		{
+			// Проверяем, не равен ли newsCategory null
+			if (newsCategory == null) { return null; }
+
+			// Получаем из БД актуальную версию NewsCategory
+			Models.NewsCategory? category = await _context.NewsCategories.FirstOrDefaultAsync(category => category.id == newsCategory.id);
+			if (category == null) { return null; }
+
+			CategoryPostsExtended categoryPostsExtended = new CategoryPostsExtended();
+			categoryPostsExtended.id = category.id;
+			categoryPostsExtended.name = category.name;
+			categoryPostsExtended.description = category.description;
+
+			// Получаем список постов для данной категории
+			categoryPostsExtended.newsPosts = _context.NewsPosts.Where(post => post.newsCategoryId == category.id).ToList();
+
+			// Получение кол-ва пользователей, которые подписанны на данную категорию
+			categoryPostsExtended.numberSubscribers = _context.AvailableCategoriesUsers.Count(category => category.newsCategoryId == category.id);
+		
+			return categoryPostsExtended;
 		}
 
 		#endregion
