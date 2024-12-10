@@ -23,5 +23,18 @@ namespace CompanyNews.Helpers.Event
 			// Проверяем, есть ли подписчики на событие и вызываем их
 			logOutYourAccount?.Invoke(null, new EventAggregator());
 		}
+
+		/// <summary>
+		/// Подписка на событие - вход в аккаунт. Переход на страницу после успешной авторизации.
+		/// </summary>
+		public static event EventHandler<EventAggregator> logInYourAccount;
+		/// <summary>
+		/// Вызов метода перехода на страницу после успешной авторизации.
+		/// </summary>
+		public static void LogInYourAccount()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			logInYourAccount?.Invoke(null, new EventAggregator());
+		}
 	}
 }
