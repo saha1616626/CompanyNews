@@ -7,8 +7,8 @@ using CompanyNews.Repositories.NewsCategories;
 using CompanyNews.Repositories.NewsCategory;
 using CompanyNews.Repositories.NewsPosts;
 using CompanyNews.Repositories.WorkDepartments;
-using CompanyNews.ViewModels;
 using CompanyNews.ViewModels.AdminApp;
+using CompanyNews.ViewModels.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,10 +19,10 @@ using System.Threading.Tasks;
 
 namespace CompanyNews.Services
 {
-	/// <summary>
-	/// Регистратор зависимостей
-	/// </summary>
-	public static class ServiceLocator
+    /// <summary>
+    /// Регистратор зависимостей
+    /// </summary>
+    public static class ServiceLocator
 	{
 		private static IServiceProvider _serviceProvider;
 
