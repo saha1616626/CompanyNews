@@ -56,5 +56,12 @@ namespace CompanyNews.Repositories.Accounts
 		/// </summary>
 		/// <param name="id">id пользователя</param>
 		Task DeleteAccountAsync(int id);
-    }
+
+		/// <summary>
+		/// Зашифровать пароль
+		/// </summary>
+		/// <param name="password"> Пароль из UI. </param>
+		Task<string> EncryptPassword(string password);
+
+	}
 }

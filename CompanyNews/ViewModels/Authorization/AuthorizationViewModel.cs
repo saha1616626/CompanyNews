@@ -63,8 +63,30 @@ namespace CompanyNews.ViewModels.Authorization
                 return _entrance ??
                     (_entrance = new RelayCommand(async (obj) =>
                     {
+                        if(login == null || password == null || login.Text.Trim() == "" || password.Password.Trim() == "")
+                        {
+                            // Выделяем поля и выводим ошибку.
+							errorInputText.Text = "Заполните все поля."; errorInputBorder.Visibility = System.Windows.Visibility.Visible;
+							if (password == null || password.Password.Trim() == "") { StartFieldIllumination(password); }
+							if (login == null || login.Text.Trim() == "") { StartFieldIllumination(login); }
+						}
+                        else
+                        {
+							if (await LogInYourAccount(login.Text.Trim(), password.Password.Trim()))
+							{
+                                // Если успешно, то происход вход в аккаунт
+							}
+							else
+							{
+								errorInputText.Text = "Неверный логин или пароль, попробуйте заново.";
+								errorInputBorder.Visibility = System.Windows.Visibility.Visible;
 
-                    }, (obj) => true));
+							}
+						}
+
+						BeginFadeAnimation(errorInputText); // Исчезание информации об ошибке
+                        BeginFadeAnimation(errorInputBorder);
+					}, (obj) => true));
             }
         }
 
@@ -75,11 +97,16 @@ namespace CompanyNews.ViewModels.Authorization
         /// <summary>
         /// Асинхронно получаем информацию из привязанного View
         /// </summary>
-        public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters)
+        public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters, TextBox login, PasswordBox password)
         {
             darkBackground = adminViewModelParameters.darkBackground;
             fieldIllumination = adminViewModelParameters.fieldIllumination;
-            errorInput = adminViewModelParameters.errorInput;
+            errorInputText = adminViewModelParameters.errorInputText;
+			errorInputBorder = adminViewModelParameters.errorInputBorder;
+
+
+			this.login = login;
+            this.password = password;   
         }
 
         #region View
@@ -107,16 +134,24 @@ namespace CompanyNews.ViewModels.Authorization
         /// <summary>
         /// Вывод ошибки и анимация текста на странице
         /// </summary>
-        public TextBlock? errorInput { get; set; }
+        public TextBlock? errorInputText { get; set; }
 
-        #endregion
+		/// <summary>
+		/// Вывод контейнера для сообщения ошибки
+		/// </summary>
+		public Border? errorInputBorder { get; set; }
 
-        #endregion
+		public TextBox? login { get; set; } // Поле логина
+		public PasswordBox? password { get; set; } // Поле пароля
 
-        #region Animation
+		#endregion
 
-        // выводим сообщения об ошибке с анимацией затухания
-        private async void BeginFadeAnimation(TextBlock textBlock)
+		#endregion
+
+		#region Animation
+
+		// выводим сообщения об ошибке с анимацией затухания
+		private async void BeginFadeAnimation(TextBlock textBlock)
         {
             textBlock.IsEnabled = true;
             textBlock.Opacity = 1.0;
@@ -124,7 +159,7 @@ namespace CompanyNews.ViewModels.Authorization
             Storyboard storyboard = new Storyboard();
             DoubleAnimation fadeAnimation = new DoubleAnimation
             {
-                From = 1.0,
+                From = 2.0,
                 To = 0.0,
                 Duration = TimeSpan.FromSeconds(2),
             };
@@ -134,8 +169,26 @@ namespace CompanyNews.ViewModels.Authorization
             storyboard.Begin(textBlock);
         }
 
-        // запускаем анимации для TextBox (подсвечивание объекта)
-        private void StartFieldIllumination(TextBox textBox)
+		private async void BeginFadeAnimation(Border border)
+		{
+			border.IsEnabled = true;
+			border.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => border.IsEnabled = false;
+			storyboard.Begin(border);
+		}
+
+		// запускаем анимации для TextBox (подсвечивание объекта)
+		private void StartFieldIllumination(TextBox textBox)
         {
             fieldIllumination.Begin(textBox);
         }

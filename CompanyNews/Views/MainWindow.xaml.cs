@@ -54,7 +54,7 @@ namespace CompanyNews.Views
 			ClearMemoryAfterFrame(authorizationPage);
 			ClearMemoryAfterFrame(adminHomePage);
 			ClearMemoryAfterFrame(clientHomePage);
-			await Task.Delay(500);
+			await Task.Delay(800);
 
 			// Проверка состояния пользователя в системе
 			UserLoginStatus userLoginStatus = await _authorizationService.GetUserStatusInSystem();

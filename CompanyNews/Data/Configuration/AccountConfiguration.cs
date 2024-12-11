@@ -16,7 +16,7 @@ namespace CompanyNews.Data.Configuration
 		{
 			builder.HasKey(account => account.id);
 			builder.ToTable("Account");
-			builder.Property(account => account.login).HasColumnName("login").HasMaxLength(100);
+			builder.Property(account => account.login).HasColumnName("login").HasMaxLength(300);
 			builder.Property(account => account.password).HasColumnName("password").HasMaxLength(100);
 			builder.Property(account => account.accountRole).HasColumnName("accountRole").HasMaxLength(50);
 			builder.Property(account => account.workDepartmentId).HasColumnName("workDepartmentId").IsRequired(false);

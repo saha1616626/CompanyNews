@@ -16,7 +16,7 @@
         <ViewModel:AuthorizationViewModel x:Key="AuthorizationViewModel"/>
 
         <!--анимация подсветки полей-->
-        <Storyboard x:Key="FieldIllumination">
+        <Storyboard x:Key="fieldIllumination">
             <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
 From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         </Storyboard>
@@ -37,11 +37,19 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <TextBlock Text="Новости ТРАЙТЭК" FontSize="30" Foreground="Black" FontWeight="Bold" 
                HorizontalAlignment="Left" Margin="40, 20, 0, 0" VerticalAlignment="Top"/>
 
+        </Grid>
+
+        <Border Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" BorderThickness="1" x:Name="errorInputBorder" Visibility="Hidden"
+HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Margin="0,20,-5,0" Grid.Row="0">
             <!--сообщение об ошибке-->
             <TextBlock Text="{Binding errorInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-               x:Name="errorInput" HorizontalAlignment="Right" Height="100" Margin="0, 70, 350, 0" 
-               FontWeight="DemiBold" FontSize="18"/>
-        </Grid>
+       x:Name="errorInputText" HorizontalAlignment="Left" VerticalAlignment="Center"
+       Margin="10, 10, 10, 10" 
+       FontWeight="Regular" FontSize="18"
+       Width="300"
+       TextWrapping="Wrap"/>
+            <!-- Используйте TextWrapping для переноса текста -->
+        </Border>
 
         <Grid Grid.Row="1" Margin="0,70,0,0">
 

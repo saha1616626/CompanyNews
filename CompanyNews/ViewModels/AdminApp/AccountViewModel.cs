@@ -235,7 +235,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
 			errorInputPopup = adminViewModelParameters.errorInputPopup;
-			errorInput = adminViewModelParameters.errorInput;
+			errorInput = adminViewModelParameters.errorInputText;
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
 

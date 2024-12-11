@@ -67,6 +67,15 @@ namespace CompanyNews.Services
 			await _accountRepository.DeleteAccountAsync(id);
 		}
 
+		/// <summary>
+		/// Зашифровать пароль
+		/// </summary>
+		/// <param name="password"> Пароль из UI. </param>
+		public async Task<string> EncryptPassword(string password)
+		{
+			return await _accountRepository.EncryptPassword(password);
+		}
+
 		#endregion
 
 	}

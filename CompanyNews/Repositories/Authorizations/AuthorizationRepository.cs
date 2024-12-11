@@ -65,7 +65,7 @@ namespace CompanyNews.Repositories.Authorizations
 		/// </summary>
 		public async Task<bool> LogInYourAccount(string login, string password)
 		{
-			Account account = await _context.Accounts.FindAsync(login); // Ищем аккаунт по логину
+			Account account = await _context.Accounts.FirstOrDefaultAsync(account => account.login == login); // Ищем аккаунт по логину
 			if (account == null) { return false; } // Логин не найден
 			if(PasswordHasher.VerifyPassword(password, account.password))// Сверяем пароли
 			{

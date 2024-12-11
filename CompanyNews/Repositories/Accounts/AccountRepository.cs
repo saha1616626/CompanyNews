@@ -1,4 +1,5 @@
 ﻿using CompanyNews.Data;
+using CompanyNews.Helpers;
 using CompanyNews.Models;
 using CompanyNews.Models.Extended;
 using Microsoft.EntityFrameworkCore;
@@ -171,6 +172,15 @@ namespace CompanyNews.Repositories.Accounts
 			if (account == null) { return; }
 			_context.Accounts.Remove(account);
 			await _context.SaveChangesAsync();
+		}
+
+		/// <summary>
+		/// Зашифровать пароль
+		/// </summary>
+		/// <param name="password"> Пароль из UI. </param>
+		public async Task<string> EncryptPassword(string password)
+		{
+			return PasswordHasher.HashPassword(password);
 		}
 
 		#endregion

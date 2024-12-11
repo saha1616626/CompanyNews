@@ -14,7 +14,10 @@ namespace CompanyNews.Data
 		public CompanyNewsDbContext(DbContextOptions<CompanyNewsDbContext> options)
         : base(options)
 		{
-			Database.EnsureCreated(); // Проверка наличия БД
+			// Применяем все миграции, если они не были применены.
+			//Database.Migrate();
+
+			Database.EnsureCreatedAsync();
 		}
 
         public DbSet<Account> Accounts { get; set; }

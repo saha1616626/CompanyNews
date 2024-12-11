@@ -32,7 +32,12 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Вывод ошибки и анимация текста на странице
 		/// </summary>
-		public TextBlock? errorInput {  get; set; }
+		public TextBlock? errorInputText {  get; set; }
+
+		/// <summary>
+		/// Вывод контейнера для сообщения ошибки
+		/// </summary>
+		public Border? errorInputBorder { get; set; }
 
 		/// <summary>
 		/// Popup удаления данных
