@@ -14,6 +14,7 @@ using System.Windows.Media.Animation;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Runtime.CompilerServices;
 using CompanyNews.Helpers;
+using CompanyNews.Helpers.Event;
 
 namespace CompanyNews.ViewModels.Authorization
 {
@@ -75,6 +76,7 @@ namespace CompanyNews.ViewModels.Authorization
 							if (await LogInYourAccount(login.Text.Trim(), password.Password.Trim()))
 							{
                                 // Если успешно, то происход вход в аккаунт
+                                AuthorizationEvent.LogInYourAccount();
 							}
 							else
 							{

@@ -1,5 +1,1 @@
-{
-  "isUserLoggedIn": false,
-  "accountId": null,
-  "accountRole": null
-}
+{"isUserLoggedIn":true,"accountId":5,"accountRole":"Администратор"}

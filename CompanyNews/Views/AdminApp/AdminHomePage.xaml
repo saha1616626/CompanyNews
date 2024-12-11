@@ -4,12 +4,210 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
       mc:Ignorable="d" 
-      MinHeight="700" MinWidth="1200"
+      MinHeight="700" Width="Auto"
       Title="AdminHomePage">
 
-    <Grid>
-        
+    <Page.Resources>
+
+        <!--связываем View и ViewModel-->
+        <ViewModel:AdminHomeViewModel x:Key="AdminHomeViewModel"/>
+
+        <!--анимация подсветки полей-->
+        <Storyboard x:Key="fieldIllumination">
+            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid Background="AliceBlue" DataContext="{StaticResource AdminHomeViewModel}" x:Name="test">
+
+        <!--стили-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="\Dictionary\Popup.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <!--основная разметка-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--фон-->
+        <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Background="#FF80A2E8"/>
+
+        <!--Название сервиса-->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+            <TextBlock Text="Новости ТРАЙТЭК" FontSize="24" Foreground="Black"
+   VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,30,0" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--#region Button account and outAccount-->
+
+            <!--Профиль пользователя-->
+            <Button Grid.Row="0" Grid.Column="0" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+Margin="0,5,5,5" Height="40" Padding="20,0,20,0"
+Background="Transparent" BorderBrush="Transparent"
+VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Regular"/>
+                        <Setter Property="Opacity" Value="1"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="White"/>
+
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="AccountBox" Width="35" Height="35" />
+                    <TextBlock Text="Александр Березкин" FontSize="16" FontWeight="Regular" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!--Кнопка выхода-->
+            <Button Grid.Row="0" Grid.Column="1" Height="40" Padding="0,-5,0,-5" Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopup}">
+
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Regular"/>
+                        <Setter Property="Opacity" Value="1"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="White"/>
+
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ExitToApp" Width="30" Height="30" />
+                    <TextBlock Text="Выход" FontSize="10" FontWeight="Regular" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <!--#endregion-->
+
+            <!--#region Popup-->
+
+            <!-- Размещение Popup относительно данного grid-->
+            <Grid x:Name="positionPopup" Grid.RowSpan="8" Grid.ColumnSpan="8" 
+HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+            <!--Фон для Popup-->
+            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Grid.RowSpan="8" x:Name="DarkBackground" 
+Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
+
+            <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=test}" 
+            IsOpen="{Binding StartPoupOfOutAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+            VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 
+            AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!--фон-->
+                <Border Background="AliceBlue" 
+            Style="{StaticResource OutlineOfPopup}">
+                    <!-- Устанавливаем радиус закругления -->
+                    <Grid Width="400" Height="250">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBlock Text="Вы действительно хотите выйти из аккаунта?" 
+                               FontSize="20" 
+                               FontWeight="DemiBold" 
+                               HorizontalAlignment="Center" 
+                               TextWrapping="Wrap" 
+                               TextAlignment="Center" 
+                               Height="110" Margin="20,130,20,0"/>
+                            </StackPanel>
+
+                            <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+                            Height="35" Background="Gray" BorderBrush="Black" 
+                            Command="{Binding ClosePopup}"/>
+                                <Button Grid.Row="0" Grid.Column="1" Content="Выход" Width="150" 
+                            Height="35" Background="Gray" BorderBrush="Black" Command="{Binding LogOutYourAccount}"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Popup>
+
+            <!--#endregion-->
+
+        </Grid>
+
     </Grid>
 </Page>

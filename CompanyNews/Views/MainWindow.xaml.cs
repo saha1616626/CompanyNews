@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -36,13 +37,15 @@ namespace CompanyNews.Views
 		public MainWindow()
 		{
 			InitializeComponent();
-
+			
 			_authorizationService = ServiceLocator.GetService<AuthorizationService>();
 			// Запускаем асинхронный метод управления сессией
 			SessionManagementAsync(); // Вход в систему
 
 			// Подписываемся на событие перехода на нужную страница после успешной авторизации
 			AuthorizationEvent.logInYourAccount += LogInYourAccount;
+			// Подписываемся на событие перехода на страницу авторизации после успешного выхода
+			AuthorizationEvent.logOutYourAccount += LogOutYourAccount;
 		}
 
 		/// <summary>
@@ -54,7 +57,7 @@ namespace CompanyNews.Views
 			ClearMemoryAfterFrame(authorizationPage);
 			ClearMemoryAfterFrame(adminHomePage);
 			ClearMemoryAfterFrame(clientHomePage);
-			await Task.Delay(800);
+			await Task.Delay(500);
 
 			// Проверка состояния пользователя в системе
 			UserLoginStatus userLoginStatus = await _authorizationService.GetUserStatusInSystem();
@@ -82,6 +85,14 @@ namespace CompanyNews.Views
 		/// <summary>
 		/// Вход в аккаунт. Подписка на событие.
 		/// </summary>
+		private async void LogOutYourAccount(object sender, EventAggregator e)
+		{
+			await SessionManagementAsync();
+		}
+
+		/// <summary>
+		/// Выход из аккаунта. Подписка на событие.
+		/// </summary>
 		private async void LogInYourAccount(object sender, EventAggregator e)
 		{
 			await SessionManagementAsync();
@@ -108,5 +119,6 @@ namespace CompanyNews.Views
 				mainFrame.Content = null;
 			}
 		}
+
 	}
 }
