@@ -16,14 +16,15 @@ namespace CompanyNews.Data.Configuration
 		{
 			builder.HasKey(account => account.id);
 			builder.ToTable("Account");
-			builder.Property(account => account.login).HasColumnName("login").HasMaxLength(300);
-			builder.Property(account => account.password).HasColumnName("password").HasMaxLength(100);
+			builder.Property(account => account.login).HasColumnName("login").HasMaxLength(100);
+			builder.Property(account => account.password).HasColumnName("password").HasMaxLength(300);
 			builder.Property(account => account.accountRole).HasColumnName("accountRole").HasMaxLength(50);
 			builder.Property(account => account.workDepartmentId).HasColumnName("workDepartmentId").IsRequired(false);
 			builder.Property(account => account.phoneNumber).HasColumnName("phoneNumber").HasMaxLength(11);
 			builder.Property(account => account.name).HasColumnName("name").HasMaxLength(100);
 			builder.Property(account => account.surname).HasColumnName("surname").HasMaxLength(100);
 			builder.Property(account => account.patronymic).HasColumnName("patronymic").HasMaxLength(100).IsRequired(false);
+			builder.Property(account => account.profileDescription).HasColumnName("profileDescription").HasMaxLength(1000).IsRequired(false);
 			builder.Property(account => account.image).HasColumnName("image").IsRequired(false);
 			builder.Property(account => account.isProfileBlocked).HasColumnName("isProfileBlocked");
 			builder.Property(account => account.reasonBlockingAccount).HasColumnName("reasonBlockingAccount").HasMaxLength(1000).IsRequired(false);

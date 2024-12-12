@@ -39,6 +39,11 @@ namespace CompanyNews.Models
 		public string surname { get; set; }
         public string? patronymic { get; set; }
 
+        /// <summary>
+        /// Описание профиля
+        /// </summary>
+        public string? profileDescription { get; set; }
+
 		/// <summary>
 		/// Фото человека
 		/// </summary>

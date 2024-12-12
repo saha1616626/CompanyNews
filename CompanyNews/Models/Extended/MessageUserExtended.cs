@@ -38,6 +38,11 @@ namespace CompanyNews.Models.Extended
 		public string status { get; set; }
 
 		/// <summary>
+		/// Дата и время модерации
+		/// </summary>
+		public DateTime? dateModeration { get; set; }
+
+		/// <summary>
 		/// Причина отклонения прохождения модерации
 		/// </summary>
 		public string? rejectionReason { get; set; }

@@ -27,10 +27,15 @@ namespace CompanyNews.Models
         /// </summary>
         public string? message { get; set; }
 
-        /// <summary>
-        /// Навигационное свойство для связи с категорией
-        /// </summary>
-        public NewsCategory newsCategory { get; set; }
+		/// <summary>
+		/// Пост в архиве?
+		/// </summary>
+		public bool isArchived { get; set; }
+
+		/// <summary>
+		/// Навигационное свойство для связи с категорией
+		/// </summary>
+		public NewsCategory newsCategory { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с отправленными сообщениями

@@ -34,7 +34,7 @@ namespace CompanyNews.ViewModels.UserControls
 			LimitingMenuDependingRole(); // Ограничения меню в зависимости от роли
 		}
 
-		#region workHamburgerMenu
+		#region WorkHamburgerMenu
 
 		/// <summary>
 		/// Запуск меню или закрытие
@@ -70,6 +70,86 @@ namespace CompanyNews.ViewModels.UserControls
 			IsSideMenuVisible = false; // невидимое меню
 			SideMenuWidth = 0; // изменяем ширину
 			IsMenuButtonVisibility = IsSideMenuVisible ? false : true; // скрываем кнопку или показываем
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с рабочими отделами
+		/// </summary>
+		private RelayCommand _openPageWorkDepartment { get; set; }
+		public RelayCommand OpenPageWorkDepartment
+		{
+			get
+			{
+				return _openPageWorkDepartment ??
+					(_openPageWorkDepartment = new RelayCommand((obj) =>
+					{
+						
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с категориями постов
+		/// </summary>
+		private RelayCommand _openPageNewsCategory { get; set; }
+		public RelayCommand OpenPageNewsCategory
+		{
+			get
+			{
+				return _openPageNewsCategory ??
+					(_openPageNewsCategory = new RelayCommand((obj) =>
+					{
+
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с постами
+		/// </summary>
+		private RelayCommand _openPageNewsPost { get; set; }
+		public RelayCommand OpenPageNewsPost
+		{
+			get
+			{
+				return _openPageNewsPost ??
+					(_openPageNewsPost = new RelayCommand((obj) =>
+					{
+						
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с сообщениями пользователей
+		/// </summary>
+		private RelayCommand _openPageMessageUsers { get; set; }
+		public RelayCommand OpenPageMessageUsers
+		{
+			get
+			{
+				return _openPageMessageUsers ??
+					(_openPageMessageUsers = new RelayCommand((obj) =>
+					{
+
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с учетными записями
+		/// </summary>
+		private RelayCommand _openPageAccount { get; set; }
+		public RelayCommand OpenPageAccount
+		{
+			get
+			{
+				return _openPageAccount ??
+					(_openPageAccount = new RelayCommand((obj) =>
+					{
+
+					}, (obj) => true));
+			}
 		}
 
 		#endregion

@@ -45,6 +45,7 @@ namespace CompanyNews.Repositories.NewsPosts
 			newsPostExtended.datePublication = newsPost.datePublication;
 			if(newsPost.image != null) { newsPostExtended.image = newsPost.image; }
 			if (newsPost.message != null) { newsPostExtended.message = newsPost.message; }
+			newsPostExtended.isArchived = newsPost.isArchived;
 
 			return newsPostExtended;
 		}
@@ -64,6 +65,7 @@ namespace CompanyNews.Repositories.NewsPosts
 			newsPost.datePublication = newsPostExtended.datePublication;
 			if (newsPostExtended.image != null) { newsPost.image = newsPostExtended.image; }
 			if (newsPostExtended.message != null) { newsPost.message = newsPostExtended.message; }
+			newsPost.isArchived = newsPostExtended.isArchived;
 
 			return newsPost;
 		}

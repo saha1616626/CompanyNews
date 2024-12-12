@@ -20,6 +20,7 @@ namespace CompanyNews.Data.Configuration
 			builder.Property(messageUser => messageUser.accountId).HasColumnName("accountId");
 			builder.Property(messageUser => messageUser.message).HasColumnName("message").HasMaxLength(1000);
 			builder.Property(messageUser => messageUser.status).HasColumnName("status").HasMaxLength(50);
+			builder.Property(messageUser => messageUser.dateModeration).HasColumnName("dateModeration").IsRequired(false);
 			builder.Property(messageUser => messageUser.rejectionReason).HasColumnName("rejectionReason").HasMaxLength(1000).IsRequired(false);
 		}
 	}

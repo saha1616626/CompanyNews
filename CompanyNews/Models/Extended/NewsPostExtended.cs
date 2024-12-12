@@ -20,6 +20,11 @@ namespace CompanyNews.Models.Extended
 		public DateTime datePublication { get; set; }
 
 		/// <summary>
+		/// Пост в архиве?
+		/// </summary>
+		public bool isArchived { get; set; }
+
+		/// <summary>
 		/// Фото к посту
 		/// </summary>
 		public byte[]? image { get; set; }

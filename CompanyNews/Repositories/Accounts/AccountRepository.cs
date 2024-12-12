@@ -57,6 +57,7 @@ namespace CompanyNews.Repositories.Accounts
 			accountExtended.phoneNumber = account.phoneNumber;
 			accountExtended.name = account.name;
 			accountExtended.surname = account.surname;
+			if (account.profileDescription != null) { accountExtended.profileDescription = account.profileDescription; }
 			if (account.image != null) { accountExtended.image = account.image; }
 			if (account.patronymic != null) { accountExtended.patronymic = account.patronymic; }
 			accountExtended.isProfileBlocked = account.isProfileBlocked;
@@ -84,6 +85,7 @@ namespace CompanyNews.Repositories.Accounts
 			account.phoneNumber = accountExtended.phoneNumber;
 			account.name = accountExtended.name;
 			account.surname = accountExtended.surname;
+			if (accountExtended.profileDescription != null) { account.profileDescription = accountExtended.profileDescription; }
 			if (accountExtended.image != null) { account.image = accountExtended.image; }
 			if (accountExtended.patronymic != null) { account.patronymic = accountExtended.patronymic; }
 			account.isProfileBlocked = accountExtended.isProfileBlocked;

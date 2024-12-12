@@ -34,14 +34,19 @@ namespace CompanyNews.Models
 		public string message { get; set; }
 
         /// <summary>
-        /// Статус модерации сообщения (Модерация, Одобрено и Отклонено)
+        /// Статус модерации сообщения (На проверке и одобрено)
         /// </summary>
         public string status { get; set; }
 
-        /// <summary>
-        /// Причина отклонения прохождения модерации
-        /// </summary>
-        public string? rejectionReason { get; set; }
+		/// <summary>
+		/// Дата и время модерации
+		/// </summary>
+		public DateTime? dateModeration { get; set; }
+
+		/// <summary>
+		/// Причина отклонения прохождения модерации
+		/// </summary>
+		public string? rejectionReason { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с постом

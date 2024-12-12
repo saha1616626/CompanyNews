@@ -46,6 +46,11 @@ namespace CompanyNews.Models.Extended
 		public string? patronymic { get; set; }
 
 		/// <summary>
+		/// Описание профиля
+		/// </summary>
+		public string? profileDescription { get; set; }
+
+		/// <summary>
 		/// Фото человека
 		/// </summary>
 		public byte[]? image { get; set; }

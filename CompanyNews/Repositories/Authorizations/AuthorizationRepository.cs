@@ -44,6 +44,10 @@ namespace CompanyNews.Repositories.Authorizations
 			userLoginStatus.isUserLoggedIn = false;
 			userLoginStatus.accountId = null;
 			userLoginStatus.accountRole = null;
+			userLoginStatus.isProfileBlocked = null;
+			userLoginStatus.reasonBlockingAccount = null;
+			userLoginStatus.isCanLeaveComments = null;
+			userLoginStatus.reasonBlockingMessages = null;
 
 			// Перезапись данных в JSON
 			try
@@ -74,6 +78,10 @@ namespace CompanyNews.Repositories.Authorizations
 				userLoginStatus.isUserLoggedIn = true;
 				userLoginStatus.accountId = account.id;
 				userLoginStatus.accountRole = account.accountRole;
+				userLoginStatus.isProfileBlocked = account.isProfileBlocked;
+				if(account.reasonBlockingAccount != null) { userLoginStatus.reasonBlockingAccount = account.reasonBlockingAccount; } 
+				userLoginStatus.isCanLeaveComments = account.isCanLeaveComments;
+				if (account.reasonBlockingMessages != null) { userLoginStatus.reasonBlockingMessages = account.reasonBlockingMessages; }
 
 				try
 				{

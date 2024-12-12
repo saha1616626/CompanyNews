@@ -19,6 +19,7 @@ namespace CompanyNews.Data.Configuration
 			builder.Property(newsPost => newsPost.datePublication).HasColumnName("datePublication");
 			builder.Property(newsPost => newsPost.image).HasColumnName("image").IsRequired(false);
 			builder.Property(newsPost => newsPost.message).HasColumnName("message").IsRequired(false);
+			builder.Property(NewsPost => NewsPost.isArchived).HasColumnName("isArchived");
 
 			builder.HasMany(newsPost => newsPost.messageUsers)
 				.WithOne(messageUser => messageUser.newsPost)

@@ -44,7 +44,8 @@ namespace CompanyNews.Repositories.MessageUsers
 			messageUserExtendet.Account = account;
 			messageUserExtendet.message = messageUser.message;
 			messageUserExtendet.status = messageUser.status;
-			if(messageUser.rejectionReason != null) { messageUserExtendet.rejectionReason = messageUser.rejectionReason; }
+			if (messageUser.dateModeration != null) { messageUserExtendet.dateModeration = messageUser.dateModeration; }
+			if (messageUser.rejectionReason != null) { messageUserExtendet.rejectionReason = messageUser.rejectionReason; }
 
 			return messageUserExtendet;
 		}
@@ -65,6 +66,7 @@ namespace CompanyNews.Repositories.MessageUsers
 			messageUser.accountId = messageUserExtendet.accountId;
 			messageUser.message = messageUserExtendet.message;
 			messageUser.status = messageUserExtendet.status;
+			if (messageUserExtendet.dateModeration != null) { messageUser.dateModeration = messageUserExtendet.dateModeration; }
 			if (messageUserExtendet.rejectionReason != null) { messageUser.rejectionReason = messageUserExtendet.rejectionReason; }
 			
 			return messageUser;

@@ -26,6 +26,24 @@ namespace CompanyNews.Models.Authorization
 		/// </summary>
 		public string? accountRole { get; set; }
 
+		/// <summary>
+		/// Заблокирован профиль у пользователя?
+		/// </summary>
+		public bool? isProfileBlocked { get; set; }
 
+		/// <summary>
+		/// Причина блокировки аккаунта
+		/// </summary>
+		public string? reasonBlockingAccount { get; set; }
+
+		/// <summary>
+		/// Можно оставлять комментарии пользователю?
+		/// </summary>
+		public bool? isCanLeaveComments { get; set; }
+
+		/// <summary>
+		/// Причина запрета комментирования постов
+		/// </summary>
+		public string? reasonBlockingMessages { get; set; }
 	}
 }

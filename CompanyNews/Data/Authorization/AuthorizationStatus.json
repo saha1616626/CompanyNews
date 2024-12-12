@@ -1,1 +1,9 @@
-{"isUserLoggedIn":true,"accountId":5,"accountRole":"Администратор"}
+{
+  "isUserLoggedIn": false,
+  "accountId": null,
+  "accountRole": null,
+  "isProfileBlocked": null,
+  "reasonBlockingAccount": null,
+  "isCanLeaveComments": null,
+  "reasonBlockingMessages":  null
+}

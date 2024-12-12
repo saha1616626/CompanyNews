@@ -67,7 +67,8 @@ namespace CompanyNews.Repositories.NewsCategories
 
 			// Получение кол-ва пользователей, которые подписанны на данную категорию
 			categoryPostsExtended.numberSubscribers = _context.AvailableCategoriesUsers.Count(category => category.newsCategoryId == category.id);
-		
+			categoryPostsExtended.isArchived = newsCategory.isArchived;
+
 			return categoryPostsExtended;
 		}
 

@@ -17,6 +17,7 @@ namespace CompanyNews.Data.Configuration
 			builder.ToTable("NewsCategory");
 			builder.Property(newsCategory => newsCategory.name).HasColumnName("name").HasMaxLength(100);
 			builder.Property(newsCategory => newsCategory.description).HasColumnName("description").HasMaxLength(1000).IsRequired(false);
+			builder.Property(newsCategory => newsCategory.isArchived).HasColumnName("isArchived");
 
 			builder.HasMany(newsCategory => newsCategory.availableCategoriesUsers)
 				.WithOne(availableCategoriesUser => availableCategoriesUser.newsCategory)
