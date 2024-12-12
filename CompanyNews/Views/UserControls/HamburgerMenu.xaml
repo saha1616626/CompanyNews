@@ -1,0 +1,125 @@
+﻿<UserControl x:Class="CompanyNews.Views.UserControls.HamburgerMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CompanyNews.Views.UserControls"
+             xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.UserControls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!--связываем View и ViewModel-->
+        <ViewModel:HamburgerMenuViewModel x:Key="HamburgerMenuViewModel"/>
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource HamburgerMenuViewModel}">
+
+        <!--стили-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="\Dictionary\HamburgerMenu.xaml"/>
+                    <ResourceDictionary Source="\Dictionary\Button.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Гамбургер кнопка -->
+        <Button x:Name="HamburgerButton" Grid.Column="0" Background="Transparent" BorderThickness="0" 
+            Command="{Binding HamburgerButton}" Visibility="{Binding IsMenuButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Top" Margin="10,13,0,10" Style="{StaticResource CustomButtonStyle}">
+            <materialDesign:PackIcon Kind="Menu" Width="24" Height="24" Foreground="Black"/>
+        </Button>
+
+        <!-- Основное содержимое -->
+        <Grid Grid.Column="1">
+            <ContentPresenter />
+        </Grid>
+
+        <!-- Боковое меню -->
+        <Grid x:Name="SideMenu" Grid.Column="0" Background="SlateGray" Margin="0,0,16,0"  
+         Height="1500" Width="{Binding SideMenuWidth}" 
+         Visibility="{Binding IsSideMenuVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <!-- Элементы бокового меню -->
+
+            <!--полоска-->
+            <Border 
+                Grid.Column="0"
+                BorderThickness="1,0,0,0" 
+                BorderBrush="Black"
+                Margin="199,0,0,0" />
+
+            <!--кнопка закрытия гамбургер меню-->
+            <Button Background="Transparent" BorderThickness="0" Margin="0,10,5,0"
+            VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding HamburgerButton}">
+                <materialDesign:PackIcon Kind="Backburger" Width="24" Height="24"/>
+            </Button>
+
+            <!-- Элементы бокового меню -->
+            <StackPanel Margin="0,30,0,0">
+                
+                <StackPanel VerticalAlignment="Top" Margin="0,0,0,0" 
+                            Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    
+                    <TextBlock Text="Общее" Margin="10,20,0,0" FontSize="14" FontWeight="DemiBold" Opacity="0.5"/>
+
+                    <Button Content="Рабочие отделы" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"
+                            />
+
+                    <Button Content="Категории постов" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenOrdersPageButton}" 
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
+                    
+                </StackPanel>
+
+                <Border Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Grid.Column="0"
+                    BorderThickness="0,1,0,0" 
+                    BorderBrush="Black"
+                    Margin="10,10,10,0" Opacity="0.5" />
+
+                <StackPanel>
+                    
+                    <TextBlock Text="Модерация" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
+
+                    <Button Content="Посты" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"/>
+
+                    <Button Content="Сообщения" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenUsersPageButton}" 
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
+                    
+                </StackPanel>
+
+                <Border 
+                    Grid.Column="0"
+                    BorderThickness="0,1,0,0" 
+                    BorderBrush="Black"
+                    Margin="10,10,10,0" Opacity="0.5" />
+
+                <StackPanel Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    
+                    <TextBlock Text="Управление аккаунтами" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
+
+                    <Button Content="Пользователи" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenUsersPageButton}" 
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,10" Padding="20,0,0,0"/>
+                    
+                </StackPanel>
+
+                <Border Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Grid.Column="0"
+                    BorderThickness="0,1,0,0" 
+                    BorderBrush="Black"
+                    Margin="10,10,10,0" Opacity="0.5" />
+
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+
+</UserControl>

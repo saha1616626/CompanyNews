@@ -23,5 +23,18 @@ namespace CompanyNews.Helpers.Event
 			// Проверяем, есть ли подписчики на событие и вызываем их
 			closeHamburgerMenu?.Invoke(null, new EventAggregator());
 		}
+
+		/// <summary>
+		/// Подписка на событие - возврат на предшествующую страницу при выходе из личного кабинета.
+		/// </summary>
+		public static event EventHandler<EventAggregator> backPreviousPage;
+		/// <summary>
+		/// Вызов метода для возврата на предшествующую страницу. 
+		/// </summary>
+		public static void BackPreviousPage()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			backPreviousPage?.Invoke(null, new EventAggregator());
+		}
 	}
 }

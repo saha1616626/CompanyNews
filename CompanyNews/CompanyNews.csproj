@@ -15,8 +15,6 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\ClientApp\" />
-    <Folder Include="ViewModels\UserControl\" />
-    <Folder Include="Views\UserControls\" />
   </ItemGroup>
 
   <ItemGroup>

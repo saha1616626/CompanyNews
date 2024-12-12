@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp"
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      xmlns:control="clr-namespace:CompanyNews.Views.UserControls"
       mc:Ignorable="d" 
       MinHeight="700" Width="Auto"
       Title="AdminHomePage">
@@ -36,6 +37,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
         <!--основная разметка-->
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -48,13 +50,20 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         <!--фон-->
         <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Background="#FF80A2E8"/>
 
-        <!--Название сервиса-->
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <TextBlock Text="Новости ТРАЙТЭК" FontSize="24" Foreground="Black"
-   VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+        <!--гамбургер меню-->
+        <Grid Grid.Column="0" Grid.RowSpan="2" Panel.ZIndex="1">
+
+            <control:HamburgerMenu x:Name="HamburgerMenuControl"/>
+
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,30,0" HorizontalAlignment="Right">
+        <!--Название сервиса-->
+        <Grid Grid.Row="0" Grid.Column="1" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+            <TextBlock Text="Новости ТРАЙТЭК" FontSize="24" Foreground="Black"
+   VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="10,10,0,10"/>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="2" Margin="0,0,30,0" HorizontalAlignment="Right">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -64,8 +73,8 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
             <!--Профиль пользователя-->
             <Button Grid.Row="0" Grid.Column="0" MouseLeftButtonDown="Window_MouseLeftButtonDown"
-Margin="0,5,5,5" Height="40" Padding="20,0,20,0"
-Background="Transparent" BorderBrush="Transparent"
+Margin="0,5,0,5" Height="40" Padding="0,0,0,0" Command="{Binding OpenPersonalAccount}"
+Background="Transparent" BorderBrush="Transparent" Visibility="{Binding IsAccountIcon, Converter={StaticResource BooleanToVisibilityConverter}}"
 VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
@@ -104,7 +113,7 @@ VerticalAlignment="Center" HorizontalAlignment="Center">
 
             <!--Кнопка выхода-->
             <Button Grid.Row="0" Grid.Column="1" Height="40" Padding="0,-5,0,-5" Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent" 
-                    VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopup}">
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopup}" Visibility="{Binding IsGoBack, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
@@ -141,6 +150,47 @@ VerticalAlignment="Center" HorizontalAlignment="Center">
                 </StackPanel>
             </Button>
 
+            <!--Кнопка вернуться назад-->
+            <Button Grid.Row="0" Grid.Column="0" MouseLeftButtonDown="Window_MouseLeftButtonDown" Command="{Binding OpenPreviousPage}"
+Margin="0,5,0,5" Height="40" Padding="20,0,20,0" Visibility="{Binding IsGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Background="Transparent" BorderBrush="Transparent" 
+                    VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Regular"/>
+                        <Setter Property="Opacity" Value="1"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="White"/>
+
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="ArrowLeftCircle" Width="30" Height="30" />
+                    <TextBlock Text="Назад" FontSize="10" FontWeight="Regular" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            
             <!--#endregion-->
 
             <!--#region Popup-->
@@ -149,18 +199,13 @@ VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid x:Name="positionPopup" Grid.RowSpan="8" Grid.ColumnSpan="8" 
 HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <!--Фон для Popup-->
-            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Grid.RowSpan="8" x:Name="DarkBackground" 
-Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
-
             <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=test}" 
             IsOpen="{Binding StartPoupOfOutAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
             VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 
             AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <!--фон-->
-                <Border Background="AliceBlue" 
+                <Border Background="AliceBlue" BorderBrush="Gray" BorderThickness="5"
             Style="{StaticResource OutlineOfPopup}">
                     <!-- Устанавливаем радиус закругления -->
                     <Grid Width="400" Height="250">
@@ -206,8 +251,15 @@ Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
             </Popup>
 
             <!--#endregion-->
-
+            
         </Grid>
 
+        <!--Фон для Popup-->
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Grid.RowSpan="8" x:Name="DarkBackground" 
+Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
+
+        <Frame x:Name="adminHomeFrame" Grid.Row="2" Grid.ColumnSpan="3" NavigationUIVisibility="Hidden"/>
+        
     </Grid>
 </Page>
