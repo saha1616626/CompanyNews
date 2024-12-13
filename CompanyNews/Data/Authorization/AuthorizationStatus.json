@@ -1,9 +1,1 @@
-{
-  "isUserLoggedIn": false,
-  "accountId": null,
-  "accountRole": null,
-  "isProfileBlocked": null,
-  "reasonBlockingAccount": null,
-  "isCanLeaveComments": null,
-  "reasonBlockingMessages":  null
-}
+{"isUserLoggedIn":true,"accountId":2,"accountRole":"Модератор","isProfileBlocked":false,"reasonBlockingAccount":null,"isCanLeaveComments":false,"reasonBlockingMessages":null}

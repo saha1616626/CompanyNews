@@ -24,7 +24,7 @@ namespace CompanyNews.Models
 		/// <summary>
 		/// Навигационное свойство для связи с категориями доступными пользователям
 		/// </summary>
-		public ICollection<AvailableCategoriesUser> availableCategoriesUsers { get; set; }
+		public ICollection<NewsCategoriesWorkDepartment> newsCategoriesWorkDepartments { get; set; }
 
         /// <summary>
         /// Навигационное свойство для связи с постами

@@ -107,7 +107,7 @@ VerticalAlignment="Center" HorizontalAlignment="Center">
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="AccountBox" Width="35" Height="35" />
-                    <TextBlock Text="Александр Березкин" FontSize="16" FontWeight="Regular" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" FontWeight="Regular" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
 

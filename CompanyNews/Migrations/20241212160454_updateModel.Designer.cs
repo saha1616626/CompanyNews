@@ -4,6 +4,7 @@ using CompanyNews.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyNews.Migrations
 {
     [DbContext(typeof(CompanyNewsDbContext))]
-    partial class CompanyNewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241212160454_updateModel")]
+    partial class updateModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +112,31 @@ namespace CompanyNews.Migrations
                     b.ToTable("Account", (string)null);
                 });
 
+            modelBuilder.Entity("CompanyNews.Models.AvailableCategoriesUser", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("accountId")
+                        .HasColumnType("int")
+                        .HasColumnName("accountId");
+
+                    b.Property<int>("newsCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("newsCategoryId");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("accountId");
+
+                    b.HasIndex("newsCategoryId");
+
+                    b.ToTable("AvailableCategoriesUser", (string)null);
+                });
+
             modelBuilder.Entity("CompanyNews.Models.MessageUser", b =>
                 {
                     b.Property<int>("id")
@@ -157,31 +185,6 @@ namespace CompanyNews.Migrations
                     b.HasIndex("newsPostId");
 
                     b.ToTable("MessageUser", (string)null);
-                });
-
-            modelBuilder.Entity("CompanyNews.Models.NewsCategoriesWorkDepartment", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("newsCategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("newsCategoryId");
-
-                    b.Property<int>("workDepartmentId")
-                        .HasColumnType("int")
-                        .HasColumnName("workDepartmentId");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("newsCategoryId");
-
-                    b.HasIndex("workDepartmentId");
-
-                    b.ToTable("NewsCategoriesWorkDepartment", (string)null);
                 });
 
             modelBuilder.Entity("CompanyNews.Models.NewsCategory", b =>
@@ -281,6 +284,25 @@ namespace CompanyNews.Migrations
                     b.Navigation("workDepartment");
                 });
 
+            modelBuilder.Entity("CompanyNews.Models.AvailableCategoriesUser", b =>
+                {
+                    b.HasOne("CompanyNews.Models.Account", "account")
+                        .WithMany("availableCategoriesUsers")
+                        .HasForeignKey("accountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CompanyNews.Models.NewsCategory", "newsCategory")
+                        .WithMany("availableCategoriesUsers")
+                        .HasForeignKey("newsCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("account");
+
+                    b.Navigation("newsCategory");
+                });
+
             modelBuilder.Entity("CompanyNews.Models.MessageUser", b =>
                 {
                     b.HasOne("CompanyNews.Models.Account", "account")
@@ -300,25 +322,6 @@ namespace CompanyNews.Migrations
                     b.Navigation("newsPost");
                 });
 
-            modelBuilder.Entity("CompanyNews.Models.NewsCategoriesWorkDepartment", b =>
-                {
-                    b.HasOne("CompanyNews.Models.NewsCategory", "newsCategory")
-                        .WithMany("newsCategoriesWorkDepartments")
-                        .HasForeignKey("newsCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CompanyNews.Models.WorkDepartment", "workDepartment")
-                        .WithMany("newsCategoriesWorkDepartments")
-                        .HasForeignKey("workDepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("newsCategory");
-
-                    b.Navigation("workDepartment");
-                });
-
             modelBuilder.Entity("CompanyNews.Models.NewsPost", b =>
                 {
                     b.HasOne("CompanyNews.Models.NewsCategory", "newsCategory")
@@ -332,12 +335,14 @@ namespace CompanyNews.Migrations
 
             modelBuilder.Entity("CompanyNews.Models.Account", b =>
                 {
+                    b.Navigation("availableCategoriesUsers");
+
                     b.Navigation("messageUsers");
                 });
 
             modelBuilder.Entity("CompanyNews.Models.NewsCategory", b =>
                 {
-                    b.Navigation("newsCategoriesWorkDepartments");
+                    b.Navigation("availableCategoriesUsers");
 
                     b.Navigation("newsPosts");
                 });
@@ -350,8 +355,6 @@ namespace CompanyNews.Migrations
             modelBuilder.Entity("CompanyNews.Models.WorkDepartment", b =>
                 {
                     b.Navigation("accounts");
-
-                    b.Navigation("newsCategoriesWorkDepartments");
                 });
 #pragma warning restore 612, 618
         }

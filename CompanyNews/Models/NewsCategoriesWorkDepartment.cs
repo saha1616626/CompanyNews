@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace CompanyNews.Models
 {
     /// <summary>
-    /// Доступные категории новостей для пользователя
+    /// Доступные категории новостей для рабочего отдела
     /// </summary>
-    public class AvailableCategoriesUser
+    public class NewsCategoriesWorkDepartment
     {
         public int id { get; set; }
-        public int accountId { get; set; }
+        public int workDepartmentId { get; set; }
         public int newsCategoryId { get; set; }
 
         /// <summary>
@@ -21,8 +21,8 @@ namespace CompanyNews.Models
         public NewsCategory newsCategory {  get; set; }
 
         /// <summary>
-        /// Навигационное свойство для связи с аккаунтом, который привязан к категории
+        /// Навигационное свойство для связи с рабочим отделом, которое привязано к категории
         /// </summary>
-        public Account account { get; set; }
+        public WorkDepartment workDepartment { get; set; }
     }
 }

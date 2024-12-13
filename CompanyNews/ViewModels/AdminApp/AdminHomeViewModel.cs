@@ -1,5 +1,7 @@
 ﻿using CompanyNews.Helpers;
 using CompanyNews.Helpers.Event;
+using CompanyNews.Models;
+using CompanyNews.Models.Authorization;
 using CompanyNews.Services;
 using CompanyNews.Views.AdminApp;
 using System;
@@ -16,7 +18,7 @@ using System.Windows.Data;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
-    public class AdminHomeViewModel : INotifyPropertyChanged
+	public class AdminHomeViewModel : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
@@ -34,10 +36,40 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Первоначальная настройка страницы
 		/// </summary>
-		public void SettingUpPage()
+		public async void SettingUpPage()
 		{
 			DarkBackground = Visibility.Collapsed; // Фон для Popup скрыт
 			IsAccountIcon = true; // Кнопка перехода в ЛК отображается
+
+			// Выводим имя и фамилию пользователя 
+			Account account = await _authorizationService.GetUserAccount();
+			if (account != null)
+			{
+				UserName = $"{account.name} {account.surname}";
+			}
+		}
+
+		/// <summary>
+		/// Запуск начальной страницы после запуска меню
+		/// </summary>
+		public async Task StartingHomePage()
+		{
+			// Запуск начальной страницы в зависимости от роли пользователя
+			// Получаем роль
+			UserLoginStatus userLoginStatus = await _authorizationService.GetUserStatusInSystem();
+			if (userLoginStatus != null)
+			{
+				if (userLoginStatus.accountRole == "Администратор")
+				{
+					LaunchFrame.NavigationService.Navigate(accountPage = new AccountPage());
+					lastCopy = accountPage;
+				}
+				else if (userLoginStatus.accountRole == "Модератор")
+				{
+					LaunchFrame.NavigationService.Navigate(newsPostPage = new NewsPostPage());
+					lastCopy = newsPostPage;
+				}
+			}
 		}
 
 		/// <summary>
@@ -55,7 +87,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						IsGoBack = true; // Отображаем кнопку возврата назад
 						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем "гамбургер" меню
 						LaunchFrame.Navigate(personalAccountAdmin = new PersonalAccountAdmin());
-						
+
 					}, (obj) => true));
 			}
 		}
@@ -102,7 +134,12 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Работа с учетными записями
 		/// </summary>
-		AccountPage accountPage { get; set; } 
+		AccountPage accountPage { get; set; }
+
+		/// <summary>
+		/// Работа с постами
+		/// </summary>
+		NewsPostPage newsPostPage {  get; set; } 
 
 		/// <summary>
 		/// Очистка памяти
@@ -178,7 +215,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			get
 			{
 				return _logOutYourAccount ??
-					(_logOutYourAccount = new RelayCommand(async(obj) =>
+					(_logOutYourAccount = new RelayCommand(async (obj) =>
 					{
 						// закрываем popup
 						StartPoupOfOutAccount = false;
@@ -235,6 +272,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			if (openPage != null)
 			{
 				LaunchFrame = openPage;
+				await StartingHomePage(); // Запуск начальной страницы
 			}
 		}
 
@@ -248,15 +286,14 @@ namespace CompanyNews.ViewModels.AdminApp
 			set
 			{
 				_launchFrame = value;
-				LaunchFrame.NavigationService.Navigate(accountPage = new AccountPage());
-				lastCopy = accountPage;
+				OnPropertyChanged(nameof(LaunchFrame));
 			}
 		}
 
 		/// <summary>
 		/// Видимость кнопки для перехода в личный кабинет
 		/// </summary>
-		public bool _isAccountIcon {  get; set; }
+		public bool _isAccountIcon { get; set; }
 		public bool IsAccountIcon
 		{
 			get { return _isAccountIcon; }
@@ -270,15 +307,22 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Видимость кнопки вернуться назад
 		/// </summary>
-		private bool _isGoBack {  get; set; }
+		private bool _isGoBack { get; set; }
 		public bool IsGoBack
 		{
 			get { return _isGoBack; }
 			set
 			{
 				_isGoBack = value;
-				OnPropertyChanged(nameof(IsGoBack));	
+				OnPropertyChanged(nameof(IsGoBack));
 			}
+		}
+
+		private string _userName { get; set; }
+		public string UserName
+		{
+			get { return _userName; }
+			set { _userName = value; OnPropertyChanged(nameof(UserName)); }
 		}
 
 		#endregion

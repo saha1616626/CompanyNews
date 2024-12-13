@@ -2,7 +2,7 @@
 using CompanyNews.Helpers.Validators;
 using CompanyNews.Repositories.Accounts;
 using CompanyNews.Repositories.Authorizations;
-using CompanyNews.Repositories.AvailableCategoriesUsers;
+using CompanyNews.Repositories.NewsCategoriesWorkDepartments;
 using CompanyNews.Repositories.MessageUsers;
 using CompanyNews.Repositories.NewsCategories;
 using CompanyNews.Repositories.NewsCategory;
@@ -48,9 +48,9 @@ namespace CompanyNews.Services
 			services.AddScoped<NewsCategoryService>();
 			services.AddScoped<NewsCategoryViewModel>();
 
-			services.AddScoped<IAvailableCategoriesUserRepository, AvailableCategoriesUserRepository>();
-			services.AddScoped<AvailableCategoriesUserService>();
-			services.AddScoped<AvailableCategoriesUserViewModel>();
+			services.AddScoped<INewsCategoriesWorkDepartmentRepository, NewsCategoriesWorkDepartmentRepository>();
+			services.AddScoped<NewsCategoriesWorkDepartmentService>();
+			services.AddScoped<NewsCategoriesWorkDepartmentViewModel>();
 
 			services.AddScoped<INewsPostRepository, NewsPostRepository>();
 			services.AddScoped<NewsPostService>();

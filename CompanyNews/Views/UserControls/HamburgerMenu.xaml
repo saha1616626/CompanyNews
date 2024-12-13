@@ -63,59 +63,49 @@
 
             <!-- Элементы бокового меню -->
             <StackPanel Margin="0,30,0,0">
-                
+
                 <StackPanel VerticalAlignment="Top" Margin="0,0,0,0" 
-                            Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    
-                    <TextBlock Text="Общее" Margin="10,20,0,0" FontSize="14" FontWeight="DemiBold" Opacity="0.5"/>
+                            Visibility="{Binding IsAdministrativeMenuEnabled, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <TextBlock Text="Администратор" Margin="10,20,0,0" FontSize="14" FontWeight="DemiBold" Opacity="0.5"/>
+
+                    <Button Content="Пользователи" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenUsersPageButton}" 
+        HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"/>
 
                     <Button Content="Рабочие отделы" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
-                            HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"
+                            HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,0" Padding="20,0,0,0"
                             />
 
                     <Button Content="Категории постов" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenOrdersPageButton}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
-                    
-                </StackPanel>
 
-                <Border Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    <Border
                     Grid.Column="0"
                     BorderThickness="0,1,0,0" 
                     BorderBrush="Black"
                     Margin="10,10,10,0" Opacity="0.5" />
 
-                <StackPanel>
-                    
-                    <TextBlock Text="Модерация" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
+                </StackPanel>
+
+                <StackPanel  Visibility="{Binding IsModerationMenuEnabled, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <TextBlock Text="Модератор" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
 
                     <Button Content="Посты" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"/>
 
                     <Button Content="Сообщения" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenUsersPageButton}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
-                    
-                </StackPanel>
 
-                <Border 
+                    <Border 
                     Grid.Column="0"
                     BorderThickness="0,1,0,0" 
                     BorderBrush="Black"
                     Margin="10,10,10,0" Opacity="0.5" />
 
-                <StackPanel Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    
-                    <TextBlock Text="Управление аккаунтами" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
-
-                    <Button Content="Пользователи" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenUsersPageButton}" 
-                            HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,10" Padding="20,0,0,0"/>
-                    
                 </StackPanel>
 
-                <Border Visibility="{Binding IsUserSettings, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Grid.Column="0"
-                    BorderThickness="0,1,0,0" 
-                    BorderBrush="Black"
-                    Margin="10,10,10,0" Opacity="0.5" />
+
 
             </StackPanel>
 

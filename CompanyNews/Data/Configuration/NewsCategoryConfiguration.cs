@@ -19,7 +19,7 @@ namespace CompanyNews.Data.Configuration
 			builder.Property(newsCategory => newsCategory.description).HasColumnName("description").HasMaxLength(1000).IsRequired(false);
 			builder.Property(newsCategory => newsCategory.isArchived).HasColumnName("isArchived");
 
-			builder.HasMany(newsCategory => newsCategory.availableCategoriesUsers)
+			builder.HasMany(newsCategory => newsCategory.newsCategoriesWorkDepartments)
 				.WithOne(availableCategoriesUser => availableCategoriesUser.newsCategory)
 				.HasForeignKey(availableCategoriesUser => availableCategoriesUser.newsCategoryId)
 				.OnDelete(DeleteBehavior.Cascade);

@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 namespace CompanyNews.Models.Extended
 {
 	/// <summary>
-	/// Класс содержит инормацию о категории и о пользовательской категории
+	/// Класс содержит идентификатор доступной категории у рабочего отдела
 	/// </summary>
 	public class NewsCategoryExtended : NewsCategory
 	{
-		public int availableCategoriesUserExtendedId { get; set; }
+		/// <summary>
+		/// Идентификатор категории для определенного рабочего отдела (NewsCategoriesWorkDepartment)
+		/// </summary>
+		public int NewsCategoriesWorkDepartmentExtendedId { get; set; }
 	}
 }

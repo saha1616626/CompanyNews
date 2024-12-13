@@ -24,6 +24,11 @@ namespace CompanyNews.Data.Configuration
 				.WithOne(account => account.workDepartment) // Каждый аккаунт имеет одну должность
 				.HasForeignKey(account => account.workDepartmentId) // Внешний ключ для связи
 				.OnDelete(DeleteBehavior.SetNull); // Удаление должности заменит у аккаунта id на Null
+
+			builder.HasMany(workDepartment => workDepartment.newsCategoriesWorkDepartments)
+				.WithOne(NewsCategoriesWorkDepartment => NewsCategoriesWorkDepartment.workDepartment)
+				.HasForeignKey(NewsCategoriesWorkDepartment => NewsCategoriesWorkDepartment.workDepartmentId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }

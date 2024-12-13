@@ -75,11 +75,6 @@ namespace CompanyNews.Models
         public WorkDepartment workDepartment { get; set; }
 
         /// <summary>
-        /// Навигационное свойство для связи с привязанными категориями у пользователя
-        /// </summary>
-        public ICollection<AvailableCategoriesUser> availableCategoriesUsers { get; set; }
-
-        /// <summary>
         /// Навигационное свойство для связи с отправленными сообщениями пользователей
         /// </summary>
         public ICollection<MessageUser> messageUsers { get; set; }

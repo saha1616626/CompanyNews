@@ -157,13 +157,23 @@ namespace CompanyNews.ViewModels.UserControls
 		#region Features
 
 		/// <summary>
-		/// Свойство видимости кнопки "пользователи"
+		/// Свойство видимости кнопок для Администратора
 		/// </summary>
-		private bool _isUserSettings { get; set; }
-		public bool IsUserSettings
+		private bool _isAdministrativeMenuEnabled { get; set; }
+		public bool IsAdministrativeMenuEnabled
 		{
-			get { return _isUserSettings; }
-			set { _isUserSettings = value; OnPropertyChanged(nameof(IsUserSettings)); }
+			get { return _isAdministrativeMenuEnabled; }
+			set { _isAdministrativeMenuEnabled = value; OnPropertyChanged(nameof(IsAdministrativeMenuEnabled)); }
+		}
+
+		/// <summary>
+		/// Свойство видимости кнопок для Модератора
+		/// </summary>
+		private bool _isModerationMenuEnabled { get; set; }
+		public bool IsModerationMenuEnabled
+		{
+			get { return _isModerationMenuEnabled; }
+			set { _isModerationMenuEnabled = value; OnPropertyChanged(nameof(IsModerationMenuEnabled)); }
 		}
 
 		/// <summary>
@@ -212,13 +222,15 @@ namespace CompanyNews.ViewModels.UserControls
 			{
 				if (userLoginStatus.accountRole == "Администратор")
 				{
-					// Отображаем пункт меню с пользователями
-					IsUserSettings = true;
+					// Отображаем пункты для Администратора и скрываем для Модератора
+					IsAdministrativeMenuEnabled = true;
+					IsModerationMenuEnabled = false;
 				}
-				else if (userLoginStatus.accountRole == "Редактор")
+				else if (userLoginStatus.accountRole == "Модератор")
 				{
-					// Скрываем пункт меню с пользователями
-					IsUserSettings = false;
+					// Отображаем пункты для Модератора и скрываем для Администратора
+					IsModerationMenuEnabled = true;
+					IsAdministrativeMenuEnabled = false;
 				}
 			}
 		}

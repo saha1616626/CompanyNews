@@ -98,7 +98,7 @@ HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Ma
 
         </Grid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,50">
+        <Grid Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,50" ToolTip="Количество читателей сервиса.">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

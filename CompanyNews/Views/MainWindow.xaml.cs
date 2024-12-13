@@ -70,7 +70,7 @@ namespace CompanyNews.Views
 			if (userLoginStatus.accountRole != null)
 			{
 				// Вход в учетную запись
-				if (userLoginStatus.accountRole == "Администратор" || userLoginStatus.accountRole == "Редактор")
+				if (userLoginStatus.accountRole == "Администратор" || userLoginStatus.accountRole == "Модератор")
 				{
 					mainFrame.Navigate(adminHomePage = new AdminHomePage());
 				}

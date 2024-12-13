@@ -1,4 +1,4 @@
-﻿<Page x:Class="CompanyNews.Views.AdminApp.AccountPage"
+﻿<Page x:Class="CompanyNews.Views.AdminApp.NewsPostPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,13 +9,16 @@
       mc:Ignorable="d" 
       MouseLeftButtonDown="Window_MouseLeftButtonDown"
       MinHeight="700" Width="Auto"
-      Title="AccountPage">
+      Title="NewsPostPage">
 
     <Grid>
+        
+        <Grid>
 
-        <TextBlock Grid.Row="0" Text="Страница для работы с учетными записями в разработке..." FontSize="24" Foreground="Black"
+            <TextBlock Grid.Row="0" Text="Страница для работы с постами в разработке..." FontSize="24" Foreground="Black"
 VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+
+        </Grid>
         
     </Grid>
-    
 </Page>

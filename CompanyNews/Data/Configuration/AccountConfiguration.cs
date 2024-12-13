@@ -31,11 +31,6 @@ namespace CompanyNews.Data.Configuration
 			builder.Property(account => account.isCanLeaveComments).HasColumnName("isCanLeaveComments");
 			builder.Property(account => account.reasonBlockingMessages).HasColumnName("reasonBlockingMessages").HasMaxLength(1000).IsRequired(false);
 
-			builder.HasMany(account => account.availableCategoriesUsers)
-				.WithOne(availableCategoriesUser => availableCategoriesUser.account)
-				.HasForeignKey(availableCategoriesUser => availableCategoriesUser.accountId)
-				.OnDelete(DeleteBehavior.Cascade);
-
 			builder.HasMany(account => account.messageUsers)
 				.WithOne(messageUser => messageUser.account)
 				.HasForeignKey(messageUser => messageUser.accountId)

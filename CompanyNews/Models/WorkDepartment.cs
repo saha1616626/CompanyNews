@@ -21,5 +21,10 @@ namespace CompanyNews.Models
         /// Навигационное свойство для связи с аккаунтом
         /// </summary>
         public ICollection<Account> accounts { get; set; }
-    }
+
+		/// <summary>
+		/// Навигационное свойство для связи с привязанными категориями у рабочего отдела
+		/// </summary>
+		public ICollection<NewsCategoriesWorkDepartment> newsCategoriesWorkDepartments { get; set; }
+	}
 }

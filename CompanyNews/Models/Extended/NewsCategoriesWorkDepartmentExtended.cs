@@ -11,18 +11,16 @@ namespace CompanyNews.Models.Extended
 	/// Расширенная модель доступных категорий новостей для пользователя. Идентификаторы в базовой 
 	/// модели заменены на соответствующие значения
 	/// </summary>
-	public class AvailableCategoriesUserExtended
+	public class NewsCategoriesWorkDepartmentExtended
 	{
 
-		public int id { get; set; }
-
 		/// <summary>
-		/// Учетная запись пользователя
+		/// Рабочий депарамент
 		/// </summary>
-		public Account account { get; set; }
+		public WorkDepartment workDepartment { get; set; }
 
 		/// <summary>
-		/// Список категорий у пользователя
+		/// Список категорий у рабочего отдела
 		/// </summary>
 		public IEnumerable<NewsCategoryExtended>? categories { get; set; }
 	}

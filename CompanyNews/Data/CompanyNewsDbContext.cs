@@ -12,18 +12,18 @@ namespace CompanyNews.Data
     public class CompanyNewsDbContext : DbContext
     {
 		public CompanyNewsDbContext(DbContextOptions<CompanyNewsDbContext> options)
-        : base(options)
+		: base(options)
 		{
 			// Применяем все миграции, если они не были применены.
-			//Database.Migrate();
+			//Database.EnsureCreated();
 
-			Database.EnsureCreatedAsync();
+			Database.Migrate();
 		}
 
-        public DbSet<Account> Accounts { get; set; }
+		public DbSet<Account> Accounts { get; set; }
 		public DbSet<WorkDepartment> WorkDepartments { get; set; }
 		public DbSet<NewsCategory> NewsCategories { get; set; }
-		public DbSet<AvailableCategoriesUser> AvailableCategoriesUsers { get; set; }
+		public DbSet<NewsCategoriesWorkDepartment> NewsCategoriesWorkDepartments { get; set; }
 		public DbSet<NewsPost> NewsPosts { get; set; }
 		public DbSet<MessageUser> MessageUsers { get; set; }
 
@@ -32,7 +32,7 @@ namespace CompanyNews.Data
 			modelBuilder.ApplyConfiguration(new AccountConfiguration());
 			modelBuilder.ApplyConfiguration(new WorkDepartmentConfiguration());
 			modelBuilder.ApplyConfiguration(new NewsCategoryConfiguration());
-			modelBuilder.ApplyConfiguration(new AvailableCategoriesUserConfiguration());
+			modelBuilder.ApplyConfiguration(new NewsCategoriesWorkDepartmentConfiguration());
 			modelBuilder.ApplyConfiguration(new NewsPostConfiguration());
 			modelBuilder.ApplyConfiguration(new MessageUserConfiguration());
 
