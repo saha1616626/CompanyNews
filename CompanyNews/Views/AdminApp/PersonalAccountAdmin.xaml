@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp"
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      MouseLeftButtonDown="Window_MouseLeftButtonDown"
       mc:Ignorable="d" 
       MinHeight="700" Width="Auto"
       Title="PersonalAccountAdmin">
@@ -24,9 +25,122 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
     </Page.Resources>
 
     <Grid Background="AliceBlue" DataContext="{StaticResource PersonalAccountAdminViewModel}">
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <TextBlock Text="Личный кабинет в разработке..." FontSize="24" Foreground="Black"
-VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Заголовок страницы-->
+        <TextBlock Text="Личный кабинет" Grid.Row="0" FontSize="30" 
+           Foreground="Black" FontWeight="DemiBold"  Margin="50,30,50,10"/>
+
+        <!--Информация о пользователе-->
+        <Grid Grid.Row="1" Grid.Column="0" Margin="50,30,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--Изображение-->
+            <Image Grid.Column="0" Source="{Binding ProfilePicture, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+            <Border BorderBrush="Gray" BorderThickness="5" Width="209" Height="209" CornerRadius="10"/>
+
+            <!--Кнопка изменить изображение-->
+            <Button Grid.Column="0" Height="40" Padding="0,-5,0,-5" Margin="165,-165,0,0" Background="Transparent" BorderBrush="Transparent" materialDesign:RippleAssist.IsDisabled="True" 
+        VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopupChangeImage}" Visibility="{Binding IsGoBack, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Regular"/>
+                        <Setter Property="Opacity" Value="1"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="GreenYellow"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="GreenYellow"/>
+
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" />
+                </StackPanel>
+            </Button>
+
         </Grid>
+
+        <!--Данные о пользователе-->
+        <Grid Grid.Row="1" Grid.Column="1" Margin="0,20,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="UserName" Grid.Row="0" Text="Берекзин Александр Алексеевич" FontSize="28" 
+Foreground="Black" FontWeight="ExtraLight"  Margin="-25,0,0,0"/>
+
+            <Border Grid.Row="1" Width="{Binding ElementName=UserName, Path=ActualWidth, Mode=OneWay}" Height="1" Background="Black" Margin="-25,10,0,0"/>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="-25,20,0,0">
+                <TextBlock Grid.Row="0" Text="Телефон: " FontSize="24" 
+Foreground="Black" FontWeight="DemiBold"/>
+                <TextBlock Grid.Row="0" Text="7(900)00-00-00" FontSize="24" 
+Foreground="Black" FontWeight="ExtraLight"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="-25,0,0,0">
+                <TextBlock Grid.Row="0" Text="Должность: " FontSize="24" 
+Foreground="Black" FontWeight="DemiBold"/>
+                <TextBlock Grid.Row="0" Text="Разработчик" FontSize="24" 
+Foreground="Black" FontWeight="ExtraLight"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="-25,0,0,0">
+                <TextBlock Grid.Row="0" Opacity="1" FontSize="24" 
+                           MaxWidth="500" TextWrapping="Wrap" Height="Auto" Foreground="Black" TextAlignment="Justify">
+                    <Run Text="О&#160;себе:" FontSize="24" Foreground="Black" FontWeight="DemiBold"/>
+                    <Run Text=" "/> 
+                    <Run Text="РазработчикРазработ чикРазработчикРазработчикРазработчик Разработчик Разработчик" FontWeight="ExtraLight" />
+                </TextBlock>
+            </StackPanel>
+
+        </Grid>
+
     </Grid>
 </Page>

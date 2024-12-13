@@ -131,6 +131,8 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async void OpenPageAccount(object sender, EventAggregator e)
 		{
+			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
+			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new AccountPage());
 			lastCopy = new AccountPage();
 		}
@@ -140,6 +142,8 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async void OpenPageWorkDepartment(object sender, EventAggregator e)
 		{
+			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
+			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new WorkDepartmentPage());
 			lastCopy = new WorkDepartmentPage();
 		}
@@ -149,6 +153,8 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async void OpenPageNewsCategory(object sender, EventAggregator e)
 		{
+			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
+			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new NewsCategoryPage());
 			lastCopy = new NewsCategoryPage();
 		}

@@ -1,4 +1,5 @@
-﻿using CompanyNews.ViewModels.AdminApp;
+﻿using CompanyNews.Helpers.Event;
+using CompanyNews.ViewModels.AdminApp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,12 @@ namespace CompanyNews.Views.AdminApp
             InitializeComponent();
 
 		}
-    }
+
+
+		// Закрываем "гамбургер" меню, если открыто, при нажатии на окно, но не на меню
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			HamburgerMenuEvent.CloseHamburgerMenu();
+		}
+	}
 }
