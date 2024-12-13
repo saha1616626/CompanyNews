@@ -32,8 +32,9 @@
         </Grid.ColumnDefinitions>
 
         <!-- Гамбургер кнопка -->
-        <Button x:Name="HamburgerButton" Grid.Column="0" Background="Transparent" BorderThickness="0" 
-            Command="{Binding HamburgerButton}" Visibility="{Binding IsMenuButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Top" Margin="10,13,0,10" Style="{StaticResource CustomButtonStyle}">
+        <Button x:Name="HamburgerButton" Grid.Column="0" Background="Transparent" BorderThickness="0" Height="53"
+            Command="{Binding HamburgerButton}" Visibility="{Binding IsMenuButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                VerticalAlignment="Top" Margin="10,0,0,10">
             <materialDesign:PackIcon Kind="Menu" Width="24" Height="24" Foreground="Black"/>
         </Button>
 
@@ -69,14 +70,14 @@
 
                     <TextBlock Text="Администратор" Margin="10,20,0,0" FontSize="14" FontWeight="DemiBold" Opacity="0.5"/>
 
-                    <Button Content="Пользователи" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenUsersPageButton}" 
+                    <Button Content="Пользователи" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenPageAccount}" 
         HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"/>
 
-                    <Button Content="Рабочие отделы" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
+                    <Button Content="Рабочие отделы" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenPageWorkDepartment}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,0" Padding="20,0,0,0"
                             />
 
-                    <Button Content="Категории постов" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenOrdersPageButton}" 
+                    <Button Content="Категории постов" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenPageNewsCategory}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
 
                     <Border
@@ -91,10 +92,10 @@
 
                     <TextBlock Text="Модератор" FontSize="14" FontWeight="DemiBold" Opacity="0.5" Margin="10,20,0,0"/>
 
-                    <Button Content="Посты" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenDishesPageButton}" 
+                    <Button Content="Посты" Style="{StaticResource HamburgerMenuButtonStyle}" Command="{Binding OpenPageNewsPost}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,10,0,0" Padding="20,0,0,0"/>
 
-                    <Button Content="Сообщения" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenUsersPageButton}" 
+                    <Button Content="Сообщения" Style="{StaticResource HamburgerMenuButtonStyle}"  Command="{Binding OpenPageMessageUsers}" 
                             HorizontalContentAlignment="Left" Width="200" Margin="0,0,0,10" Padding="20,0,0,0"/>
 
                     <Border 

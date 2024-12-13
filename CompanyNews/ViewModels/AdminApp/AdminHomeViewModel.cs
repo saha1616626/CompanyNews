@@ -4,6 +4,7 @@ using CompanyNews.Models;
 using CompanyNews.Models.Authorization;
 using CompanyNews.Services;
 using CompanyNews.Views.AdminApp;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +30,17 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			_authorizationService = ServiceLocator.GetService<AuthorizationService>();
 			SettingUpPage(); // Первоначальная настройка страницы
+
+			// Подписываемся на событие — переход на страницу для работы с учетными записями.
+			HamburgerMenuEvent.openPageAccount += OpenPageAccount;
+			// Подписываемся на событие — переход на страницу для работы с рабочими отделами.
+			HamburgerMenuEvent.openPageWorkDepartment += OpenPageWorkDepartment;
+			// Подписываемся на событие — переход на страницу для работы с категориями постов.
+			HamburgerMenuEvent.openPageNewsCategory += OpenPageNewsCategory;
+			// Подписываемся на событие — переход на страницу для работы с новостными постами.
+			HamburgerMenuEvent.openPageNewsPost += OpenPageNewsPost;
+			// Подписываемся на событие — переход на страницу для работы с сообщениями пользователей.
+			HamburgerMenuEvent.openPageMessageUser += OpenPageMessageUser;
 		}
 
 		#region WorkingWithPages
@@ -61,13 +73,13 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				if (userLoginStatus.accountRole == "Администратор")
 				{
-					LaunchFrame.NavigationService.Navigate(accountPage = new AccountPage());
-					lastCopy = accountPage;
+					LaunchFrame.NavigationService.Navigate(new AccountPage());
+					lastCopy = new AccountPage();
 				}
 				else if (userLoginStatus.accountRole == "Модератор")
 				{
-					LaunchFrame.NavigationService.Navigate(newsPostPage = new NewsPostPage());
-					lastCopy = newsPostPage;
+					LaunchFrame.NavigationService.Navigate(new NewsPostPage());
+					lastCopy = new NewsPostPage();
 				}
 			}
 		}
@@ -86,7 +98,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						IsAccountIcon = false; // Скрываем кнопку с аккаунтом
 						IsGoBack = true; // Отображаем кнопку возврата назад
 						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем "гамбургер" меню
-						LaunchFrame.Navigate(personalAccountAdmin = new PersonalAccountAdmin());
+						LaunchFrame.Navigate(new PersonalAccountAdmin());
 
 					}, (obj) => true));
 			}
@@ -105,7 +117,6 @@ namespace CompanyNews.ViewModels.AdminApp
 					{
 						IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 						IsGoBack = false; // Скрываем кнопку возврата назад
-						ClearMemoryAfterFrame(personalAccountAdmin); // Очищаем память от страницы авторизации
 						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем "гамбургер" меню
 
 						// Открываем последнюю страницу перед переходом в ЛК
@@ -115,7 +126,50 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 		}
 
-		// при переходе по меню нужно очищать фреймы старые для этого есть lastCopy. Поэтому, нужно предварительно туда записывать данные
+		/// <summary>
+		/// Переход на страницу для работы с учетными записями.
+		/// </summary>
+		public async void OpenPageAccount(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new AccountPage());
+			lastCopy = new AccountPage();
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с рабочими отделами.
+		/// </summary>
+		public async void OpenPageWorkDepartment(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new WorkDepartmentPage());
+			lastCopy = new WorkDepartmentPage();
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с категориями постов.
+		/// </summary>
+		public async void OpenPageNewsCategory(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new NewsCategoryPage());
+			lastCopy = new NewsCategoryPage();
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с новостными постами.
+		/// </summary>
+		public async void OpenPageNewsPost(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new NewsPostPage());
+			lastCopy = new NewsPostPage();
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с сообщениями пользователей.
+		/// </summary>
+		public async void OpenPageMessageUser(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new MessageUserPage());
+			lastCopy = new MessageUserPage();
+		}
 
 		#endregion
 
@@ -125,21 +179,6 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// Последний экземпляр класса
 		/// </summary>
 		public object lastCopy;
-
-		/// <summary>
-		/// Личный кабинет администратора или редактр
-		/// </summary>
-		PersonalAccountAdmin personalAccountAdmin { get; set; }
-
-		/// <summary>
-		/// Работа с учетными записями
-		/// </summary>
-		AccountPage accountPage { get; set; }
-
-		/// <summary>
-		/// Работа с постами
-		/// </summary>
-		NewsPostPage newsPostPage {  get; set; } 
 
 		/// <summary>
 		/// Очистка памяти

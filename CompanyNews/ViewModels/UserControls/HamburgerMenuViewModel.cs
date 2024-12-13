@@ -73,71 +73,7 @@ namespace CompanyNews.ViewModels.UserControls
 		}
 
 		/// <summary>
-		/// Переход на страницу для работы с рабочими отделами
-		/// </summary>
-		private RelayCommand _openPageWorkDepartment { get; set; }
-		public RelayCommand OpenPageWorkDepartment
-		{
-			get
-			{
-				return _openPageWorkDepartment ??
-					(_openPageWorkDepartment = new RelayCommand((obj) =>
-					{
-						
-					}, (obj) => true));
-			}
-		}
-
-		/// <summary>
-		/// Переход на страницу для работы с категориями постов
-		/// </summary>
-		private RelayCommand _openPageNewsCategory { get; set; }
-		public RelayCommand OpenPageNewsCategory
-		{
-			get
-			{
-				return _openPageNewsCategory ??
-					(_openPageNewsCategory = new RelayCommand((obj) =>
-					{
-
-					}, (obj) => true));
-			}
-		}
-
-		/// <summary>
-		/// Переход на страницу для работы с постами
-		/// </summary>
-		private RelayCommand _openPageNewsPost { get; set; }
-		public RelayCommand OpenPageNewsPost
-		{
-			get
-			{
-				return _openPageNewsPost ??
-					(_openPageNewsPost = new RelayCommand((obj) =>
-					{
-						
-					}, (obj) => true));
-			}
-		}
-
-		/// <summary>
-		/// Переход на страницу для работы с сообщениями пользователей
-		/// </summary>
-		private RelayCommand _openPageMessageUsers { get; set; }
-		public RelayCommand OpenPageMessageUsers
-		{
-			get
-			{
-				return _openPageMessageUsers ??
-					(_openPageMessageUsers = new RelayCommand((obj) =>
-					{
-
-					}, (obj) => true));
-			}
-		}
-
-		/// <summary>
-		/// Переход на страницу для работы с учетными записями
+		/// Переход на страницу "Учетные записи"
 		/// </summary>
 		private RelayCommand _openPageAccount { get; set; }
 		public RelayCommand OpenPageAccount
@@ -147,7 +83,71 @@ namespace CompanyNews.ViewModels.UserControls
 				return _openPageAccount ??
 					(_openPageAccount = new RelayCommand((obj) =>
 					{
+						HamburgerMenuEvent.OpenPageAccount();
+					}, (obj) => true));
+			}
+		}
 
+		/// <summary>
+		/// Переход на страницу "Рабочие отделы"
+		/// </summary>
+		private RelayCommand _openPageWorkDepartment { get; set; }
+		public RelayCommand OpenPageWorkDepartment
+		{
+			get
+			{
+				return _openPageWorkDepartment ??
+					(_openPageWorkDepartment = new RelayCommand((obj) =>
+					{
+						HamburgerMenuEvent.OpenPageWorkDepartment();
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу "Категории постов"
+		/// </summary>
+		private RelayCommand _openPageNewsCategory { get; set; }
+		public RelayCommand OpenPageNewsCategory
+		{
+			get
+			{
+				return _openPageNewsCategory ??
+					(_openPageNewsCategory = new RelayCommand((obj) =>
+					{
+						HamburgerMenuEvent.OpenPageNewsCategory();
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу "Новостные посты"
+		/// </summary>
+		private RelayCommand _openPageNewsPost { get; set; }
+		public RelayCommand OpenPageNewsPost
+		{
+			get
+			{
+				return _openPageNewsPost ??
+					(_openPageNewsPost = new RelayCommand((obj) =>
+					{
+						HamburgerMenuEvent.OpenPageNewsPost();
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
+		/// Переход на страницу "Сообщения пользователей"
+		/// </summary>
+		private RelayCommand _openPageMessageUsers { get; set; }
+		public RelayCommand OpenPageMessageUsers
+		{
+			get
+			{
+				return _openPageMessageUsers ??
+					(_openPageMessageUsers = new RelayCommand((obj) =>
+					{
+						HamburgerMenuEvent.OpenPageMessageUser();
 					}, (obj) => true));
 			}
 		}

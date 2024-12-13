@@ -24,6 +24,75 @@ namespace CompanyNews.Helpers.Event
 			closeHamburgerMenu?.Invoke(null, new EventAggregator());
 		}
 
+		#region OpenPageInMenu
+
+		/// <summary>
+		/// Событие — переход на страницу для работы с учетными записями.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageAccount;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с учетными записями. 
+		/// </summary>
+		public static void OpenPageAccount()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageAccount?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Событие — переход на страницу для работы с рабочими отделами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageWorkDepartment;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с рабочими отделами.
+		/// </summary>
+		public static void OpenPageWorkDepartment()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageWorkDepartment?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Событие — переход на страницу для работы с категориями постов.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageNewsCategory;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с категориями постов.
+		/// </summary>
+		public static void OpenPageNewsCategory()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageNewsCategory?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Событие — переход на страницу для работы с новостными постами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageNewsPost;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с новостными постами.
+		/// </summary>
+		public static void OpenPageNewsPost()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageNewsPost?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Событие — переход на страницу для работы с сообщениями пользователей.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageMessageUser;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с сообщениями пользователей.
+		/// </summary>
+		public static void OpenPageMessageUser()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageMessageUser?.Invoke(null, new EventAggregator());
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Подписка на событие - возврат на предшествующую страницу при выходе из личного кабинета.
 		/// </summary>
