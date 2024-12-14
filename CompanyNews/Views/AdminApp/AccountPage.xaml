@@ -24,7 +24,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
     </Page.Resources>
 
-    <Grid DataContext="{StaticResource AccountViewModel}">
+    <Grid DataContext="{StaticResource AccountViewModel}" x:Name="mainGrid">
 
         <!--стили-->
         <Grid.Resources>
@@ -55,15 +55,34 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <!--Сообщения системы-->
             <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
                         BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
-                        HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="500" Margin="0,-2,100,0">
+                        HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="400" Margin="0,30,-5,0">
                 <!--Тело сообщения-->
                 <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-       x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
-       Margin="10, 10, 10, 10" 
-       FontWeight="Regular" FontSize="18"
-       Width="470"
-       TextWrapping="Wrap"/>
+                    x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="10, 10, 10, 10" 
+                    FontWeight="Regular" FontSize="18"
+                    Width="370"
+                    TextWrapping="Wrap"/>
             </Border>
+
+            <ListBox Grid.Row="1" Margin="0,30,44,0" HorizontalAlignment="Center"
+  x:Name="RadioButtonGroupChoiceChip" FontSize="16" FontWeight="DemiBold"
+  Style="{StaticResource MaterialDesignChoiceChipListBox}">
+
+                <ListBoxItem Height="50" IsSelected="{Binding DefaultListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="По умолчанию "/>
+                        <materialDesign:PackIcon Kind="AccountCircle" />
+                    </StackPanel>
+                </ListBoxItem>
+
+                <ListBoxItem Height="50" IsSelected="{Binding ListBlockedAccountsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Аккунт заблокирован "/>
+                        <materialDesign:PackIcon Kind="ArrowUpDropCircle" />
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
 
             <!--#region Кнопки для взаиомодействия с таблицей-->
             <Grid Grid.Row="1"  Margin="50,30,50,0">
@@ -94,11 +113,11 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
                     <Button Content="Редктировать" Command="{Binding EditAccount}"
    MinWidth="100" Height="35" Background="Gray" BorderBrush="Black"
-   Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
+   Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableEdit}"/>
 
                     <Button Content="Удалить" MinWidth="100" 
    Height="35" Background="Gray" BorderBrush="Black" Command="{Binding DeleteAccount}"
-   Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
+   Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableDelete}"/>
                 </StackPanel>
 
             </Grid>
@@ -120,34 +139,73 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                         ColumnHeaderStyle="{StaticResource ColumnTableHeader}">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Логин" 
-                                                Binding="{Binding login}"  
+                        <DataGridTextColumn Header="Роль" 
+                                                Binding="{Binding accountRole}"  
                                                 Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="Margin" Value="0,0,20,0"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Логин" Binding="{Binding name}"  Width="*" IsReadOnly="True">
+                        <DataGridTextColumn Header="Рабочий отдел" Binding="{Binding workDepartmentName}"  Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="Margin" Value="0,0,20,0"/>
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,10,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Роль" Binding="{Binding name}"  Width="*" IsReadOnly="True">
+                        <DataGridTextColumn Header="Логин" Binding="{Binding login}"  Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="Margin" Value="0,0,20,0"/>
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="  Номер&#x0A;телефона" Binding="{Binding phoneNumber}"  Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Width="*" Header="Фото">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50" Height="50" Stretch="Uniform" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Имя" Binding="{Binding name}"  Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding surname}"  Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
                     </DataGrid.Columns>
 
                 </DataGrid>
@@ -156,6 +214,76 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <!--#endregion-->
 
         </Grid>
+
+        <!--#region Popup-->
+
+        <!--фон для Popup-->
+        <Border x:Name="DarkBackground" 
+  Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+  Background="#80000000" Panel.ZIndex="1" 
+  Margin="-600,-600,-600,-600"/>
+
+        <!--Popup для удаления данных-->
+        <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=mainGrid}"
+            IsOpen="{Binding StartPoupDeleteData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+            VerticalOffset="-40" StaysOpen="False" Closed="MyPopup_Closed" 
+            AllowsTransparency="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Background="Gray">
+                <!--фон-->
+                <Border Background="AliceBlue" Style="{StaticResource OutlineOfPopup}" >
+                    <Grid Width="500" Height="330">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Удаление пользователя" 
+                                    Margin="0, 20, 0, 0" FontSize="30" FontWeight="Bold"/>
+
+                            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" 
+                                     Height="80" Margin="20,15,20,0">
+                                <TextBlock Text="Вы уверены, что хотите удалить учётную запись? После подтверждения это действие нельзя будет отменить!" FontSize="20" FontWeight="UltraBold" 
+                                        HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" />
+                            </StackPanel>
+
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Height="110" Margin="0,-30,0,15">
+                                <TextBlock Text="{Binding DataDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+    TextWrapping="Wrap" x:Name="NameOfOrderDeleted" HorizontalAlignment="Center" 
+    VerticalAlignment="Center" Margin="25,30,25,0"  FontSize="20" TextAlignment="Center" FontWeight="DemiBold"/>
+                            </ScrollViewer>
+
+                            <Grid Grid.Row="3" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+                                     Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
+                                <Button Grid.Row="0" Grid.Column="1" Content="Удалить" Width="150" 
+                                     Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
+
+                            </Grid>
+
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Popup>
+
+        <!--#endregion-->
 
     </Grid>
 

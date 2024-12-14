@@ -40,22 +40,48 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			_accountService = ServiceLocator.GetService<AccountService>();
 			ListAccountExtendeds = new ObservableCollection<AccountExtended>();
+			SettingUpPage(); // Первоначальная настройка страницы
 			LoadAccount(); // Выводим список на экран
 		}
 
 		#region CRUD Operations
 
 		/// <summary>
+		/// Первоначальная настройка страницы
+		/// </summary>
+		public async void SettingUpPage()
+		{
+			DefaultListSelected = true; // Список аккаунтов по умолчанию
+			ListBlockedAccountsSelected = false; // Список заблокирванных аккаунтов не отображается
+			DarkBackground = Visibility.Collapsed; // Скрываем фон для Popup
+		}
+
+		/// <summary>
 		/// Вывод списка всех учетных записей в UI.
 		/// </summary>
 		private async Task LoadAccount()
 		{
-			ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
-			var accounts = await _accountService.GetAllAccountsAsync();
-			foreach (var account in accounts)
+			if (DefaultListSelected)
 			{
-				ListAccountExtendeds.Add(account);
+				ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
+				var accounts = await _accountService.GetAllAccountsAsync();
+				foreach (var account in accounts)
+				{
+					ListAccountExtendeds.Add(account);
+				}
 			}
+
+			if (ListBlockedAccountsSelected)
+			{
+				ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
+				var accounts = await _accountService.GetAllAccountsAsync();
+				foreach (var account in accounts)
+				{
+					if(account.isProfileBlocked) 
+						ListAccountExtendeds.Add(account);
+				}
+			}
+
 		}
 
 		/// <summary>
@@ -154,6 +180,13 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _deleteAccount ??
 					(_deleteAccount = new RelayCommand(async (obj) =>
 					{
+						StartPoupDeleteData = true; // отображаем Popup
+						DarkBackground = Visibility.Visible; // показать фон
+						
+						if(SelectedAccount != null)
+						{
+							DataDeleted = $"Имя и фамилия: {SelectedAccount.name} {SelectedAccount.surname}\nРоль: \"{SelectedAccount.accountRole}\"\nЛогин: \"{SelectedAccount.login}\"";
+						}
 
 					}, (obj) => true));
 			}
@@ -176,7 +209,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI
+		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI Popup
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -187,15 +220,24 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _saveData ??
 					(_saveData = new RelayCommand(async (obj) =>
 					{
-
-						if (isAddData) // Логика при добавлении данных
+						Account account = await _accountService.AccountExtendedConvert(SelectedAccount);
+						if (account != null)
 						{
+							await DeleteAccountAsync(account);
+
+							if(systemMessage != null && systemMessageBorder != null)
+							{
+								await ClosePopupWorkingWithData(); // Скрываем Popup
+								// Выводим сообщение об успешном удалении данных
+								systemMessage.Text = $"Пользователь успешно удален.";
+								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+								// Исчезание сообщения
+								BeginFadeAnimation(systemMessage);
+								BeginFadeAnimation(systemMessageBorder);
+							}
 
 						}
-						else // Логика при редактировании данных
-						{
-
-						}
+						
 
 					}, (obj) => true));
 			}
@@ -203,9 +245,12 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		#region UsersSearch
 
-		// список для фильтров таблицы
+		// Cписок для фильтров таблицы
 		public ObservableCollection<AccountExtended> ListSearch { get; set; } = new ObservableCollection<AccountExtended>();
 
+		/// <summary>
+		/// Поиск данных в таблицы через строку запроса
+		/// </summary>
 		public async Task UserSearch(string searchByValue)
 		{
 			if (!string.IsNullOrWhiteSpace(searchByValue))
@@ -216,9 +261,14 @@ namespace CompanyNews.ViewModels.AdminApp
 				// Объединяем атрибуты сущности для поиска
 				foreach (AccountExtended item in ListAccountExtendeds)
 				{
-					string unification = item.login.ToLower() + " " + item.accountRole + " " +
-						item.workDepartmentName + " " + item.phoneNumber + " " + item.name + " " +
-						item.surname + " " + item.patronymic;
+					string workDepartmentName = "";
+					if (item.workDepartmentName == null) { workDepartmentName = ""; } else { workDepartmentName = item.workDepartmentName; }
+					string patronymic = "";
+					if (item.patronymic == null) { patronymic = ""; } else { patronymic = item.patronymic; }
+
+					string unification = item.login.ToLower() + " " + item.accountRole.ToLower() + " " +
+						workDepartmentName.ToLower() + " " + item.phoneNumber.ToLower() + " " + item.name.ToLower() + " " +
+						item.surname.ToLower() + " " + patronymic.ToLower();
 
 					bool dataExists = unification.Contains(searchByValue.ToLowerInvariant());
 
@@ -233,9 +283,15 @@ namespace CompanyNews.ViewModels.AdminApp
 
 				if (ListSearch.Count == 0)
 				{
-					// Оповещениие об отсутствии данных
-					systemMessage.Text = "Пользователь не найдена!"; // Собщение об ошибке
-					BeginFadeAnimation(systemMessageBorder); // Анимация затухания ошибки
+					if (systemMessage != null && systemMessageBorder != null)
+					{
+						// Оповещениие об отсутствии данных
+						systemMessage.Text = $"Пользователь не найден.";
+						systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+						// Исчезание сообщения
+						BeginFadeAnimation(systemMessage);
+						BeginFadeAnimation(systemMessageBorder);
+					}
 				}
 			}
 			else
@@ -272,8 +328,52 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-
+			// Закрываем Popup
+			StartPoupDeleteData = false;
+			DarkBackground = Visibility.Collapsed; // Скрываем фон
 		}
+
+		#region FeaturesPopup
+
+		/// <summary>
+		/// Popup удаления данных
+		/// </summary>
+		private bool _startPoupDeleteData { get; set; }
+		public bool StartPoupDeleteData
+		{
+			get { return _startPoupDeleteData; }
+			set
+			{
+				_startPoupDeleteData = value;
+				OnPropertyChanged(nameof(StartPoupDeleteData));
+			}
+		}
+
+		/// <summary>
+		/// Данные передаются в Popup, как предпросмотр перед удалением
+		/// </summary>
+		private string _dataDeleted { get; set; }
+		public string DataDeleted
+		{
+			get { return _dataDeleted; }
+			set { _dataDeleted = value; OnPropertyChanged(nameof(DataDeleted)); }
+		}
+
+		/// <summary>
+		/// Затемненный фон позади Popup
+		/// </summary>
+		private Visibility _darkBackground { get; set; }
+		public Visibility DarkBackground
+		{
+			get { return _darkBackground; }
+			set
+			{
+				_darkBackground = value;
+				OnPropertyChanged(nameof(DarkBackground));
+			}
+		}
+
+		#endregion
 
 		#endregion
 
@@ -284,12 +384,10 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters)
 		{
-			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
 			errorInputPopup = adminViewModelParameters.errorInputPopup;
 			systemMessage = adminViewModelParameters.errorInputText;
 			systemMessageBorder = adminViewModelParameters.errorInputBorder;
-			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
 
 		/// <summary>
@@ -302,18 +400,29 @@ namespace CompanyNews.ViewModels.AdminApp
 			set
 			{
 				_selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
-				OnPropertyChanged(nameof(IsWorkButtonEnable));
+				OnPropertyChanged(nameof(IsWorkButtonEnableEdit));
+				OnPropertyChanged(nameof(IsWorkButtonEnableDelete)); 
 			}
 		}
 
 		/// <summary>
-		/// Отображение кнопки «удалить» и «редактировать» в UI.
+		/// Отображение или скрытие кнопки «редактировать» в UI. 
 		/// </summary>
-		private bool _isWorkButtonEnable { get; set; }
-		public bool IsWorkButtonEnable
+		private bool _isWorkButtonEnableEdit { get; set; }
+		public bool IsWorkButtonEnableEdit
 		{
 			get { return SelectedAccount != null; } // Если в таблице выбранн объект, то кнопки доступны
-			set { _isWorkButtonEnable = value; OnPropertyChanged(nameof(IsWorkButtonEnable)); }
+			set { _isWorkButtonEnableEdit = value; OnPropertyChanged(nameof(IsWorkButtonEnableEdit)); }
+		}
+
+		/// <summary>
+		/// Отображение или скрытие кнопки «удалить» в UI.
+		/// </summary>
+		private bool _isWorkButtonEnableDelete { get; set; }
+		public bool IsWorkButtonEnableDelete
+		{
+			get { return SelectedAccount != null && SelectedAccount.accountRole != "Администратор"; } // Если выбрана роль Admin, то удалить ее нельзя
+			set { _isWorkButtonEnableDelete = value; OnPropertyChanged(nameof(IsWorkButtonEnableDelete)); }
 		}
 
 		/// <summary>
@@ -323,11 +432,6 @@ namespace CompanyNews.ViewModels.AdminApp
 		private bool isAddData { get; set; }
 
 		#region View
-
-		/// <summary>
-		/// Затемненный фон позади Popup
-		/// </summary>
-		public Border? darkBackground { get; set; }
 
 		/// <summary>
 		/// Анимация полей
@@ -350,9 +454,32 @@ namespace CompanyNews.ViewModels.AdminApp
 		public TextBlock? errorInputPopup { get; set; }
 
 		/// <summary>
-		/// Popup удаления данных
+		/// Выбран список сортировки по умолчанию в UI
 		/// </summary>
-		public Popup? deleteDataPopup { get; set; }
+		private bool _defaultListSelected { get; set; }
+		public bool DefaultListSelected
+		{
+			get { return _defaultListSelected; }
+			set
+			{
+				_defaultListSelected = value; OnPropertyChanged(nameof(DefaultListSelected));
+				LoadAccount();
+			}
+		}
+
+		/// <summary>
+		/// Выбран список заблокированных аккаунтов в UI
+		/// </summary>
+		private bool _listBlockedAccountsSelected { get; set; }
+		public bool ListBlockedAccountsSelected
+		{
+			get { return _listBlockedAccountsSelected; }
+			set
+			{
+				_listBlockedAccountsSelected = value; OnPropertyChanged(nameof(ListBlockedAccountsSelected));
+				LoadAccount();
+			}
+		}
 
 		#endregion
 

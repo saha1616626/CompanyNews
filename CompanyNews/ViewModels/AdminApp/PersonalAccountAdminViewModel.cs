@@ -164,6 +164,7 @@ namespace CompanyNews.ViewModels.AdminApp
 							// Сообщение об завершении операции
 							systemMessage.Text = "Операция отменена.";
 							systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+							IsOperationSuccessful = false; // Сообщаем, что операция не прошла
 							// Исчезание сообщения
 							BeginFadeAnimation(systemMessage);
 							BeginFadeAnimation(systemMessageBorder);
@@ -220,6 +221,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						// Сообщение об завершении операции
 						systemMessage.Text = "Операция отменена.";
 						systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+						IsOperationSuccessful = false; // Сообщаем, что операция не прошла
 						// Исчезание сообщения
 						BeginFadeAnimation(systemMessage);
 						BeginFadeAnimation(systemMessageBorder);
@@ -259,6 +261,7 @@ namespace CompanyNews.ViewModels.AdminApp
 									// Сообщение об завершении операции
 									systemMessage.Text = "Фото профиля успешно обновлено.";
 									systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+									IsOperationSuccessful = true; // Сообщаем, что операция успешна
 								}
 							}
 							else // Если изменение описания
@@ -274,6 +277,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								// Сообщение об завершении операции
 								systemMessage.Text = "Описание профиля успешно обновлено.";
 								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+								IsOperationSuccessful = true; // Сообщаем, что операция успешна
 							}
 
 							// Исчезание сообщения
@@ -373,6 +377,8 @@ namespace CompanyNews.ViewModels.AdminApp
 				OnPropertyChanged(nameof(IsProfileDescriptionEditing));
 			}
 		}
+
+		public bool IsOperationSuccessful { get; set; }
 
 		#endregion
 

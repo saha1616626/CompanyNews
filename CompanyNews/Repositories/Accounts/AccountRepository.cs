@@ -2,12 +2,15 @@
 using CompanyNews.Helpers;
 using CompanyNews.Models;
 using CompanyNews.Models.Extended;
+using CompanyNews.Views.AdminApp;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace CompanyNews.Repositories.Accounts
 {
@@ -58,7 +61,16 @@ namespace CompanyNews.Repositories.Accounts
 			accountExtended.name = account.name;
 			accountExtended.surname = account.surname;
 			if (account.profileDescription != null) { accountExtended.profileDescription = account.profileDescription; }
-			if (account.image != null) { accountExtended.image = account.image; }
+			if (account.image != null)
+			{
+				// создание BitmapImage из загруженного изображения
+				BitmapImage selectedImage = new BitmapImage();
+				selectedImage.BeginInit();
+				selectedImage.StreamSource = new MemoryStream(account.image);
+				selectedImage.EndInit();
+
+				accountExtended.image = selectedImage;
+			}
 			if (account.patronymic != null) { accountExtended.patronymic = account.patronymic; }
 			accountExtended.isProfileBlocked = account.isProfileBlocked;
 			if (account.reasonBlockingAccount != null) { accountExtended.reasonBlockingAccount = account.reasonBlockingAccount; }
@@ -86,7 +98,7 @@ namespace CompanyNews.Repositories.Accounts
 			account.name = accountExtended.name;
 			account.surname = accountExtended.surname;
 			if (accountExtended.profileDescription != null) { account.profileDescription = accountExtended.profileDescription; }
-			if (accountExtended.image != null) { account.image = accountExtended.image; }
+			if (accountExtended.image != null) { account.image = WorkingWithImage.ConvertingImageForWritingDatabase(accountExtended.image); }
 			if (accountExtended.patronymic != null) { account.patronymic = accountExtended.patronymic; }
 			account.isProfileBlocked = accountExtended.isProfileBlocked;
 			if (accountExtended.reasonBlockingAccount != null) { account.reasonBlockingAccount = accountExtended.reasonBlockingAccount; }

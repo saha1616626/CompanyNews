@@ -104,6 +104,23 @@ namespace CompanyNews.Helpers
 		}
 
 		/// <summary>
+		/// Конвертация изображения для записи в базу данных
+		/// </summary>
+		public static byte[] ConvertingImageForWritingDatabase(BitmapSource bitmapSource)
+		{
+			// Создание MemoryStream для записи данных
+			using (MemoryStream ms = new MemoryStream())
+			{
+				// Сохранение BitmapSource в MemoryStream в формате PNG
+				PngBitmapEncoder encoder = new PngBitmapEncoder();
+				encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+				encoder.Save(ms);
+
+				return ms.ToArray(); // получаем массив байтов из MemoryStream
+			}
+		}
+
+		/// <summary>
 		/// Преобразование изображения в CroppedBitmap
 		/// </summary>
 		public static CroppedBitmap? ConvertImageCroppedBitmap(BitmapImage bitmapImage, int desiredSize)

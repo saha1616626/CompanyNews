@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace CompanyNews.Models.Extended
 {
@@ -53,7 +54,7 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Фото человека
 		/// </summary>
-		public byte[]? image { get; set; }
+		public BitmapImage image { get; set; }
 
 		/// <summary>
 		/// Заблокирован профиль у пользователя?

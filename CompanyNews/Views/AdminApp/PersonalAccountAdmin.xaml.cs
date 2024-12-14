@@ -59,12 +59,21 @@ namespace CompanyNews.Views.AdminApp
 		{
 			DarkBackground.Visibility = Visibility.Collapsed;
 
-			// Сообщение об завершении операции
-			SystemMessage.Text = "Операция отменена.";
-			SystemMessageBorder.Visibility = System.Windows.Visibility.Visible;
-			// Исчезание сообщения
-			_personalAccountAdminViewModel.BeginFadeAnimation(SystemMessage);
-			_personalAccountAdminViewModel.BeginFadeAnimation(SystemMessageBorder);
+			// Прежде чем выводим сообщение, проверяем успех операции
+			if(!_personalAccountAdminViewModel.IsOperationSuccessful || _personalAccountAdminViewModel.IsOperationSuccessful == null)
+			{
+				// Сообщение об завершении операции
+				SystemMessage.Text = "Операция отменена.";
+				SystemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+				// Исчезание сообщения
+				_personalAccountAdminViewModel.BeginFadeAnimation(SystemMessage);
+				_personalAccountAdminViewModel.BeginFadeAnimation(SystemMessageBorder);
+			}
+			else
+			{
+				_personalAccountAdminViewModel.IsOperationSuccessful = false;
+			}
+			
 		}
 
 		#endregion

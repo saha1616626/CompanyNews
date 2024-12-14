@@ -349,7 +349,7 @@ HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Ma
        x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
        Margin="10, 10, 10, 10" 
        FontWeight="Regular" FontSize="18"
-       Width="300"
+       Width="280"
        TextWrapping="Wrap"/>
                 </Border>
 

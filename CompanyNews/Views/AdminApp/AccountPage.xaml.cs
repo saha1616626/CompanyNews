@@ -1,5 +1,6 @@
 ﻿using CompanyNews.Helpers.Event;
 using CompanyNews.ViewModels.AdminApp;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,5 +81,15 @@ namespace CompanyNews.Views.AdminApp
 
 			MyDataGrid.Height = newHeight - minSizeWindow + minSizeTable;
 		}
+
+		#region Popup
+
+		// скрыть фон при скрытие popup
+		private void MyPopup_Closed(object sender, EventArgs e)
+		{
+			DarkBackground.Visibility = Visibility.Collapsed;
+		}
+
+		#endregion
 	}
 }
