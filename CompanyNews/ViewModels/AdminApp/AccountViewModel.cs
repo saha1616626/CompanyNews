@@ -26,10 +26,15 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		private readonly AuthorizationService _authorizationService; // Авторизация
 
+		public ObservableCollection<AccountExtended> _listAccountExtendeds { get; set; }
 		/// <summary>
 		/// Отображаемый список учетных записей в UI
 		/// </summary>
-		public ObservableCollection<AccountExtended> ListAccountExtendeds;
+		public ObservableCollection<AccountExtended> ListAccountExtendeds
+		{
+			get { return _listAccountExtendeds; }
+			set { _listAccountExtendeds = value; OnPropertyChanged(nameof(ListAccountExtendeds)); }
+		}
 
 		public AccountViewModel()
 		{
@@ -45,6 +50,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task LoadAccount()
 		{
+			ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
 			var accounts = await _accountService.GetAllAccountsAsync();
 			foreach (var account in accounts)
 			{
@@ -82,7 +88,7 @@ namespace CompanyNews.ViewModels.AdminApp
 
 			// Находим учетную запись в списке для отображения в UI и удаляем объект
 			AccountExtended? accountExtended = ListAccountExtendeds.FirstOrDefault(a => a.id == account.id);
-			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }	
+			if (accountExtended != null) { ListAccountExtendeds.Remove(accountExtended); }
 		}
 
 		/// <summary>
@@ -195,6 +201,52 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 		}
 
+		#region UsersSearch
+
+		// список для фильтров таблицы
+		public ObservableCollection<AccountExtended> ListSearch { get; set; } = new ObservableCollection<AccountExtended>();
+
+		public async Task UserSearch(string searchByValue)
+		{
+			if (!string.IsNullOrWhiteSpace(searchByValue))
+			{
+				await LoadAccount(); // обновляем список
+				ListSearch.Clear(); // очищаем список поиска данных
+
+				// Объединяем атрибуты сущности для поиска
+				foreach (AccountExtended item in ListAccountExtendeds)
+				{
+					string unification = item.login.ToLower() + " " + item.accountRole + " " +
+						item.workDepartmentName + " " + item.phoneNumber + " " + item.name + " " +
+						item.surname + " " + item.patronymic;
+
+					bool dataExists = unification.Contains(searchByValue.ToLowerInvariant());
+
+					if (dataExists)
+					{
+						ListSearch.Add(item);
+					}
+				}
+
+				ListAccountExtendeds.Clear(); // Очистка список перед заполнением
+				ListAccountExtendeds = new ObservableCollection<AccountExtended>(ListSearch); // Обновление списка
+
+				if (ListSearch.Count == 0)
+				{
+					// Оповещениие об отсутствии данных
+					systemMessage.Text = "Пользователь не найдена!"; // Собщение об ошибке
+					BeginFadeAnimation(systemMessageBorder); // Анимация затухания ошибки
+				}
+			}
+			else
+			{
+				ListAccountExtendeds.Clear(); // Очистка список перед заполнением
+				await LoadAccount(); // обновляем список
+			}
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Popup
@@ -220,7 +272,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-			
+
 		}
 
 		#endregion
@@ -235,18 +287,21 @@ namespace CompanyNews.ViewModels.AdminApp
 			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
 			errorInputPopup = adminViewModelParameters.errorInputPopup;
-			errorInput = adminViewModelParameters.errorInputText;
+			systemMessage = adminViewModelParameters.errorInputText;
+			systemMessageBorder = adminViewModelParameters.errorInputBorder;
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
 
 		/// <summary>
 		/// Выбранный аккаунт в UI
 		/// </summary>
-		private AccountExtended _selectedAccount {  get; set; }
+		private AccountExtended _selectedAccount { get; set; }
 		public AccountExtended SelectedAccount
 		{
 			get { return _selectedAccount; }
-			set { _selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
+			set
+			{
+				_selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
 				OnPropertyChanged(nameof(IsWorkButtonEnable));
 			}
 		}
@@ -280,14 +335,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		public Storyboard? fieldIllumination { get; set; }
 
 		/// <summary>
+		/// Вывод сообщения системы и анимация текста на странице
+		/// </summary>
+		public TextBlock? systemMessage { get; set; }
+
+		/// <summary>
+		/// Вывод контейнера для сообщения системы
+		/// </summary>
+		public Border? systemMessageBorder { get; set; }
+
+		/// <summary>
 		/// Вывод ошибки и анимация текста в Popup
 		/// </summary>
 		public TextBlock? errorInputPopup { get; set; }
-
-		/// <summary>
-		/// Вывод ошибки и анимация текста на странице
-		/// </summary>
-		public TextBlock? errorInput { get; set; }
 
 		/// <summary>
 		/// Popup удаления данных
@@ -295,6 +355,57 @@ namespace CompanyNews.ViewModels.AdminApp
 		public Popup? deleteDataPopup { get; set; }
 
 		#endregion
+
+		#endregion
+
+		#region Animation
+
+		// выводим сообщения об ошибке с анимацией затухания
+		public async void BeginFadeAnimation(TextBlock textBlock)
+		{
+			textBlock.IsEnabled = true;
+			textBlock.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => textBlock.IsEnabled = false;
+			storyboard.Begin(textBlock);
+		}
+
+		public async void BeginFadeAnimation(Border border)
+		{
+			border.IsEnabled = true;
+			border.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => border.IsEnabled = false;
+			storyboard.Begin(border);
+		}
+
+		// запускаем анимации для TextBox (подсвечивание объекта)
+		private void StartFieldIllumination(TextBox textBox)
+		{
+			fieldIllumination.Begin(textBox);
+		}
+		private void StartFieldIllumination(PasswordBox passwordBox)
+		{
+			fieldIllumination.Begin(passwordBox);
+		}
 
 		#endregion
 
