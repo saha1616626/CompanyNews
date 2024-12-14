@@ -69,8 +69,13 @@ namespace CompanyNews.Views
 
 			if (userLoginStatus.accountRole != null)
 			{
+				// Если пользователь заблокирован, то направляем направляем его в меню авторизации.
+				if ((bool)userLoginStatus.isProfileBlocked)
+				{
+					await _authorizationService.LogOutYourAccount();
+				}
 				// Вход в учетную запись
-				if (userLoginStatus.accountRole == "Администратор" || userLoginStatus.accountRole == "Модератор")
+				else if (userLoginStatus.accountRole == "Администратор" || userLoginStatus.accountRole == "Модератор")
 				{
 					mainFrame.Navigate(adminHomePage = new AdminHomePage());
 				}

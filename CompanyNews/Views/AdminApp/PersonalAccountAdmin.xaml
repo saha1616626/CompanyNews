@@ -24,123 +24,339 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
     </Page.Resources>
 
-    <Grid Background="AliceBlue" DataContext="{StaticResource PersonalAccountAdminViewModel}">
+    <Grid Background="AliceBlue" DataContext="{StaticResource PersonalAccountAdminViewModel}" x:Name="mainGrid">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+            <Grid Margin="0,0,0,150">
 
-        <!--Заголовок страницы-->
-        <TextBlock Text="Личный кабинет" Grid.Row="0" FontSize="30" 
+                <!--стили-->
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="\Dictionary\Popup.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Grid.Resources>
+
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--Заголовок страницы-->
+                <TextBlock Text="Личный кабинет" Grid.Row="0" FontSize="30" 
            Foreground="Black" FontWeight="DemiBold"  Margin="50,30,50,10"/>
 
-        <!--Информация о пользователе-->
-        <Grid Grid.Row="1" Grid.Column="0" Margin="50,30,0,0">
+                <!--Информация о пользователе-->
+                <Grid Grid.Row="1" Grid.Column="0" Margin="50,30,0,0">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-            <!--Изображение-->
-            <Image Grid.Column="0" Source="{Binding ProfilePicture, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
-            <Border BorderBrush="Gray" BorderThickness="5" Width="209" Height="209" CornerRadius="10"/>
+                    <!--Изображение-->
+                    <Image Grid.Column="0" Source="{Binding ProfilePicture, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <Border BorderBrush="Gray" BorderThickness="5" Width="209" Height="209" CornerRadius="10"/>
 
-            <!--Кнопка изменить изображение-->
-            <Button Grid.Column="0" Height="40" Padding="0,-5,0,-5" Margin="165,-165,0,0" Background="Transparent" BorderBrush="Transparent" materialDesign:RippleAssist.IsDisabled="True" 
-        VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopupChangeImage}" Visibility="{Binding IsGoBack, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!--Кнопка изменить изображение-->
+                    <Button Grid.Column="0" Height="40" Padding="0,-5,0,-5" Margin="165,-165,0,0" Background="Transparent" BorderBrush="Transparent" materialDesign:RippleAssist.IsDisabled="True" 
+        VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding OpenPopupChangeImage}">
 
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
-                        <Setter Property="Background" Value="Black"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="FontSize" Value="16"/>
-                        <Setter Property="FontWeight" Value="Regular"/>
-                        <Setter Property="Opacity" Value="1"/>
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Regular"/>
+                                <Setter Property="Opacity" Value="1"/>
 
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <SolidColorBrush Color="GreenYellow"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground" Value="GreenYellow"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="GreenYellow"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="GreenYellow"/>
 
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
 
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" />
-                </StackPanel>
-            </Button>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" />
+                        </StackPanel>
+                    </Button>
 
-        </Grid>
+                </Grid>
 
-        <!--Данные о пользователе-->
-        <Grid Grid.Row="1" Grid.Column="1" Margin="0,20,0,0">
+                <!--Данные о пользователе-->
+                <Grid Grid.Row="1" Grid.Column="1" Margin="0,20,0,0">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBlock x:Name="UserName" Grid.Row="0" Text="Берекзин Александр Алексеевич" FontSize="28" 
+                    <TextBlock x:Name="UserName" Grid.Row="0" Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="28" 
 Foreground="Black" FontWeight="ExtraLight"  Margin="-25,0,0,0"/>
 
-            <Border Grid.Row="1" Width="{Binding ElementName=UserName, Path=ActualWidth, Mode=OneWay}" Height="1" Background="Black" Margin="-25,10,0,0"/>
+                    <Border Grid.Row="1" Width="{Binding ElementName=UserName, Path=ActualWidth, Mode=OneWay}" Height="1" Background="Black" Margin="-25,10,0,0"/>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="-25,20,0,0">
-                <TextBlock Grid.Row="0" Text="Телефон: " FontSize="24" 
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="-25,20,0,0">
+                        <TextBlock Grid.Row="0" Text="Телефон: " FontSize="24" 
 Foreground="Black" FontWeight="DemiBold"/>
-                <TextBlock Grid.Row="0" Text="7(900)00-00-00" FontSize="24" 
+                        <TextBlock Grid.Row="0" Text="{Binding UserPhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="24" 
 Foreground="Black" FontWeight="ExtraLight"/>
-            </StackPanel>
+                    </StackPanel>
 
-            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="-25,0,0,0">
-                <TextBlock Grid.Row="0" Text="Должность: " FontSize="24" 
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="-25,0,0,0">
+                        <TextBlock Grid.Row="0" Text="Должность: " FontSize="24" 
 Foreground="Black" FontWeight="DemiBold"/>
-                <TextBlock Grid.Row="0" Text="Разработчик" FontSize="24" 
+                        <TextBlock Grid.Row="0" Text="{Binding UserWorkDepartment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="24" 
 Foreground="Black" FontWeight="ExtraLight"/>
-            </StackPanel>
+                    </StackPanel>
 
-            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="-25,0,0,0">
-                <TextBlock Grid.Row="0" Opacity="1" FontSize="24" 
-                           MaxWidth="500" TextWrapping="Wrap" Height="Auto" Foreground="Black" TextAlignment="Justify">
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="-25,0,0,0">
+                        <TextBlock Grid.Row="0" Opacity="1" FontSize="24" 
+                           MaxWidth="450" TextWrapping="Wrap" Height="Auto" Foreground="Black" TextAlignment="Justify">
                     <Run Text="О&#160;себе:" FontSize="24" Foreground="Black" FontWeight="DemiBold"/>
                     <Run Text=" "/> 
-                    <Run Text="РазработчикРазработ чикРазработчикРазработчикРазработчик Разработчик Разработчик" FontWeight="ExtraLight" />
-                </TextBlock>
-            </StackPanel>
+                    <Run Text="{Binding UserProfileDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="ExtraLight" />
+                        </TextBlock>
+                    </StackPanel>
 
-        </Grid>
+                </Grid>
+
+                <!--Кнопка для редактирования информации о себе-->
+                <Button Grid.Column="2" Grid.Row="1" Height="40" Padding="0,-5,0,-5" Margin="30,32,0,0" Background="Transparent" BorderBrush="Transparent" materialDesign:RippleAssist.IsDisabled="True" 
+VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding OpenPopupChangeInfo}">
+
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                            <Setter Property="Background" Value="Black"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="FontWeight" Value="Regular"/>
+                            <Setter Property="Opacity" Value="1"/>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="GreenYellow"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Foreground" Value="GreenYellow"/>
+
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" />
+                    </StackPanel>
+                </Button>
+
+                <!--#region Popup-->
+
+                <!--Фон для Popup-->
+                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Grid.RowSpan="8" x:Name="DarkBackground" 
+Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
+
+                <Popup x:Name="ChangingProfilePopup" PlacementTarget="{Binding ElementName=mainGrid}" 
+ IsOpen="{Binding StartPoupOfOutAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+ VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 
+ AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!--фон-->
+                    <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="5"
+ Style="{StaticResource OutlineOfPopup}">
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Изменение описания -->
+                            <Grid Grid.Row="0" Width="400" Height="250" Visibility="{Binding IsProfileDescriptionEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
+                                        <TextBlock Text="Изменение информации о себе." 
+                   FontSize="20" 
+                   FontWeight="DemiBold" 
+                   HorizontalAlignment="Center" 
+                   TextWrapping="Wrap" 
+                   TextAlignment="Center" 
+                   Height="25" Margin="0,-5,0,0"/>
+
+                                        <!--Поле для ввода информации о себе-->
+                                        <TextBox Grid.Row="2" Height="90" 
+                                HorizontalAlignment="Center" materialDesign:HintAssist.Hint="Расскажите о своих увлечениях, достижениях и т.д." 
+                                Text="{Binding UserProfileDescriptionPopup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                materialDesign:TextFieldAssist.HasClearButton="True"
+                                materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding Path=IsChecked, 
+                                ElementName=MaterialDesignOutlinedTextBoxTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                MaxLength="300" Style="{StaticResource MaterialDesignOutlinedTextBox}" TextWrapping="Wrap" 
+                                VerticalScrollBarVisibility="Auto" Width="355" Margin="0,25,0,0" />
+
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+                Height="35" Background="Gray" BorderBrush="Black" 
+                Command="{Binding ClosePopup}"/>
+                                        <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
+                Height="35" Background="Gray" BorderBrush="Black" Command="{Binding SaveData}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <!-- Изменение изображения -->
+                            <Grid Grid.Row="1" Width="400" Height="350" Visibility="{Binding IsImageEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
+                                        <TextBlock Text="Изменение изображения профиля." 
+   FontSize="20" 
+   FontWeight="DemiBold" 
+   HorizontalAlignment="Center" 
+   TextWrapping="Wrap" 
+   TextAlignment="Center" 
+   Height="25" Margin="0,-5,0,0"/>
+
+                                        <!--Изображение-->
+                                        <Image Source="{Binding ProfilePicturePopup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       Width="200" Margin="0,18,0,0" VerticalAlignment="Center"/>
+
+                                    </StackPanel>
+
+                                    <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+Height="35" Background="Gray" BorderBrush="Black" 
+Command="{Binding ClosePopup}"/>
+                                        <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
+Height="35" Background="Gray" BorderBrush="Black" Command="{Binding SaveData}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+
+                        </Grid>
+
+                    </Border>
+                </Popup>
+
+                <!--#endregion-->
+
+                <!--Сообщение об ограничение действий-->
+                <Border Grid.Row="2" Grid.ColumnSpan="4" Height="Auto" Width="550" Margin="50,50,50,10" Background="WhiteSmoke"
+                BorderBrush="IndianRed" BorderThickness="5" CornerRadius="10" Padding="0,10,0,10" HorizontalAlignment="Left"
+                        Visibility="{Binding IsUserLimitations, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Foreground="Black" FontWeight="ExtraLight" FontSize="20" MaxWidth="500" TextWrapping="Wrap"  TextAlignment="Justify">
+                    <Run Text="Ограничение: " FontWeight="DemiBold"/>
+                    <Run Text="Вы не можете оставлять комментарии в данный момент." FontWeight="ExtraLight"/>
+                        </TextBlock>
+                        <TextBlock Foreground="Black" FontWeight="ExtraLight" FontSize="20" MaxWidth="500" TextWrapping="Wrap" TextAlignment="Justify">
+                    <Run Text="Причина ограничения: " FontWeight="DemiBold"/>
+                    <Run Text="{Binding UserLimitations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontWeight="ExtraLight"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!--Сообщения-->
+                <Border Grid.Column="3" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
+HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Margin="0,50,-5,0" Grid.Row="0">
+                    <!--сообщение об ошибке-->
+                    <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+       x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+       Margin="10, 10, 10, 10" 
+       FontWeight="Regular" FontSize="18"
+       Width="300"
+       TextWrapping="Wrap"/>
+                    <!-- Используйте TextWrapping для переноса текста -->
+                </Border>
+
+            </Grid>
+
+        </ScrollViewer>
 
     </Grid>
 </Page>

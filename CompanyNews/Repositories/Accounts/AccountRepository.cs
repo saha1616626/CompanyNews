@@ -157,7 +157,7 @@ namespace CompanyNews.Repositories.Accounts
 			if (account == null) throw new ArgumentNullException(nameof(account));
 
 			// Убедимся, что учетная запись существует
-			var existingAccount = await _context.Accounts.FindAsync(account.id);
+			var existingAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.id == account.id);
 			if (existingAccount == null) throw new KeyNotFoundException($"Учетная запись с ID {existingAccount.id} не найдена.");
 
 			// Обновление данных. Данным методом можно обновить только указанные поля в account

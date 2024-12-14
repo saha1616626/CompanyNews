@@ -15,6 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Runtime.CompilerServices;
 using CompanyNews.Helpers;
 using CompanyNews.Helpers.Event;
+using CompanyNews.Models.Authorization;
 
 namespace CompanyNews.ViewModels.Authorization
 {
@@ -75,8 +76,21 @@ namespace CompanyNews.ViewModels.Authorization
                         {
 							if (await LogInYourAccount(login.Text.Trim(), password.Password.Trim()))
 							{
-                                // Если успешно, то происход вход в аккаунт
-                                AuthorizationEvent.LogInYourAccount();
+                                // Если успешно, то проверяем ограничения пользователя
+                                UserLoginStatus userLoginStatus = await _authorizationService.GetUserStatusInSystem();
+                                if (userLoginStatus != null)
+                                {
+                                    if ((bool)userLoginStatus.isProfileBlocked)
+                                    {
+										errorInputText.Text = $"Ваш профиль заблокирован.\nПричина: {userLoginStatus.reasonBlockingAccount}";
+										errorInputBorder.Visibility = System.Windows.Visibility.Visible;
+									}
+                                    else
+                                    {
+										// Если профиль не заблокирован, то происход вход в аккаунт
+										AuthorizationEvent.LogInYourAccount();
+									}
+								}
 							}
 							else
 							{

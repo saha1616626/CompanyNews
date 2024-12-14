@@ -127,6 +127,28 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
+		/// Переход на страницу "Учетные записи"
+		/// </summary>
+		private RelayCommand _openAccount { get; set; }
+		public RelayCommand OpenAccount
+		{
+			get
+			{
+				return _openAccount ??
+					(_openAccount = new RelayCommand((obj) =>
+					{
+						IsAccountIcon = true; // Отображаем кнопку с аккаунтом
+						IsGoBack = false; // Скрываем кнопку возврата назад
+						LaunchFrame.NavigationService.Navigate(new AccountPage());
+						lastCopy = new AccountPage();
+
+						// Закрываем "гамбургер" меню
+						HamburgerMenuEvent.CloseHamburgerMenu();
+					}, (obj) => true));
+			}
+		}
+
+		/// <summary>
 		/// Переход на страницу для работы с учетными записями.
 		/// </summary>
 		public async void OpenPageAccount(object sender, EventAggregator e)
@@ -135,6 +157,9 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new AccountPage());
 			lastCopy = new AccountPage();
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
 		}
 
 		/// <summary>
@@ -146,6 +171,9 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new WorkDepartmentPage());
 			lastCopy = new WorkDepartmentPage();
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
 		}
 
 		/// <summary>
@@ -157,6 +185,9 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new NewsCategoryPage());
 			lastCopy = new NewsCategoryPage();
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
 		}
 
 		/// <summary>
@@ -166,6 +197,9 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			LaunchFrame.NavigationService.Navigate(new NewsPostPage());
 			lastCopy = new NewsPostPage();
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
 		}
 
 		/// <summary>
@@ -175,6 +209,9 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			LaunchFrame.NavigationService.Navigate(new MessageUserPage());
 			lastCopy = new MessageUserPage();
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
 		}
 
 		#endregion

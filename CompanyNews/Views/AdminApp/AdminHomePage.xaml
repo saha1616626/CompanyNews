@@ -24,7 +24,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
     </Page.Resources>
 
-    <Grid Background="AliceBlue" DataContext="{StaticResource AdminHomeViewModel}" x:Name="test">
+    <Grid Background="AliceBlue" DataContext="{StaticResource AdminHomeViewModel}" x:Name="mainGrid">
 
         <!--стили-->
         <Grid.Resources>
@@ -59,8 +59,13 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
         <!--Название сервиса-->
         <Grid Grid.Row="0" Grid.Column="1" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-            <TextBlock Text="Новости ТРАЙТЭК" FontSize="24" Foreground="Black"
-   VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="10,10,0,10"/>
+            <Button Background="Transparent" BorderThickness="0" BorderBrush="Transparent"
+                    materialDesign:RippleAssist.IsDisabled="True" Height="50"
+                    VerticalAlignment="Center" HorizontalAlignment="Left"
+                    Command="{Binding OpenAccount}">
+                <TextBlock Text="Новости ТРАЙТЭК" FontSize="24" Foreground="Black"
+VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="-6,0,0,0"/>
+            </Button>
         </Grid>
 
         <Grid Grid.Row="0" Grid.Column="2" Margin="0,0,30,0" HorizontalAlignment="Right">
@@ -195,11 +200,7 @@ Margin="0,5,0,5" Height="40" Padding="20,0,20,0" Visibility="{Binding IsGoBack, 
 
             <!--#region Popup-->
 
-            <!-- Размещение Popup относительно данного grid-->
-            <Grid x:Name="positionPopup" Grid.RowSpan="8" Grid.ColumnSpan="8" 
-HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-            <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=test}" 
+            <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=mainGrid}" 
             IsOpen="{Binding StartPoupOfOutAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
             VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 

@@ -40,7 +40,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         </Grid>
 
         <Border Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" BorderThickness="1" x:Name="errorInputBorder" Visibility="Hidden"
-HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Margin="0,20,-5,0" Grid.Row="0">
+HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Margin="0,50,-5,0" Grid.Row="0">
             <!--сообщение об ошибке-->
             <TextBlock Text="{Binding errorInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
        x:Name="errorInputText" HorizontalAlignment="Left" VerticalAlignment="Center"
