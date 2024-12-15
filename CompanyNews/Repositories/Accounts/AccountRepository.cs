@@ -130,7 +130,7 @@ namespace CompanyNews.Repositories.Accounts
 		public async Task<IEnumerable<AccountExtended>?> GetAllAccountsAsync()
 		{
 			// Получаем список аккаунтов
-			IEnumerable<Account> accounts = await _context.Accounts.ToListAsync();
+			IEnumerable<Account>? accounts = await _context.Accounts.ToListAsync();
 			if (accounts == null) { return null; }
 
 			// Список аккаунтов

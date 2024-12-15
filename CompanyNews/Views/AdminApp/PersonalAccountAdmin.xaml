@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp"
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-      MouseLeftButtonDown="Window_MouseLeftButtonDown"
+      PreviewMouseLeftButtonUp="Window_MouseLeftButtonDown"
       mc:Ignorable="d" 
       MinHeight="700" Width="Auto"
       Title="PersonalAccountAdmin">

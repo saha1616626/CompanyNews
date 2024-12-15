@@ -1,7 +1,9 @@
 ﻿using CompanyNews.Helpers;
+using CompanyNews.Helpers.Event;
 using CompanyNews.Models;
 using CompanyNews.Models.Extended;
 using CompanyNews.Services;
+using CompanyNews.Views.AdminApp.WorkingWithData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -146,7 +148,8 @@ namespace CompanyNews.ViewModels.AdminApp
 					(_addAccount = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						AccountPageFrame = new AccountWorkingPage();
 					}, (obj) => true));
 			}
 		}
@@ -479,6 +482,14 @@ namespace CompanyNews.ViewModels.AdminApp
 				_listBlockedAccountsSelected = value; OnPropertyChanged(nameof(ListBlockedAccountsSelected));
 				LoadAccount();
 			}
+		}
+
+		// Page для запуска страницы
+		private Page _accountPageFrame { get; set; }
+		public Page AccountPageFrame
+		{
+			get { return _accountPageFrame; }
+			set { _accountPageFrame = value; OnPropertyChanged(nameof(AccountPageFrame)); }
 		}
 
 		#endregion

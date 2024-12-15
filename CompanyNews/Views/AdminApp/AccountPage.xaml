@@ -7,7 +7,7 @@
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
       mc:Ignorable="d" 
-      MouseLeftButtonDown="Window_MouseLeftButtonDown"
+      PreviewMouseLeftButtonUp="Window_MouseLeftButtonDown"
       MinHeight="700" Width="Auto" SizeChanged="Window_SizeChanged"
       Title="AccountPage">
 
@@ -218,7 +218,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         <!--#region Popup-->
 
         <!--фон для Popup-->
-        <Border x:Name="DarkBackground" 
+        <Border x:Name="DarkBackground"
   Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
   Background="#80000000" Panel.ZIndex="1" 
   Margin="-600,-600,-600,-600"/>
@@ -284,6 +284,10 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         </Popup>
 
         <!--#endregion-->
+
+        <!--Фрейм страницы для редактирования и добавления данных-->
+        <Frame x:Name="ordersFrame" Content="{Binding AccountPageFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+        NavigationUIVisibility="Hidden" />
 
     </Grid>
 

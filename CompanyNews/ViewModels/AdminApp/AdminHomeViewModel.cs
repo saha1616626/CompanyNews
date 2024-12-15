@@ -74,12 +74,12 @@ namespace CompanyNews.ViewModels.AdminApp
 				if (userLoginStatus.accountRole == "Администратор")
 				{
 					LaunchFrame.NavigationService.Navigate(new AccountPage());
-					lastCopy = new AccountPage();
+					LastPageType = typeof(AccountPage);
 				}
 				else if (userLoginStatus.accountRole == "Модератор")
 				{
 					LaunchFrame.NavigationService.Navigate(new NewsPostPage());
-					lastCopy = new NewsPostPage();
+					LastPageType = typeof(NewsPostPage);
 				}
 			}
 		}
@@ -120,7 +120,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем "гамбургер" меню
 
 						// Открываем последнюю страницу перед переходом в ЛК
-						LaunchFrame.Navigate(lastCopy);
+						LaunchFrame.Navigate(Activator.CreateInstance(LastPageType)); //  Activator.CreateInstance() создает новый экземпляр страницы каждый раз при навигации.
 
 					}, (obj) => true));
 			}
@@ -140,7 +140,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 						IsGoBack = false; // Скрываем кнопку возврата назад
 						LaunchFrame.NavigationService.Navigate(new AccountPage());
-						lastCopy = new AccountPage();
+						LastPageType = typeof(AccountPage);
 
 						// Закрываем "гамбургер" меню
 						HamburgerMenuEvent.CloseHamburgerMenu();
@@ -156,7 +156,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new AccountPage());
-			lastCopy = new AccountPage();
+			LastPageType = typeof(AccountPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();
@@ -170,7 +170,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new WorkDepartmentPage());
-			lastCopy = new WorkDepartmentPage();
+			LastPageType = typeof(WorkDepartmentPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();
@@ -184,7 +184,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 			IsGoBack = false; // Скрываем кнопку возврата назад
 			LaunchFrame.NavigationService.Navigate(new NewsCategoryPage());
-			lastCopy = new NewsCategoryPage();
+			LastPageType = typeof(NewsCategoryPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();
@@ -196,7 +196,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void OpenPageNewsPost(object sender, EventAggregator e)
 		{
 			LaunchFrame.NavigationService.Navigate(new NewsPostPage());
-			lastCopy = new NewsPostPage();
+			LastPageType = typeof(NewsPostPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();
@@ -208,7 +208,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void OpenPageMessageUser(object sender, EventAggregator e)
 		{
 			LaunchFrame.NavigationService.Navigate(new MessageUserPage());
-			lastCopy = new MessageUserPage();
+			LastPageType = typeof(MessageUserPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();
@@ -221,7 +221,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Последний экземпляр класса
 		/// </summary>
-		public object lastCopy;
+		public Type LastPageType;
 
 		/// <summary>
 		/// Очистка памяти
