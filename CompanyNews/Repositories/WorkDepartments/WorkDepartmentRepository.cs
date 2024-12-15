@@ -28,7 +28,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// </summary>
 		public async Task<WorkDepartment?> GetWorkDepartmentByIdAsync(int id)
 		{
-			WorkDepartment? workDepartment = await  _context.WorkDepartments.FindAsync(id);
+			WorkDepartment? workDepartment = await  _context.WorkDepartments.FirstOrDefaultAsync(wd => wd.id == id);
 			if (workDepartment == null) { return null; }
 
 			return workDepartment;

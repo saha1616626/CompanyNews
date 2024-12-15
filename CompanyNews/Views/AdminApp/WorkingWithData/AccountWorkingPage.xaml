@@ -34,8 +34,8 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         <!--Заголовок-->
         <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding HeadingPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
             FontSize="30"
-            Foreground="Black" FontWeight="DemiBold" Margin="0,20,0,0" 
-            VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            Foreground="Black" FontWeight="DemiBold" Margin="50,35,0,0" 
+            VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
         <!--Сообщения системы-->
         <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
@@ -51,7 +51,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         </Border>
 
 
-        <Grid Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0">
+        <Grid Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -112,8 +112,8 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
 
             <!--выбор роли пользователя-->
-            <ComboBox ItemsSource="{Binding OptionsRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                    Grid.Column="2" Grid.Row="1" x:Name="Role" DisplayMemberPath="name"
+            <ComboBox ItemsSource="{Binding ListRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                    Grid.Column="2" Grid.Row="1" x:Name="Role" 
                                     SelectedValue="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsReadOnly="True" VerticalAlignment="Top" Width="300" Margin="30,40,0,0" 
                                     materialDesign:HintAssist.Hint="Роль*" IsEditable="True"
@@ -154,14 +154,14 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <Button Grid.Row="5" Grid.Column="2" Content="Изменить пароль"
                                 Width="150" Height="35" HorizontalAlignment="Center"
                                 Visibility="{Binding IsEditUser, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Background="Gray" BorderBrush="Black" Margin="30,20,0,0" Command="{Binding Btn_EditPassword}"/>
+                                Background="Gray" BorderBrush="Black" Margin="30,20,0,0" Command="{Binding ChangePassword}"/>
 
             <!--Выбор рабочего отдела-->
-            <ComboBox ItemsSource="{Binding WorkDepartment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            <ComboBox ItemsSource="{Binding ListWorkDepartments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                         Grid.Column="1" Grid.Row="1" x:Name="WorkDepartment" DisplayMemberPath="name"
-                        SelectedValue="{Binding SelectedRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValue="{Binding SelectedWorkDepartment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         IsReadOnly="True" VerticalAlignment="Top" Width="300" Margin="30,40,0,0" 
-                        materialDesign:HintAssist.Hint="Рабочий отдел*" IsEditable="True"
+                        materialDesign:HintAssist.Hint="Рабочий отдел*" IsEditable="False"
                         Style="{StaticResource MaterialDesignOutlinedComboBox}">
             </ComboBox>
 
@@ -187,12 +187,12 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Margin="1,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
 
                 <StackPanel Orientation="Horizontal" Margin="0,-10,0,0">
-                    <Button Grid.Row="0" Content="Отмена" 
+                    <Button Grid.Row="0" Content="Закрыть" 
 Width="150" Height="35" Background="Gray" 
 BorderBrush="Black" Command="{Binding Refund}" />
                     <Button Grid.Row="1" Content="Сохранить"
 x:Name="RenameButtonBrand" Width="150" Height="35" 
-Background="Gray" BorderBrush="Black" Margin="15,0,0,0" Command="{Binding Btn_SaveData}"/>
+Background="Gray" BorderBrush="Black" Margin="15,0,0,0" Command="{Binding SaveData}"/>
                 </StackPanel>
 
             </Grid>

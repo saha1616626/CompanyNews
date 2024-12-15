@@ -44,6 +44,11 @@ namespace CompanyNews.ViewModels.AdminApp
 			ListAccountExtendeds = new ObservableCollection<AccountExtended>();
 			SettingUpPage(); // Первоначальная настройка страницы
 			LoadAccount(); // Выводим список на экран
+
+			// Подписываемся на событие — успшное добавление данных.
+			WorkingWithDataEvent.dataWasAddedSuccessfullyAccount += DataWasAddedSuccessfullyAccount;
+			// Подписываемся на событие — успшное изменение данных.
+			WorkingWithDataEvent.dataWasChangedSuccessfullyAccount += DataWasChangedSuccessfullyAccount;
 		}
 
 		#region CRUD Operations
@@ -56,6 +61,32 @@ namespace CompanyNews.ViewModels.AdminApp
 			DefaultListSelected = true; // Список аккаунтов по умолчанию
 			ListBlockedAccountsSelected = false; // Список заблокирванных аккаунтов не отображается
 			DarkBackground = Visibility.Collapsed; // Скрываем фон для Popup
+		}
+
+		/// <summary>
+		/// Успшное добавление данных
+		/// </summary>
+		public async void DataWasAddedSuccessfullyAccount(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Учетная запись успешно создана.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
+		}
+
+		/// <summary>
+		/// Успшное изменение данных
+		/// </summary>
+		public async void DataWasChangedSuccessfullyAccount(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Учетная запись успешно изменена.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
 		}
 
 		/// <summary>
@@ -149,7 +180,7 @@ namespace CompanyNews.ViewModels.AdminApp
 					{
 						isAddData = true;
 						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
-						AccountPageFrame = new AccountWorkingPage();
+						AccountPageFrame = new AccountWorkingPage(isAddData, SelectedAccount);
 					}, (obj) => true));
 			}
 		}
@@ -166,7 +197,8 @@ namespace CompanyNews.ViewModels.AdminApp
 					(_editAccount = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						AccountPageFrame = new AccountWorkingPage(isAddData, SelectedAccount);
 
 					}, (obj) => true));
 			}

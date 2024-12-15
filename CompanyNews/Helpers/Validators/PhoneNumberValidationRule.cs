@@ -18,7 +18,7 @@ namespace CompanyNews.Helpers.Validators
 		{
 			string input = value as string;
 
-			// Проверка на заполнение
+			// Проверка на заполнениеif
 			if (string.IsNullOrEmpty(input))
 			{
 				return new ValidationResult(false, "Номер телефона должен быть заполнен.");
