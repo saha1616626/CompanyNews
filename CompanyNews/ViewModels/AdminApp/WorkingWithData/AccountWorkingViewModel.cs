@@ -45,18 +45,32 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 		/// </summary>
 		public async Task InitialPageSetup(bool IsAddData, AccountExtended? accountExtended)
 		{
-			if(IsAddData) // Режим добавления данных
+			this.isAddData = IsAddData;
+			
+			if (IsAddData) // Режим добавления данных
 			{
 				HeadingPage = "Создание учетной записи";
-
+				IsEditPassword = false; // Убираем кнопку редактирования пароля
+				IsBlockingUsers = true; // Возможность блокировать аккаунты
 
 			}
-            else
-            {
+			else
+			{
 				HeadingPage = "Изменение учетной записи";
 
-				if(accountExtended != null)
+				if (accountExtended != null)
 				{
+					this.AccountExtended = accountExtended;
+
+					// Убираем возможность блокировки Администратора
+					if (accountExtended.accountRole == "Администратор")
+					{
+						IsBlockingUsers = false;
+					}
+					else { IsBlockingUsers = true; }
+					IsEditPassword = true; // Возможность изменять пароли
+
+
 					SelectAccountExtended = accountExtended;
 
 					// Заполняем все поля
@@ -67,7 +81,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 					{
 						animationName.Text = accountExtended.name;
 						animationSurname.Text = accountExtended.surname;
-						if(accountExtended.patronymic != null)
+						if (accountExtended.patronymic != null)
 						{
 							animationPatronymic.Text = accountExtended.patronymic;
 						}
@@ -80,10 +94,13 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 						animationLogin.Text = accountExtended.login;
 
 						// Рабочий отел
-						SelectedWorkDepartment = await _workDepartmentService.GetWorkDepartmentByIdAsync(accountExtended.id);
-						SelectedRole = accountExtended.accountRole; 
+						SelectedWorkDepartment = await _workDepartmentService.GetWorkDepartmentByIdAsync((int)accountExtended.workDepartmentId);
+						SelectedRole = accountExtended.accountRole;
 
-						if(accountExtended.reasonBlockingAccount != null) { animationReasonBlockingMessages.Text = accountExtended.reasonBlockingAccount; }
+						// Блокировка
+						IsBlockAccount = accountExtended.isProfileBlocked;
+
+						if (accountExtended.reasonBlockingAccount != null) { animationReasonBlockingMessages.Text = accountExtended.reasonBlockingAccount; }
 					}
 				}
 				else
@@ -97,7 +114,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 			ListRole = new List<string>() { "Модератор", "Пользователь" };
 			// Рабочий отел
 			ListWorkDepartments = new List<WorkDepartment>(await _workDepartmentService.GetAllWorkDepartmentsAsync());
-        }
+		}
 
 		/// <summary>
 		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI
@@ -124,7 +141,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 							SelectedWorkDepartment != null && !string.IsNullOrWhiteSpace(animationLogin.Text))
 							{
 								// Валидация телефона
-								if(animationNumberPhone.Text.Length != 11)
+								if (animationNumberPhone.Text.Length != 11)
 								{
 									StartFieldIllumination(animationNumberPhone); // Подсветка поля
 									systemMessage.Text = "Номер телефона должен содержать 11 цифр.";
@@ -162,11 +179,73 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 											{
 												if (isAddData) // Добавление данных
 												{
-
+													if (await CheckingUsernameUniqueness())
+													{
+														// Логин прошел проверку
+														// Проверка пароля
+														if (await CheckPassword())
+														{
+															Account account = new Account();
+															account.login = animationLogin.Text.Trim();
+															account.password = PasswordHasher.HashPassword(animationLogin.Text.Trim());
+															account.accountRole = SelectedRole;
+															account.workDepartmentId = SelectedWorkDepartment.id;
+															account.phoneNumber = animationNumberPhone.Text.Trim();
+															account.name = animationName.Text.Trim();
+															account.surname = animationSurname.Text.Trim();
+															if (animationPatronymic != null) { account.patronymic = animationPatronymic.Text.Trim(); }
+															account.isProfileBlocked = IsBlockAccount;
+															if(animationReasonBlockingMessages != null) { account.reasonBlockingAccount = animationReasonBlockingMessages.Text.Trim(); }
+															
+															await _accountService.AddAccountAsync(account); // Добавляем в БД
+															HamburgerMenuEvent.OpenPageAccount(); // Выход со страницы
+															WorkingWithDataEvent.DataWasAddedSuccessfullyAccount(); // Уведомление об успешно добавлении данных
+														}
+													}
+													else
+													{
+														StartFieldIllumination(animationLogin); // Подсветка поля
+														systemMessage.Text = "Логин уже существует.";
+														systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+														// Исчезание сообщения
+														BeginFadeAnimation(systemMessage);
+														BeginFadeAnimation(systemMessageBorder);
+													}
 												}
 												else // Редактирование данных
 												{
+													if (await CheckingUsernameUniqueness())
+													{
+														// Логин прошел проверку
+														Account account = new Account();
+														account.id = AccountExtended.id;
+														account.login = animationLogin.Text.Trim();
+														account.accountRole = AccountExtended.accountRole;
+														account.workDepartmentId = SelectedWorkDepartment.id;
+														account.phoneNumber = animationNumberPhone.Text.Trim();
+														account.name = animationName.Text.Trim();
+														account.surname = animationSurname.Text.Trim();
+														if (animationPatronymic != null) { account.patronymic = animationPatronymic.Text.Trim(); }
+														account.isProfileBlocked = IsBlockAccount;
+														if (animationReasonBlockingMessages != null) { account.reasonBlockingAccount = animationReasonBlockingMessages.Text.Trim(); }
 
+														// Получаем новый пароль
+														AccountExtended accountExtended = await _accountService.GetAccountByIdAsync(account.id);
+														account.password = accountExtended.password;
+
+														await _accountService.UpdateAccountAsync(account); // Добавляем в БД
+														HamburgerMenuEvent.OpenPageAccount(); // Выход со страницы
+														WorkingWithDataEvent.DataWasChangedSuccessfullyAccount(); // Уведомление об успешно обновлении данных
+													}
+													else
+													{
+														StartFieldIllumination(animationLogin); // Подсветка поля
+														systemMessage.Text = "Логин уже существует.";
+														systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+														// Исчезание сообщения
+														BeginFadeAnimation(systemMessage);
+														BeginFadeAnimation(systemMessageBorder);
+													}
 												}
 											}
 
@@ -213,11 +292,34 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 								BeginFadeAnimation(systemMessage);
 								BeginFadeAnimation(systemMessageBorder);
 							}
-							
+
 						}
-						
+
 					}, (obj) => true));
 			}
+		}
+
+		/// <summary>
+		/// Проверка логина
+		/// </summary>
+		/// <returns></returns>
+		public async Task<bool> CheckingUsernameUniqueness()
+		{
+			// Проверка логина на уникальность
+			IEnumerable<AccountExtended> accounts = await _accountService.GetAllAccountsAsync();
+			if (accounts != null)
+			{
+				if (isAddData) // При добавлении данных данных
+				{
+					return !accounts.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant()));
+				}
+				else // При редактировании данных
+				{
+					return !accounts.Where(a => !a.login.Equals(SelectAccountExtended.login, StringComparison.OrdinalIgnoreCase)) // Получение списка с исключенным текущим логином "SelectAccountExtended.login"
+						.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant())); // Поиск в полученном списке совпадения
+				}
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -411,6 +513,8 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 			animationReasonBlockingMessages = ReasonBlockingMessages;
 		}
 
+
+
 		/// <summary>
 		/// Выбранная роль
 		/// </summary>
@@ -438,7 +542,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 		/// <summary>
 		///  Переданный аккаунт для изменения
 		/// </summary>
-		private AccountExtended SelectAccountExtended {  get; set; }
+		private AccountExtended SelectAccountExtended { get; set; }
 
 		/// <summary>
 		/// Выбранный рабочий отдел
@@ -465,26 +569,45 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 		}
 
 		/// <summary>
+		/// Видимость кнопки изменения пароля
+		/// </summary>
+		private bool _isEditPassword { get; set; }
+		public bool IsEditPassword
+		{
+			get { return _isEditPassword; }
+			set { _isEditPassword = value; OnPropertyChanged(nameof(IsEditPassword)); }
+		}
+
+		/// <summary>
+		/// Видимость checkbox для блокировки аккаунта
+		/// </summary>
+		private bool _isBlockingUsers { get; set; }
+		public bool IsBlockingUsers
+		{
+			get { return _isBlockingUsers; }
+			set { _isBlockingUsers = value; OnPropertyChanged(nameof(IsBlockingUsers)); }
+		}
+
+
+		/// <summary>
 		/// Имя
 		/// </summary>
 		public TextBox? animationName { get; set; }
 
-		//public string Nam
-
 		/// <summary>
 		/// Фамилия
 		/// </summary>
-		public TextBox? animationSurname { get; set; } 
+		public TextBox? animationSurname { get; set; }
 
 		/// <summary>
 		/// Отчество
 		/// </summary>
-		public TextBox? animationPatronymic { get; set; } 
+		public TextBox? animationPatronymic { get; set; }
 
 		/// <summary>
 		/// Номер телефона
 		/// </summary>
-		public TextBox? animationNumberPhone { get; set; } 
+		public TextBox? animationNumberPhone { get; set; }
 
 		/// <summary>
 		/// Роль
@@ -538,6 +661,11 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 		private bool isAddData { get; set; }
 
 		/// <summary>
+		/// Полученный объект для изменения
+		/// </summary>
+		private AccountExtended AccountExtended { get; set; }
+
+		/// <summary>
 		/// Заголовок страницы
 		/// </summary>
 		private string? _headingPage { get; set; }
@@ -556,7 +684,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 			get { return _isBlockAccount; }
 			set
 			{
-				_isBlockAccount = value; 
+				_isBlockAccount = value;
 				OnPropertyChanged(nameof(IsBlockAccount));
 				if (IsBlockAccount)
 				{

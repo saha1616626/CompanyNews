@@ -98,7 +98,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
 				var accounts = await _accountService.GetAllAccountsAsync();
-				foreach (var account in accounts)
+				foreach (var account in accounts.Reverse())
 				{
 					ListAccountExtendeds.Add(account);
 				}
@@ -108,7 +108,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				ListAccountExtendeds.Clear(); // Чистка коллекции перед заполнением
 				var accounts = await _accountService.GetAllAccountsAsync();
-				foreach (var account in accounts)
+				foreach (var account in accounts.Reverse())
 				{
 					if(account.isProfileBlocked) 
 						ListAccountExtendeds.Add(account);
@@ -244,7 +244,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных аккаунта в UI Popup
+		/// Кнопка удаления аккаунта в UI Popup
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }

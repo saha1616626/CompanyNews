@@ -145,7 +145,6 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                                     VerticalAlignment="Center" HorizontalAlignment="Center"  
                                     materialDesign:TextFieldAssist.HasClearButton="True"
                                     Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"
-                                    Visibility="{Binding IsEditUser, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     materialDesign:HintAssist.Hint="Повтор пароля*" 
                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
                                     MaxLength="100" Width="300"/>
@@ -153,7 +152,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             <!--кнопка для изменения пароля-->
             <Button Grid.Row="5" Grid.Column="2" Content="Изменить пароль"
                                 Width="150" Height="35" HorizontalAlignment="Center"
-                                Visibility="{Binding IsEditUser, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Visibility="{Binding IsEditPassword, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Background="Gray" BorderBrush="Black" Margin="30,20,0,0" Command="{Binding ChangePassword}"/>
 
             <!--Выбор рабочего отдела-->
@@ -167,7 +166,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
             <!--Аккаунт заблокирован-->
             <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" Margin="30,10,0,0" 
-            HorizontalAlignment="Center" VerticalAlignment="Center">
+            HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsBlockingUsers, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TextBlock Text="Заблокировать аккаунт" FontWeight="ExtraBold" FontSize="14"/>
                 <CheckBox x:Name="IsBlockAccount" IsChecked="{Binding IsBlockAccount, Mode=TwoWay}" Margin="10,2,0,0"/>
             </StackPanel>

@@ -79,7 +79,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                 <ListBoxItem Height="50" IsSelected="{Binding ListBlockedAccountsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Аккунт заблокирован "/>
-                        <materialDesign:PackIcon Kind="ArrowUpDropCircle" />
+                        <materialDesign:PackIcon Kind="AccountCancel" />
                     </StackPanel>
                 </ListBoxItem>
             </ListBox>
