@@ -40,5 +40,36 @@ namespace CompanyNews.Helpers.Event
 		}
 
 		#endregion
+
+
+		#region NewsCategory
+
+		/// <summary>
+		/// Подписка на событие - успешное добавление данных. На странице для работы с категориями.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasAddedSuccessfullyNewsCategory;
+		/// <summary>
+		/// Вызов метода успешного добавление данных. На странице для работы с категориями.
+		/// </summary>
+		public static void DataWasAddedSuccessfullyNewsCategory()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasAddedSuccessfullyNewsCategory?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Подписка на событие - успешное изменение данных. На странице для работы с категориями.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasChangedSuccessfullyNewsCategory;
+		/// <summary>
+		/// Вызов метода успешного изменения данных. На странице для работы с категориями.
+		/// </summary>
+		public static void DataWasChangedSuccessfullyNewsCategory()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasChangedSuccessfullyNewsCategory?.Invoke(null, new EventAggregator());
+		}
+
+		#endregion
 	}
 }

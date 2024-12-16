@@ -183,9 +183,9 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                                      MaxLength="1000" TextWrapping="Wrap" Width="300"/>
 
             <!--кнопки-->
-            <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Margin="1,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
 
-                <StackPanel Orientation="Horizontal" Margin="0,-10,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,0">
                     <Button Grid.Row="0" Content="Закрыть" 
 Width="150" Height="35" Background="Gray" 
 BorderBrush="Black" Command="{Binding Refund}" />

@@ -1,0 +1,118 @@
+﻿<Page x:Class="CompanyNews.Views.AdminApp.WorkingWithData.NewsCategoryWorkingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CompanyNews.Views.AdminApp.WorkingWithData"
+      xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp.WorkingWithData"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      mc:Ignorable="d" 
+      MouseLeftButtonDown="Window_MouseLeftButtonDown"
+      MinHeight="700" Width="Auto"
+      Title="NewsCategoryWorkingPage">
+
+    <Page.Resources>
+
+        <!--связываем View и ViewModel-->
+        <ViewModel:NewsCategoryWorkingViewModel x:Key="NewsCategoryWorkingViewModel"/>
+
+        <!--анимация подсветки полей-->
+        <Storyboard x:Key="fieldIllumination">
+            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource NewsCategoryWorkingViewModel}"  Background="AliceBlue">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!--Заголовок-->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding HeadingPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+    FontSize="30"
+    Foreground="Black" FontWeight="DemiBold" Margin="50,35,0,0" 
+    VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <!--Сообщения системы-->
+        <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+    BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
+    HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="400" Margin="0,30,-5,0">
+            <!--Тело сообщения-->
+            <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+Margin="10, 10, 10, 10" 
+FontWeight="Regular" FontSize="18"
+Width="370"
+TextWrapping="Wrap"/>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--поле для ввода названия-->
+            <TextBox Grid.Column="0" Grid.Row="0" x:Name="Name" Height="50" Margin="0,40,0,0"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Text="{Binding TextName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                    materialDesign:HintAssist.Hint="Название*" 
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                    MaxLength="100" TextWrapping="Wrap" Width="300" />
+
+            <!--описание-->
+            <TextBox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Height="110" Margin="0,20,0,0" x:Name="Description"
+                                     VerticalAlignment="Center" HorizontalAlignment="Center"
+                                     Visibility="{Binding IsDescription, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     Text="{Binding TextDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                     materialDesign:TextFieldAssist.HasClearButton="True"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                                     materialDesign:HintAssist.Hint="Описание"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                                     MaxLength="1000" TextWrapping="Wrap" Width="300"/>
+
+            <!--Аккаунт заблокирован-->
+            <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Margin="0,40,0,0" 
+            HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsBlockingUsers, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Добавить в архив" FontWeight="ExtraBold" FontSize="14"/>
+                <CheckBox x:Name="IsBlockAccount" IsChecked="{Binding IsAddArchive, Mode=TwoWay}" Margin="10,3.28,0,0"/>
+            </StackPanel>
+
+            <!--кнопки-->
+            <Grid Grid.Column="0" Grid.Row="4" Margin="0,50,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Center">
+                    <Button Grid.Row="0" Content="Закрыть" 
+Width="150" Height="35" Background="Gray" 
+BorderBrush="Black" Command="{Binding Refund}" />
+                    <Button Grid.Row="1" Content="Сохранить"
+x:Name="RenameButtonBrand" Width="150" Height="35" 
+Background="Gray" BorderBrush="Black" Margin="15,0,0,0" Command="{Binding SaveData}"/>
+                </StackPanel>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Page>

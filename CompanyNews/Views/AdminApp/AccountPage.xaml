@@ -228,11 +228,12 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             IsOpen="{Binding StartPoupDeleteData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
             VerticalOffset="-40" StaysOpen="False" Closed="MyPopup_Closed" 
-            AllowsTransparency="False" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid Background="Gray">
+            AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+          
                 <!--фон-->
-                <Border Background="AliceBlue" Style="{StaticResource OutlineOfPopup}" >
-                    <Grid Width="500" Height="330">
+            <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
+Style="{StaticResource OutlineOfPopup}">
+                <Grid Width="500" Height="330">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -280,7 +281,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                         </Grid>
                     </Grid>
                 </Border>
-            </Grid>
+           
         </Popup>
 
         <!--#endregion-->

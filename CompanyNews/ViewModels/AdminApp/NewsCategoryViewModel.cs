@@ -14,6 +14,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
+using CompanyNews.Helpers.Event;
+using CompanyNews.Views.AdminApp.WorkingWithData;
+using CompanyNews.Views.AdminApp;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
@@ -40,6 +43,11 @@ namespace CompanyNews.ViewModels.AdminApp
 			ListNewsCategories = new ObservableCollection<NewsCategory>();
 			SettingUpPage(); // Первоначальная настройка страницы
 			LoadNewsCategory(); // Выводим список на экран
+
+			// Подписываемся на событие — успшное добавление данных.
+			WorkingWithDataEvent.dataWasAddedSuccessfullyNewsCategory += DataWasAddedSuccessfullyNewsCategory;
+			// Подписываемся на событие — успшное изменение данных.
+			WorkingWithDataEvent.dataWasChangedSuccessfullyNewsCategory += DataWasChangedSuccessfullyNewsCategory;
 		}
 
 		#region CRUD Operations
@@ -64,7 +72,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				ListNewsCategories.Clear(); // Чистка коллекции перед заполнением
 				var newsCategories = await _newsCategoryService.GetAllNewsCategoriesAsync();
-				foreach (var newsCategory in newsCategories)
+				foreach (var newsCategory in newsCategories.Reverse())
 				{
 					if(!newsCategory.isArchived)
 					{
@@ -77,7 +85,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				ListNewsCategories.Clear(); // Чистка коллекции перед заполнением
 				var newsCategories = await _newsCategoryService.GetAllNewsCategoriesAsync();
-				foreach (var newsCategory in newsCategories)
+				foreach (var newsCategory in newsCategories.Reverse())
 				{
 					if (newsCategory.isArchived)
 					{
@@ -137,7 +145,8 @@ namespace CompanyNews.ViewModels.AdminApp
 					(_addNewsCategory = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						NewsCategoryPageFrame = new NewsCategoryWorkingPage(isAddData, SelectedNewsCategory);
 					}, (obj) => true));
 			}
 		}
@@ -154,8 +163,8 @@ namespace CompanyNews.ViewModels.AdminApp
 					(_editNewsCategory = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
-
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						NewsCategoryPageFrame = new NewsCategoryWorkingPage(isAddData, SelectedNewsCategory);
 					}, (obj) => true));
 			}
 		}
@@ -171,13 +180,19 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _deleteNewsCategory ??
 					(_deleteNewsCategory = new RelayCommand(async (obj) =>
 					{
+						StartPoupDeleteData = true; // отображаем Popup
+						DarkBackground = Visibility.Visible; // показать фон
 
+						if (SelectedNewsCategory != null)
+						{
+							DataDeleted = $"Название: \"{SelectedNewsCategory.name}\"";
+						}
 					}, (obj) => true));
 			}
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных категории в UI
+		/// Кнопка удаления аккаунта в UI Popup
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -188,18 +203,52 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _saveData ??
 					(_saveData = new RelayCommand(async (obj) =>
 					{
-
-						if (isAddData) // Логика при добавлении данных
+						if (SelectedNewsCategory != null)
 						{
+							await DeleteNewsCategoryAsync(SelectedNewsCategory);
+
+							if (systemMessage != null && systemMessageBorder != null)
+							{
+								await ClosePopupWorkingWithData(); // Скрываем Popup
+																   // Выводим сообщение об успешном удалении данных
+								systemMessage.Text = $"Категория успешно удалена.";
+								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+								// Исчезание сообщения
+								BeginFadeAnimation(systemMessage);
+								BeginFadeAnimation(systemMessageBorder);
+							}
 
 						}
-						else // Логика при редактировании данных
-						{
 
-						}
 
 					}, (obj) => true));
 			}
+		}
+
+		/// <summary>
+		/// Успшное добавление данных
+		/// </summary>
+		public async void DataWasAddedSuccessfullyNewsCategory(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Категория успешно создана.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
+		}
+
+		/// <summary>
+		/// Успшное изменение данных
+		/// </summary>
+		public async void DataWasChangedSuccessfullyNewsCategory(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Категория успешно изменена.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
 		}
 
 		#endregion
@@ -349,6 +398,14 @@ namespace CompanyNews.ViewModels.AdminApp
 		private bool isAddData { get; set; }
 
 		#region View
+
+		// Page для запуска страницы
+		private Page _newsCategoryPageFrame { get; set; }
+		public Page NewsCategoryPageFrame
+		{
+			get { return _newsCategoryPageFrame; }
+			set { _newsCategoryPageFrame = value; OnPropertyChanged(nameof(NewsCategoryPageFrame)); }
+		}
 
 		/// <summary>
 		/// Затемненный фон позади Popup

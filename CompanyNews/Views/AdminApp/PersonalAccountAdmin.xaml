@@ -209,7 +209,7 @@ Background="#80000000" Panel.ZIndex="1" Margin="-2000,0,-2000,-2000"/>
  VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 
  AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <!--фон-->
-                    <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="5"
+                    <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
  Style="{StaticResource OutlineOfPopup}">
 
                         <Grid>

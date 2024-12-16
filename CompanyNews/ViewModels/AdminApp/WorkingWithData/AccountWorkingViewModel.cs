@@ -235,7 +235,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 
 														await _accountService.UpdateAccountAsync(account); // Добавляем в БД
 														HamburgerMenuEvent.OpenPageAccount(); // Выход со страницы
-														WorkingWithDataEvent.DataWasChangedSuccessfullyAccount(); // Уведомление об успешно обновлении данных
+														WorkingWithDataEvent.DataWasChangedSuccessfullyAccount(); // Уведомление об успешном обновлении данных
 													}
 													else
 													{
@@ -302,7 +302,6 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 		/// <summary>
 		/// Проверка логина
 		/// </summary>
-		/// <returns></returns>
 		public async Task<bool> CheckingUsernameUniqueness()
 		{
 			// Проверка логина на уникальность

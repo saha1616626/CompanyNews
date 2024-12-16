@@ -107,7 +107,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// </summary>
 		public async Task DeleteNewsCategoryAsync(int id)
 		{
-			var newsCategory = await _context.NewsCategories.FindAsync(id);
+			var newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(c => c.id == id);
 			if (newsCategory == null) { return; }
 			_context.NewsCategories.Remove(newsCategory);
 			await _context.SaveChangesAsync();

@@ -108,16 +108,16 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" >
                     <Button Content="Добавить" 
-MinWidth="100" Height="35" Background="Gray" Command="{Binding AddAccount}"
+MinWidth="100" Height="35" Background="Gray" Command="{Binding AddNewsCategory}"
 BorderBrush="Black"/>
 
-                    <Button Content="Редктировать" Command="{Binding EditAccount}"
+                    <Button Content="Редктировать" Command="{Binding EditNewsCategory}"
 MinWidth="100" Height="35" Background="Gray" BorderBrush="Black"
-Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableEdit}"/>
+Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
 
                     <Button Content="Удалить" MinWidth="100" 
-Height="35" Background="Gray" BorderBrush="Black" Command="{Binding DeleteAccount}"
-Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableDelete}"/>
+Height="35" Background="Gray" BorderBrush="Black" Command="{Binding DeleteNewsCategory}"
+Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
                 </StackPanel>
 
             </Grid>
@@ -192,10 +192,11 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableDelete}"/>
             IsOpen="{Binding StartPoupDeleteData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
             VerticalOffset="-40" StaysOpen="False" Closed="MyPopup_Closed" 
-            AllowsTransparency="False" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid Background="Gray">
+            AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+           
                 <!--фон-->
-                <Border Background="AliceBlue" Style="{StaticResource OutlineOfPopup}" >
+            <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
+ Style="{StaticResource OutlineOfPopup}">
                     <Grid Width="500" Height="330">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -244,7 +245,7 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnableDelete}"/>
                         </Grid>
                     </Grid>
                 </Border>
-            </Grid>
+            
         </Popup>
 
         <!--#endregion-->
