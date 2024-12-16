@@ -1,0 +1,35 @@
+﻿<Page x:Class="CompanyNews.Views.AdminApp.WorkingWithData.WorkDepartmentWorkingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CompanyNews.Views.AdminApp.WorkingWithData"
+      xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp.WorkingWithData"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      mc:Ignorable="d" 
+      MouseLeftButtonDown="Window_MouseLeftButtonDown"
+      MinHeight="700" Width="Auto"
+      Title="WorkDepartmentWorkingPage">
+
+    <Page.Resources>
+
+        <!--связываем View и ViewModel-->
+        <ViewModel:WorkDepartmentWorkingViewModel x:Key="WorkDepartmentWorkingViewModel"/>
+
+        <!--анимация подсветки полей-->
+        <Storyboard x:Key="fieldIllumination">
+            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource WorkDepartmentWorkingViewModel}"  Background="AliceBlue">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+    </Grid>
+</Page>
