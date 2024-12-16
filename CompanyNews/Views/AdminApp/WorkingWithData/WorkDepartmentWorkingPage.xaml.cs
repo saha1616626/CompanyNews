@@ -1,4 +1,5 @@
 ﻿using CompanyNews.Helpers.Event;
+using CompanyNews.Models;
 using CompanyNews.ViewModels.AdminApp.WorkingWithData;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace CompanyNews.Views.AdminApp.WorkingWithData
 		/// </summary>
 		private readonly WorkDepartmentWorkingViewModel _workDepartmentWorkingViewModel;
 
-		public WorkDepartmentWorkingPage()
+		public WorkDepartmentWorkingPage(bool IsAddData, WorkDepartment workDepartment)
 		{
 			InitializeComponent();
 

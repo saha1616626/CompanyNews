@@ -21,7 +21,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Получение списка рабочих отделов
 		/// </summary>
-		Task<IEnumerable<WorkDepartment>> GetAllWorkDepartmentsAsync();
+		IEnumerable<WorkDepartment> GetAllWorkDepartmentsAsync();
 
 		/// <summary>
 		/// Добавить рабочий отдел

@@ -436,7 +436,7 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		#endregion
 
-		#region UsersSearch
+		#region Search
 
 		// Cписок для фильтров таблицы
 		public ObservableCollection<NewsCategory> ListSearch { get; set; } = new ObservableCollection<NewsCategory>();
@@ -457,7 +457,7 @@ namespace CompanyNews.ViewModels.AdminApp
 					string description = "";
 					if (item.description == null) { description = ""; } else { description = item.description; }
 
-					string unification = item.name.ToLower() + " " + description;
+					string unification = item.name.ToLower() + " " + description.ToLower();
 
 					bool dataExists = unification.Contains(searchByValue.ToLowerInvariant());
 

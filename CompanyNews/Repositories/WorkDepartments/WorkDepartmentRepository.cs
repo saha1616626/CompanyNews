@@ -37,10 +37,10 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Получение списка рабочих отделов
 		/// </summary>
-		public async Task<IEnumerable<WorkDepartment>?> GetAllWorkDepartmentsAsync()
+		public IEnumerable<WorkDepartment>? GetAllWorkDepartmentsAsync()
 		{
 			// Получаем список рабочих отделов
-			IEnumerable<WorkDepartment> workDepartments = await _context.WorkDepartments.ToListAsync();
+			IEnumerable<WorkDepartment> workDepartments = _context.WorkDepartments.ToList();
 			if (workDepartments == null) { return null; }
 
 			return workDepartments;
@@ -68,7 +68,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 			if (workDepartment == null) throw new ArgumentNullException(nameof(workDepartment));
 
 			// Убедимся, что рабочий отдел существует
-			var existingNewsWorkDepartment = await _context.WorkDepartments.FindAsync(workDepartment.id);
+			var existingNewsWorkDepartment = await _context.WorkDepartments.FirstOrDefaultAsync(wd => wd.id == workDepartment.id);
 			if (existingNewsWorkDepartment == null) throw new KeyNotFoundException($"Рабочий отдел с ID {existingNewsWorkDepartment.id} не найден.");
 
 			// Обновление данных. Данным методом можно обновить только указанные поля в workDepartment
@@ -81,7 +81,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// </summary>
 		public async Task DeleteWorkDepartmentAsync(int id)
 		{
-			var workDepartment = await _context.WorkDepartments.FindAsync(id);
+			var workDepartment = await _context.WorkDepartments.FirstOrDefaultAsync(wd => wd.id == id);
 			if (workDepartment == null) { return; }
 			_context.WorkDepartments.Remove(workDepartment);
 			await _context.SaveChangesAsync();

@@ -28,7 +28,7 @@ namespace CompanyNews.Services
 
 		public async Task<IEnumerable<WorkDepartment>> GetAllWorkDepartmentsAsync()
 		{
-			return await _workDepartmentRepository.GetAllWorkDepartmentsAsync();
+			return _workDepartmentRepository.GetAllWorkDepartmentsAsync();
 		}
 
 		#endregion

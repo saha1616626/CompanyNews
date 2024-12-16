@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows;
+using CompanyNews.Helpers.Event;
+using CompanyNews.Views.AdminApp.WorkingWithData;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
@@ -26,13 +29,24 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Отображаемый список рабочих отделов в UI
 		/// </summary>
-		public ObservableCollection<WorkDepartment> ListWorkDepartments;
+		private ObservableCollection<WorkDepartment> _listWorkDepartments { get; set; }
+		public ObservableCollection<WorkDepartment> ListWorkDepartments
+		{
+			get { return _listWorkDepartments; }
+			set { _listWorkDepartments = value; OnPropertyChanged(nameof(ListWorkDepartments)); }
+		}
 
 		public WorkDepartmentViewModel()
 		{
 			_workDepartmentService = ServiceLocator.GetService<WorkDepartmentService>();
 			ListWorkDepartments = new ObservableCollection<WorkDepartment>();
+			SettingUpPage(); // Первоначальная настройка страницы
 			LoadWorkDepartment(); // Выводим список на экран
+
+			// Подписываемся на событие — успшное добавление данных.
+			WorkingWithDataEvent.dataWasAddedSuccessfullyWorkDepartment += DataWasAddedSuccessfullyWorkDepartment;
+			// Подписываемся на событие — успшное изменение данных.
+			WorkingWithDataEvent.dataWasChangedSuccessfullyWorkDepartment += DataWasChangedSuccessfullyWorkDepartment;
 		}
 
 		#region CRUD Operations
@@ -87,18 +101,27 @@ namespace CompanyNews.ViewModels.AdminApp
 		#region UI RelayCommand Operations
 
 		/// <summary>
+		/// Первоначальная настройка страницы
+		/// </summary>
+		public async void SettingUpPage()
+		{
+			DarkBackground = Visibility.Collapsed; // Скрываем фон для Popup
+		}
+
+		/// <summary>
 		/// Кнопка "добавить" рабочий отдел в UI
 		/// </summary>
-		private RelayCommand _addWorkDepartment { get; set; }
-		public RelayCommand AddWorkDepartment
+		private RelayCommand _add { get; set; }
+		public RelayCommand Add
 		{
 			get
 			{
-				return _addWorkDepartment ??
-					(_addWorkDepartment = new RelayCommand(async (obj) =>
+				return _add ??
+					(_add = new RelayCommand(async (obj) =>
 					{
 						isAddData = true;
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						PageFrame = new WorkDepartmentWorkingPage(isAddData, SelectedWorkDepartment);
 					}, (obj) => true));
 			}
 		}
@@ -106,39 +129,46 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Кнопка "изменить" рабочий отдел в UI
 		/// </summary>
-		private RelayCommand _editWorkDepartment { get; set; }
-		public RelayCommand EditWorkDepartment
+		private RelayCommand _edit { get; set; }
+		public RelayCommand Edit
 		{
 			get
 			{
-				return _editWorkDepartment ??
-					(_editWorkDepartment = new RelayCommand(async (obj) =>
+				return _edit ??
+					(_edit = new RelayCommand(async (obj) =>
 					{
 						isAddData = false;
-
-
+						HamburgerMenuEvent.CloseHamburgerMenu(); // Закрываем, если открыто "гамбургер меню"
+						PageFrame = new WorkDepartmentWorkingPage(isAddData, SelectedWorkDepartment);
 					}, (obj) => true));
 			}
 		}
 
+
 		/// <summary>
-		/// Кнопка "удалить" рабочий отдел в UI
+		/// Кнопка "удалить" в UI
 		/// </summary>
-		private RelayCommand _deleteWorkDepartment { get; set; }
-		public RelayCommand DeleteWorkDepartment
+		private RelayCommand _delete { get; set; }
+		public RelayCommand Delete
 		{
 			get
 			{
-				return _deleteWorkDepartment ??
-					(_deleteWorkDepartment = new RelayCommand(async (obj) =>
+				return _delete ??
+					(_delete = new RelayCommand(async (obj) =>
 					{
+						if (SelectedWorkDepartment != null)
+						{
+							StartPoupDeleteData = true; // отображаем Popup
+							DarkBackground = Visibility.Visible; // показать фон
 
+							DataDeleted = $"Название: \"{SelectedWorkDepartment.name}\"";
+						}
 					}, (obj) => true));
 			}
 		}
 
 		/// <summary>
-		/// Кнопка сохранения новых или изменения старых данных рабочего отдела в UI
+		/// Кнопка для удаления в UI Popup
 		/// </summary>
 
 		private RelayCommand _saveData { get; set; }
@@ -149,18 +179,52 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _saveData ??
 					(_saveData = new RelayCommand(async (obj) =>
 					{
-
-						if (isAddData) // Логика при добавлении данных
+						if (SelectedWorkDepartment != null)
 						{
+							await DeleteWorkDepartmentAsync(SelectedWorkDepartment);
+
+							if (systemMessage != null && systemMessageBorder != null)
+							{
+								await ClosePopupWorkingWithData(); // Скрываем Popup
+																   // Выводим сообщение об успешном удалении данных
+								systemMessage.Text = $"Рабочий отдел успешно удален.";
+								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+								// Исчезание сообщения
+								BeginFadeAnimation(systemMessage);
+								BeginFadeAnimation(systemMessageBorder);
+							}
 
 						}
-						else // Логика при редактировании данных
-						{
 
-						}
 
 					}, (obj) => true));
 			}
+		}
+
+		/// <summary>
+		/// Успшное добавление данных
+		/// </summary>
+		public async void DataWasAddedSuccessfullyWorkDepartment(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Категория успешно создана.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
+		}
+
+		/// <summary>
+		/// Успшное изменение данных
+		/// </summary>
+		public async void DataWasChangedSuccessfullyWorkDepartment(object sender, EventAggregator e)
+		{
+			await Task.Delay(500);
+			systemMessage.Text = $"Категория успешно изменена.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
 		}
 
 		#endregion
@@ -188,8 +252,52 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-
+			// Закрываем Popup
+			StartPoupDeleteData = false;
+			DarkBackground = Visibility.Collapsed; // Скрываем фон
 		}
+
+		#region FeaturesPopup
+
+		/// <summary>
+		/// Popup удаления данных
+		/// </summary>
+		private bool _startPoupDeleteData { get; set; }
+		public bool StartPoupDeleteData
+		{
+			get { return _startPoupDeleteData; }
+			set
+			{
+				_startPoupDeleteData = value;
+				OnPropertyChanged(nameof(StartPoupDeleteData));
+			}
+		}
+
+		/// <summary>
+		/// Данные передаются в Popup, как предпросмотр перед удалением
+		/// </summary>
+		private string _dataDeleted { get; set; }
+		public string DataDeleted
+		{
+			get { return _dataDeleted; }
+			set { _dataDeleted = value; OnPropertyChanged(nameof(DataDeleted)); }
+		}
+
+		/// <summary>
+		/// Затемненный фон позади Popup
+		/// </summary>
+		private Visibility _darkBackground { get; set; }
+		public Visibility DarkBackground
+		{
+			get { return _darkBackground; }
+			set
+			{
+				_darkBackground = value;
+				OnPropertyChanged(nameof(DarkBackground));
+			}
+		}
+
+		#endregion
 
 		#endregion
 
@@ -202,8 +310,8 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
-			errorInputPopup = adminViewModelParameters.errorInputPopup;
-			errorInput = adminViewModelParameters.errorInputText;
+			systemMessageBorder = adminViewModelParameters.errorInputBorder;
+			systemMessage = adminViewModelParameters.errorInputText;
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
 
@@ -239,6 +347,14 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		#region View
 
+		// Page для запуска страницы
+		private Page _pageFrame { get; set; }
+		public Page PageFrame
+		{
+			get { return _pageFrame; }
+			set { _pageFrame = value; OnPropertyChanged(nameof(PageFrame)); }
+		}
+
 		/// <summary>
 		/// Затемненный фон позади Popup
 		/// </summary>
@@ -252,12 +368,12 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Вывод ошибки и анимация текста в Popup
 		/// </summary>
-		public TextBlock? errorInputPopup { get; set; }
+		public Border? systemMessageBorder { get; set; }
 
 		/// <summary>
 		/// Вывод ошибки и анимация текста на странице
 		/// </summary>
-		public TextBlock? errorInput { get; set; }
+		public TextBlock? systemMessage { get; set; }
 
 		/// <summary>
 		/// Popup удаления данных
@@ -265,6 +381,113 @@ namespace CompanyNews.ViewModels.AdminApp
 		public Popup? deleteDataPopup { get; set; }
 
 		#endregion
+
+		#endregion
+
+		#region Search
+
+		// Cписок для фильтров таблицы
+		public ObservableCollection<WorkDepartment> ListSearch { get; set; } = new ObservableCollection<WorkDepartment>();
+
+		/// <summary>
+		/// Поиск данных в таблицы через строку запроса
+		/// </summary>
+		public void SearchWorkDepartment(string searchByValue)
+		{
+			if (!string.IsNullOrWhiteSpace(searchByValue))
+			{
+				LoadWorkDepartment(); // обновляем список
+				ListSearch.Clear(); // очищаем список поиска данных
+
+				// Объединяем атрибуты сущности для поиска
+				foreach (WorkDepartment item in ListWorkDepartments)
+				{
+					string description = "";
+					if (item.description == null) { description = ""; } else { description = item.description; }
+
+					string unification = item.name.ToLower() + " " + description.ToLower();
+
+					bool dataExists = unification.Contains(searchByValue.ToLowerInvariant());
+
+					if (dataExists)
+					{
+						ListSearch.Add(item);
+					}
+				}
+
+				ListWorkDepartments.Clear(); // Очистка список перед заполнением
+				ListWorkDepartments = new ObservableCollection<WorkDepartment>(ListSearch); // Обновление списка
+
+				if (ListSearch.Count == 0)
+				{
+					if (systemMessage != null && systemMessageBorder != null)
+					{
+						// Оповещениие об отсутствии данных
+						systemMessage.Text = $"Рабочий отдел не найден.";
+						systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+						// Исчезание сообщения
+						BeginFadeAnimation(systemMessage);
+						BeginFadeAnimation(systemMessageBorder);
+					}
+				}
+			}
+			else
+			{
+				ListWorkDepartments.Clear(); // Очистка список перед заполнением
+				LoadWorkDepartment(); // обновляем список
+			}
+		}
+
+		#endregion
+
+		#region Animation
+
+		// выводим сообщения об ошибке с анимацией затухания
+		public async void BeginFadeAnimation(TextBlock textBlock)
+		{
+			textBlock.IsEnabled = true;
+			textBlock.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => textBlock.IsEnabled = false;
+			storyboard.Begin(textBlock);
+		}
+
+		public async void BeginFadeAnimation(Border border)
+		{
+			border.IsEnabled = true;
+			border.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => border.IsEnabled = false;
+			storyboard.Begin(border);
+		}
+
+		// запускаем анимации для TextBox (подсвечивание объекта)
+		private void StartFieldIllumination(TextBox textBox)
+		{
+			fieldIllumination.Begin(textBox);
+		}
+		private void StartFieldIllumination(PasswordBox passwordBox)
+		{
+			fieldIllumination.Begin(passwordBox);
+		}
 
 		#endregion
 

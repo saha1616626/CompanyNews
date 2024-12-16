@@ -71,5 +71,35 @@ namespace CompanyNews.Helpers.Event
 		}
 
 		#endregion
+
+		#region WorkDepartment
+
+		/// <summary>
+		/// Подписка на событие - успешное добавление данных. На странице для работы с рабочими отделами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasAddedSuccessfullyWorkDepartment;
+		/// <summary>
+		/// Вызов метода успешного добавление данных. На странице для работы с рабочими отделами.
+		/// </summary>
+		public static void DataWasAddedSuccessfullyWorkDepartment()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasAddedSuccessfullyWorkDepartment?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Подписка на событие - успешное изменение данных. На странице для работы с рабочими отделами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasChangedSuccessfullyWorkDepartment;
+		/// <summary>
+		/// Вызов метода успешного изменения данных. На странице для работы с рабочими отделами.
+		/// </summary>
+		public static void DataWasChangedSuccessfullyWorkDepartment()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasChangedSuccessfullyWorkDepartment?.Invoke(null, new EventAggregator());
+		}
+
+		#endregion
 	}
 }
