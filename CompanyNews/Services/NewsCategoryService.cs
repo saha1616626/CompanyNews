@@ -29,7 +29,7 @@ namespace CompanyNews.Services
 
 		public async Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync()
 		{
-			return await _newsCategoryRepository.GetAllNewsCategoriesAsync();
+			return  _newsCategoryRepository.GetAllNewsCategoriesAsync();
 		}
 
 		public async Task<CategoryPostsExtended?> GetListNewsPostGroupedByCategory(Models.NewsCategory newsCategory)

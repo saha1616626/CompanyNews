@@ -37,9 +37,9 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Получение списка всех категорий постов
 		/// </summary>
-		public async Task<IEnumerable<Models.NewsCategory>?> GetAllNewsCategoriesAsync()
+		public IEnumerable<Models.NewsCategory>? GetAllNewsCategoriesAsync()
 		{
-			IEnumerable<Models.NewsCategory> newsCategories = await _context.NewsCategories.ToListAsync();
+			IEnumerable<Models.NewsCategory> newsCategories = _context.NewsCategories.ToList();
 			if(newsCategories == null) { return null; }
 
 			return newsCategories;

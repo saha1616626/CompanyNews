@@ -23,7 +23,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Получение списка категорий постов
 		/// </summary>
-		Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync();
+		IEnumerable<Models.NewsCategory> GetAllNewsCategoriesAsync();
 
 		/// <summary>
 		/// Получение списка всех постов новостей с группировкой по категории.

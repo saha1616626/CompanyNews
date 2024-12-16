@@ -25,12 +25,12 @@ namespace CompanyNews.Services
 
 		public async Task<AccountExtended?> AcountConvert(Account? account)
 		{
-			return await _accountRepository.AcountConvert(account);
+			return _accountRepository.AcountConvert(account);
 		}
 
 		public async Task<Account?> AccountExtendedConvert(AccountExtended? accountExtended)
 		{
-			return await _accountRepository.AccountExtendedConvert(accountExtended);
+			return _accountRepository.AccountExtendedConvert(accountExtended);
 		}
 
 		#endregion
@@ -44,7 +44,7 @@ namespace CompanyNews.Services
 
 		public async Task<IEnumerable<AccountExtended>> GetAllAccountsAsync()
 		{
-			return await _accountRepository.GetAllAccountsAsync();
+			return _accountRepository.GetAllAccountsAsync();
 		}
 
 		#endregion

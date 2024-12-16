@@ -31,7 +31,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		public async Task<AccountExtended?> AcountConvert(Account? account)
+		public AccountExtended? AcountConvert(Account? account)
 		{
 			// Проверяем, не равен ли account null
 			if (account == null) { return null; }
@@ -45,8 +45,8 @@ namespace CompanyNews.Repositories.Accounts
 			if (account.workDepartmentId != null)
 			{
 				// Получаем значение должности по id
-				WorkDepartment? workDepartment = await _context.WorkDepartments
-					.FirstOrDefaultAsync(wd => wd.id == account.workDepartmentId);
+				WorkDepartment? workDepartment = _context.WorkDepartments
+					.FirstOrDefault(wd => wd.id == account.workDepartmentId);
 
 				if (workDepartment == null) { accountExtended.workDepartmentId = account.workDepartmentId; accountExtended.workDepartmentName = null; }
 				else
@@ -83,7 +83,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
-		public async Task<Account?> AccountExtendedConvert(AccountExtended? accountExtended)
+		public Account? AccountExtendedConvert(AccountExtended? accountExtended)
 		{
 			// Проверяем, не равен ли accountExtended null
 			if (accountExtended == null) { return null; }
@@ -121,16 +121,16 @@ namespace CompanyNews.Repositories.Accounts
 			if (account == null) { return null; }
 	
 			// Преобразование идентификатора на соответствующие значение из БД 
-			return await AcountConvert(account);	
+			return AcountConvert(account);	
 		}
 
 		/// <summary>
 		/// Получение списка аккаунтов
 		/// </summary>
-		public async Task<IEnumerable<AccountExtended>?> GetAllAccountsAsync()
+		public IEnumerable<AccountExtended>? GetAllAccountsAsync()
 		{
 			// Получаем список аккаунтов
-			IEnumerable<Account>? accounts = await _context.Accounts.ToListAsync();
+			IEnumerable<Account>? accounts = _context.Accounts.ToList();
 			if (accounts == null) { return null; }
 
 			// Список аккаунтов
@@ -139,8 +139,8 @@ namespace CompanyNews.Repositories.Accounts
 			foreach (var account in accounts)
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
-				if(await AcountConvert(account) == null) { continue; }
-				AccountExtended accountExtended = await AcountConvert(account);
+				if(AcountConvert(account) == null) { continue; }
+				AccountExtended accountExtended = AcountConvert(account);
 				accountExtendeds.Add(accountExtended);
 			}
 

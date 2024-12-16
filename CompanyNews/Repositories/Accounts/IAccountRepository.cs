@@ -19,14 +19,14 @@ namespace CompanyNews.Repositories.Accounts
 		/// </summary>
 		/// <param name="account"></param>
 		/// <returns></returns>
-		Task<AccountExtended> AcountConvert(Account account);
+		AccountExtended AcountConvert(Account account);
 		/// <summary>
 		/// Получение Account из AccountExtended. 
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
 		/// <param name="accountExtended"></param>
 		/// <returns></returns>
-		Task<Account> AccountExtendedConvert(AccountExtended accountExtended);
+		Account AccountExtendedConvert(AccountExtended accountExtended);
 
 		/// <summary>
 		/// Получение аккаунта
@@ -37,7 +37,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// <summary>
 		/// Получение списка аккаунтов
 		/// </summary>
-		Task<IEnumerable<AccountExtended>> GetAllAccountsAsync();
+		IEnumerable<AccountExtended> GetAllAccountsAsync();
 
 		/// <summary>
 		/// Добавить аккаунт
