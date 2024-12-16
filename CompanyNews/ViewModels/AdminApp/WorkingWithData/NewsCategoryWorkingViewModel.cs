@@ -111,6 +111,15 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 										HamburgerMenuEvent.OpenPageNewsCategory();
 										WorkingWithDataEvent.DataWasAddedSuccessfullyNewsCategory(); // Уведомление об успешно добавлении данных
 									}
+									else
+									{
+										StartFieldIllumination(animationName); // Подсветка поля
+										systemMessage.Text = "Категория уже существует.";
+										systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+										// Исчезание сообщения
+										BeginFadeAnimation(systemMessage);
+										BeginFadeAnimation(systemMessageBorder);
+									}
 								}
 								else // Редактирование данных
 								{
@@ -126,6 +135,15 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 										// Возврат на страницу "Категории"
 										HamburgerMenuEvent.OpenPageNewsCategory();
 										WorkingWithDataEvent.DataWasChangedSuccessfullyNewsCategory(); // Уведомление об успешном обновлении данных
+									}
+									else
+									{
+										StartFieldIllumination(animationName); // Подсветка поля
+										systemMessage.Text = "Категория уже существует.";
+										systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+										// Исчезание сообщения
+										BeginFadeAnimation(systemMessage);
+										BeginFadeAnimation(systemMessageBorder);
 									}
 								}
 							}

@@ -28,7 +28,7 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 		/// <summary>
 		///  Получение доступных категории постов рабочего отдела из WorkDepartment
 		/// </summary>
-		public async Task<NewsCategoriesWorkDepartmentExtended?> WorkDepartmentConvert
+		public NewsCategoriesWorkDepartmentExtended? WorkDepartmentConvert
 			(WorkDepartment? workDepartment)
 		{
 			// Проверяем, не равен ли workDepartment null
@@ -38,32 +38,32 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 			newsCategoriesWorkDepartmentExtended.workDepartment = workDepartment;
 
 			// Получение категорий для данного рабочего отдела
-			List<NewsCategoriesWorkDepartment> newsCategoriesWorkDepartments = await _context.NewsCategoriesWorkDepartments.Where(ncwd => ncwd.workDepartmentId == workDepartment.id).ToListAsync();
+			List<NewsCategoriesWorkDepartment> newsCategoriesWorkDepartments = _context.NewsCategoriesWorkDepartments.Where(ncwd => ncwd.workDepartmentId == workDepartment.id).ToList();
 			// Если категорий нет у всех рабочего отдела, то возваращаем пустой список
 			if (newsCategoriesWorkDepartments == null) { newsCategoriesWorkDepartmentExtended.categories = null; return newsCategoriesWorkDepartmentExtended; }
 
 			// Список доступных категорий
 			List<NewsCategoryExtended> newsCategoryExtendeds = new List<NewsCategoryExtended>();
 
-			foreach(var item in newsCategoriesWorkDepartments)
+			foreach (var item in newsCategoriesWorkDepartments)
 			{
 				// Получаем категорию
-				Models.NewsCategory newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(newsCategory => newsCategory.id == item.newsCategoryId);
-				if (newsCategory == null) {  continue; }
+				Models.NewsCategory newsCategory = _context.NewsCategories.FirstOrDefault(newsCategory => newsCategory.id == item.newsCategoryId);
+				if (newsCategory == null) { continue; }
 
 				// Вносим данные полученной категории в модифицированную категорию
 				NewsCategoryExtended newsCategoryExtended = new NewsCategoryExtended();
 				newsCategoryExtended.NewsCategoriesWorkDepartmentExtendedId = item.id; // Идентификатор доступной категории рабочего отдела (NewsCategoriesWorkDepartment)
 				newsCategoryExtended.id = newsCategory.id;
 				newsCategoryExtended.name = newsCategory.name;
-				if(newsCategory.description != null) { newsCategoryExtended.description = newsCategory.description; }
+				if (newsCategory.description != null) { newsCategoryExtended.description = newsCategory.description; }
 				newsCategoryExtended.isArchived = newsCategory.isArchived;
 
 				newsCategoryExtendeds.Add(newsCategoryExtended);
 			}
 
 			// Если не нашлись категории для рабочего отдела, то возварщаем null категорий
-			if(newsCategoryExtendeds == null) { newsCategoriesWorkDepartmentExtended.categories = null; return newsCategoriesWorkDepartmentExtended; }
+			if (newsCategoryExtendeds == null) { newsCategoriesWorkDepartmentExtended.categories = null; return newsCategoriesWorkDepartmentExtended; }
 
 			newsCategoriesWorkDepartmentExtended.categories = newsCategoryExtendeds;
 
@@ -77,21 +77,21 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 		/// <summary>
 		/// Получение доступных категорий постов рабочего отдела по идентификатору отдела
 		/// </summary>
-		public async Task<NewsCategoriesWorkDepartmentExtended?> GetNewsCategoriesWorkDepartmentExtendedByIdAsync
+		public NewsCategoriesWorkDepartmentExtended? GetNewsCategoriesWorkDepartmentExtendedByIdAsync
 			(int id)
 		{
-			WorkDepartment? workDepartment = await _context.WorkDepartments.FirstOrDefaultAsync(workDepartment => workDepartment.id == id);	
-			if(workDepartment == null) { return null; }
+			WorkDepartment? workDepartment = _context.WorkDepartments.FirstOrDefault(workDepartment => workDepartment.id == id);
+			if (workDepartment == null) { return null; }
 
-			return await WorkDepartmentConvert(workDepartment);
+			return WorkDepartmentConvert(workDepartment);
 		}
 
 		/// <summary>
 		/// Получение списка всех доступных категорий постов рабочих отделов с группирвокой по отделу
 		/// </summary>
-		public async Task<IEnumerable<NewsCategoriesWorkDepartmentExtended>?> GetNewsCategoriesWorkDepartmentExtendedAsync()
+		public IEnumerable<NewsCategoriesWorkDepartmentExtended>? GetNewsCategoriesWorkDepartmentExtendedAsync()
 		{
-			IEnumerable<WorkDepartment> workDepartments = await _context.WorkDepartments.ToListAsync();
+			IEnumerable<WorkDepartment> workDepartments = _context.WorkDepartments.ToList();
 			if (workDepartments == null) { return null; }
 
 
@@ -101,15 +101,15 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 			foreach (var workDepartment in workDepartments)
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
-				if (await WorkDepartmentConvert(workDepartment) == null) { continue; }
-				NewsCategoriesWorkDepartmentExtended? newsCategoriesWorkDepartmentExtended = 
-					await WorkDepartmentConvert(workDepartment);
-				if(newsCategoriesWorkDepartmentExtended != null)
+				if (WorkDepartmentConvert(workDepartment) == null) { continue; }
+				NewsCategoriesWorkDepartmentExtended? newsCategoriesWorkDepartmentExtended =
+					WorkDepartmentConvert(workDepartment);
+				if (newsCategoriesWorkDepartmentExtended != null)
 				{
 					newsCategoriesWorkDepartmentExtendeds.Add(newsCategoriesWorkDepartmentExtended);
 				}
 			}
-			
+
 			return newsCategoriesWorkDepartmentExtendeds;
 		}
 
@@ -120,24 +120,29 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 		/// <summary>
 		/// Добавить категорию поста рабочему отделу
 		/// </summary>
-		public async Task<NewsCategoriesWorkDepartment> AddNewsCategoriesWorkDepartmentAsync
+		public NewsCategoriesWorkDepartment AddNewsCategoriesWorkDepartmentAsync
 			(NewsCategoriesWorkDepartment newsCategoriesWorkDepartment)
 		{
 			_context.NewsCategoriesWorkDepartments.Add(newsCategoriesWorkDepartment);
-			await _context.SaveChangesAsync();
+			_context.SaveChanges();
 			return newsCategoriesWorkDepartment;
 		}
 
 		/// <summary>
-		/// Удалить категорию поста у рабочего отдела по идентификатору
+		/// Удалить все категории поста у рабочего отдела по идентификатору рабочего отдела
 		/// </summary>
 		/// <param name="id">id категории поста</param>
-		public async Task DeleteNewsCategoriesWorkDepartmentAsync(int id)
+		public void DeleteNewsCategoriesWorkDepartmentAsync(int id)
 		{
-			var newsCategoriesWorkDepartment = await _context.NewsCategoriesWorkDepartments.FirstOrDefaultAsync(ncwd => ncwd.id == id);
-			if (newsCategoriesWorkDepartment == null) { return; }
-			_context.NewsCategoriesWorkDepartments.Remove(newsCategoriesWorkDepartment);
-			await _context.SaveChangesAsync();
+			List<NewsCategoriesWorkDepartment> newsCategoriesWorkDepartments = _context.NewsCategoriesWorkDepartments.Where(ncwd => ncwd.workDepartmentId == id).ToList();
+			if (newsCategoriesWorkDepartments == null) { return; }
+
+			foreach(NewsCategoriesWorkDepartment item in newsCategoriesWorkDepartments)
+			{
+				_context.NewsCategoriesWorkDepartments.Remove(item);
+			}
+
+			_context.SaveChanges();
 		}
 
 		#endregion

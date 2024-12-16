@@ -33,7 +33,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// Изменить аккаунт
 		/// </summary>
 		/// <param name="workDepartment">Измененные данные</param>
-		Task UpdateWorkDepartmentAsync(WorkDepartment workDepartment);
+		void UpdateWorkDepartmentAsync(WorkDepartment workDepartment);
 
 		/// <summary>
 		/// Удалить аккаунт

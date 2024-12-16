@@ -56,6 +56,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task LoadWorkDepartment()
 		{
+			ListWorkDepartments.Clear(); // Чистка коллекции перед заполнением
 			var workDepartments = await _workDepartmentService.GetAllWorkDepartmentsAsync();
 			foreach (var account in workDepartments)
 			{
@@ -207,7 +208,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void DataWasAddedSuccessfullyWorkDepartment(object sender, EventAggregator e)
 		{
 			await Task.Delay(500);
-			systemMessage.Text = $"Категория успешно создана.";
+			systemMessage.Text = $"Рабочий отдел успешно создан.";
 			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 			// Исчезание сообщения
 			BeginFadeAnimation(systemMessage);
@@ -220,7 +221,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void DataWasChangedSuccessfullyWorkDepartment(object sender, EventAggregator e)
 		{
 			await Task.Delay(500);
-			systemMessage.Text = $"Категория успешно изменена.";
+			systemMessage.Text = $"Рабочий отдел успешно изменен.";
 			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 			// Исчезание сообщения
 			BeginFadeAnimation(systemMessage);

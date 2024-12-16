@@ -43,7 +43,7 @@ namespace CompanyNews.Services
 
 		public async Task UpdateWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
-			await _workDepartmentRepository.UpdateWorkDepartmentAsync(workDepartment);
+			_workDepartmentRepository.UpdateWorkDepartmentAsync(workDepartment);
 		}
 
 		public async Task DeleteWorkDepartmentAsync(int id)

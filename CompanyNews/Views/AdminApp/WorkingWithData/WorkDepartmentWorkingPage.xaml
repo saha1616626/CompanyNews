@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp.WorkingWithData"
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp.WorkingWithData"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-      mc:Ignorable="d" 
+      mc:Ignorable="d" SizeChanged="Window_SizeChanged"
       MouseLeftButtonDown="Window_MouseLeftButtonDown"
       MinHeight="700" Width="Auto"
       Title="WorkDepartmentWorkingPage">
@@ -24,12 +24,339 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
     </Page.Resources>
 
-    <Grid DataContext="{StaticResource WorkDepartmentWorkingViewModel}"  Background="AliceBlue">
+    <Grid DataContext="{StaticResource WorkDepartmentWorkingViewModel}"  Background="AliceBlue" x:Name="mainGrid">
+
+        <!--стили-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="\Dictionary\Table.xaml"/>
+                    <ResourceDictionary Source="\Dictionary\Popup.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Заголовок-->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding HeadingPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+FontSize="30"
+Foreground="Black" FontWeight="DemiBold" Margin="50,35,0,0" 
+VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <!--Сообщения системы-->
+        <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+    BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
+    HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="400" Margin="0,30,-5,0">
+            <!--Тело сообщения-->
+            <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+Margin="10, 10, 10, 10" 
+FontWeight="Regular" FontSize="18"
+Width="370"
+TextWrapping="Wrap"/>
+        </Border>
+
+        <Grid Grid.Row="0" Grid.RowSpan="4" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,-50,0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--поле для ввода названия-->
+            <TextBox Grid.Column="0" Grid.Row="0" x:Name="Name" Height="50" Margin="0,0,0,0"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Text="{Binding TextName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                    materialDesign:HintAssist.Hint="Название*" 
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                    MaxLength="100" TextWrapping="Wrap" Width="300" />
+
+            <!--описание-->
+            <TextBox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Height="110" Margin="0,20,0,0" x:Name="Description"
+                                     VerticalAlignment="Center" HorizontalAlignment="Center"
+                                     Visibility="{Binding IsDescription, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     Text="{Binding TextDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                     materialDesign:TextFieldAssist.HasClearButton="True"
+                                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                                     materialDesign:HintAssist.Hint="Описание"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                                     MaxLength="1000" TextWrapping="Wrap" Width="300"/>
+
+        </Grid>
+
+        <!--таблица с катеориями рабочего отдела-->
+        <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,50,0,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--#region Кнопки-->
+
+            <!--Кнопки для работы с таблицами-->
+            <Grid Grid.Row="0" Grid.Column="0">
+
+                <StackPanel Orientation="Horizontal" Margin="50,0,0,0" HorizontalAlignment="Left">
+                    <Button Grid.Row="0" Content="Добавить" 
+Width="100" Height="30" Background="Gray" 
+BorderBrush="Black" Command="{Binding AddItem}" />
+                    <Button Grid.Row="1" Content="Убрать"
+Width="100" Height="30" IsEnabled="{Binding IsWorkButtonEnable}"
+Background="Gray" BorderBrush="Black" Margin="15,0,0,0" Command="{Binding DeleteItem}"/>
+                </StackPanel>
+
+            </Grid>
+
+            <!--#endregion-->
+
+
+            <!--#region Табилца-->
+
+            <Grid Grid.Row="1" Margin="50,10,50,0">
+                <DataGrid IsReadOnly="True" Height="350" x:Name="MyDataGrid"
+                    HorizontalAlignment="Stretch" FontSize="16"
+                    VerticalScrollBarVisibility="Auto"
+                    Background="WhiteSmoke"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding ListNewsCategoryExtended}"
+                    SelectedItem="{Binding SelectedNewsCategoryExtended}"
+                    Style="{StaticResource MaterialDesignDataGrid}"
+                    ColumnHeaderStyle="{StaticResource ColumnTableHeader}">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Название" 
+                        Binding="{Binding name}"  
+                        Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Описание" Binding="{Binding description}"  Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Grid>
+
+            <!--#endregion-->
+
+        </Grid>
+        
+        <!--кнопки-->
+        <Grid Grid.Column="1" Grid.Row="4" Margin="0,30,50,0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Center">
+                <Button Grid.Row="0" Content="Закрыть" 
+Width="150" Height="35" Background="Gray" 
+BorderBrush="Black" Command="{Binding Refund}" />
+                <Button Grid.Row="1" Content="Сохранить"
+x:Name="RenameButtonBrand" Width="150" Height="35" 
+Background="Gray" BorderBrush="Black" Margin="15,0,0,0" Command="{Binding SaveData}"/>
+            </StackPanel>
+
+        </Grid>
+
+        <!--#region Popup-->
+
+        <!--фон для Popup-->
+        <Border x:Name="DarkBackground"
+ Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ Background="#80000000" Panel.ZIndex="1" 
+ Margin="-1200,-1200,-1200,-1200"/>
+
+        <!--Popup для добавления данных-->
+        <Popup x:Name="AddDataPopup" PlacementTarget="{Binding ElementName=mainGrid}"
+           IsOpen="{Binding StartPopup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+           Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+           VerticalOffset="-45" StaysOpen="False" Closed="MyPopup_Closed" 
+           AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <!--фон-->
+            <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
+Style="{StaticResource OutlineOfPopup}">
+                <Grid Width="1000" Height="550">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!--название Popup-->
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Работа со списоком категорий" FontSize="30"
+    HorizontalAlignment="Center" Foreground="Black" FontWeight="DemiBold" Margin="0,20,0,0"/>
+
+                    <!--Сообщения системы-->
+                    <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+    BorderThickness="1" x:Name="PopupMessageBorder" Visibility="Hidden"
+    HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Margin="0,90,100,0">
+                        <!--Тело сообщения-->
+                        <TextBlock Text="{Binding PopupMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+x:Name="PopupMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+Margin="10, 10, 10, 10" 
+FontWeight="Regular" FontSize="18"
+Width="270"
+TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!--Поиск Категории-->
+                    <TextBox Grid.Row="1" Grid.Column="0" x:Name="CategorySearchText" 
+    Height="50" Margin="100,30,0,0"
+    VerticalAlignment="Center" HorizontalAlignment="Left"
+    Text="{Binding CategorySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+    materialDesign:TextFieldAssist.HasClearButton="True"
+    TextChanged="CategorySearch"
+    Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+    materialDesign:HintAssist.Hint="Поиск категории" 
+    materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+    MaxLength="100" TextWrapping="Wrap" Width="300" />
+
+                    <!--скролл категорий-->
+                    <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="50,30,50,10" VerticalScrollBarVisibility="Auto">
+
+                        <!--список категорий-->
+                        <ItemsControl ItemsSource="{Binding ListAvailableCategories}">
+
+                            <!--расположение элементов раскрывающегося списка-->
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"  HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <!--дизайн макет карточек категорий-->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!--размеры и отступы карточек-->
+                                    <Border Width="800" Margin="0,2,0,0" BorderBrush="Black" BorderThickness="0.5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80*"/>
+                                                <ColumnDefinition Width="20*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--название, описание-->
+                                            <Grid Grid.Column="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!--название-->
+                                                <TextBlock Grid.Row="0" HorizontalAlignment="Left" 
+                                                    FontSize="18" Margin="10,5,0,0" TextWrapping="Wrap">
+                                                    <Run Text="Название: " FontWeight="DemiBold"/>
+                                                    <Run Text="{Binding name}" FontStyle="Italic" FontWeight="Light"/>
+                                                </TextBlock>
+
+                                                <!--описание-->
+                                                <TextBlock Grid.Row="1" HorizontalAlignment="Left" 
+                                                    FontSize="18" Margin="10,5,0,5" TextWrapping="Wrap">
+                                     <Run Text="Описание: " FontWeight="DemiBold"/>
+                                     <Run Text="{Binding description}" FontStyle="Italic" FontWeight="Light"/>
+                                                </TextBlock>
+                                            </Grid>
+
+                                            <!--кнопки-->
+                                            <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                                <Button Content="Добавить" Background="CornflowerBlue" BorderBrush="Black" Foreground="White" BorderThickness="1"
+                                                    Click="AddCategory" Width="100">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsAddCategory}" Value="false">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+
+                                                <Button Content="Убрать" Background="LightSeaGreen" BorderBrush="Black" Foreground="White" BorderThickness="1"
+                                                    Click="DeleteCategory" Width="100">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsDeleteCategory}" Value="false">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+
+                                            </Grid>
+                                            
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            
+                        </ItemsControl>
+                        
+                    </ScrollViewer>
+
+                    <!--кнопки-->
+                    <Grid Grid.Row="3" Grid.Column="0" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,40">
+                            <Button Grid.Row="0" Content="Закрыть" 
+Width="150" Height="35" Background="Gray" 
+BorderBrush="Black" Command="{Binding ClosePopup}" />
+                        </StackPanel>
+
+                    </Grid>
+
+                </Grid>
+            </Border>
+
+        </Popup>
+
+        <!--#endregion-->
 
     </Grid>
 </Page>

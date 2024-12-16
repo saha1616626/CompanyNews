@@ -63,17 +63,17 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Изменить рабочий отдел
 		/// </summary>
-		public async Task UpdateWorkDepartmentAsync(WorkDepartment workDepartment)
+		public void UpdateWorkDepartmentAsync(WorkDepartment workDepartment)
 		{
 			if (workDepartment == null) throw new ArgumentNullException(nameof(workDepartment));
 
 			// Убедимся, что рабочий отдел существует
-			var existingNewsWorkDepartment = await _context.WorkDepartments.FirstOrDefaultAsync(wd => wd.id == workDepartment.id);
+			var existingNewsWorkDepartment =  _context.WorkDepartments.FirstOrDefault(wd => wd.id == workDepartment.id);
 			if (existingNewsWorkDepartment == null) throw new KeyNotFoundException($"Рабочий отдел с ID {existingNewsWorkDepartment.id} не найден.");
 
 			// Обновление данных. Данным методом можно обновить только указанные поля в workDepartment
 			_context.Entry(existingNewsWorkDepartment).CurrentValues.SetValues(workDepartment);
-			await _context.SaveChangesAsync();
+			_context.SaveChanges();
 		}
 
 		/// <summary>

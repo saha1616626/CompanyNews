@@ -29,7 +29,7 @@ namespace CompanyNews.Services
 		public async Task<NewsCategoriesWorkDepartmentExtended?> WorkDepartmentConvert
 			(WorkDepartment? workDepartment)
 		{
-			return await _newsCategoriesWorkDepartmentRepository.WorkDepartmentConvert(workDepartment);
+			return _newsCategoriesWorkDepartmentRepository.WorkDepartmentConvert(workDepartment);
 		}
 
 		#endregion
@@ -43,7 +43,7 @@ namespace CompanyNews.Services
 		public async Task<NewsCategoriesWorkDepartmentExtended?> GetNewsCategoriesWorkDepartmentExtendedByIdAsync
 			(int id)
 		{
-			return await _newsCategoriesWorkDepartmentRepository.GetNewsCategoriesWorkDepartmentExtendedByIdAsync(id);
+			return _newsCategoriesWorkDepartmentRepository.GetNewsCategoriesWorkDepartmentExtendedByIdAsync(id);
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace CompanyNews.Services
 		/// </summary>
 		public async Task<IEnumerable<NewsCategoriesWorkDepartmentExtended>?> GetNewsCategoriesWorkDepartmentExtendedAsync()
 		{
-			return await _newsCategoriesWorkDepartmentRepository.GetNewsCategoriesWorkDepartmentExtendedAsync();
+			return _newsCategoriesWorkDepartmentRepository.GetNewsCategoriesWorkDepartmentExtendedAsync();
 		}
 
 		#endregion
@@ -65,18 +65,18 @@ namespace CompanyNews.Services
 		public async Task<NewsCategoriesWorkDepartment> AddNewsCategoriesWorkDepartmentAsync
 			(NewsCategoriesWorkDepartment newsCategoriesWorkDepartment)
 		{
-			var addedAvailableCategoriesUser = await _newsCategoriesWorkDepartmentRepository.AddNewsCategoriesWorkDepartmentAsync(newsCategoriesWorkDepartment);
+			var addedAvailableCategoriesUser = _newsCategoriesWorkDepartmentRepository.AddNewsCategoriesWorkDepartmentAsync(newsCategoriesWorkDepartment);
 			return addedAvailableCategoriesUser; // Возвращаем добавленную категорию рабочего отдела
 		}
 
 
 		/// <summary>
-		/// Удалить категорию поста у рабочего отдела по идентификатору
+		/// Удалить все категории поста у рабочего отдела по идентификатору рабочего отдела
 		/// </summary>
-		/// <param name="id">id категории поста</param>
+		/// <param name="id">id рабочего отдела</param>
 		public async Task DeleteNewsCategoriesWorkDepartmentAsync(int id)
 		{
-			await _newsCategoriesWorkDepartmentRepository.DeleteNewsCategoriesWorkDepartmentAsync(id);
+			_newsCategoriesWorkDepartmentRepository.DeleteNewsCategoriesWorkDepartmentAsync(id);
 		}
 
 		#endregion
