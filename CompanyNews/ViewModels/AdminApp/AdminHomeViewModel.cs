@@ -135,12 +135,25 @@ namespace CompanyNews.ViewModels.AdminApp
 			get
 			{
 				return _openAccount ??
-					(_openAccount = new RelayCommand((obj) =>
+					(_openAccount = new RelayCommand(async (obj) =>
 					{
 						IsAccountIcon = true; // Отображаем кнопку с аккаунтом
 						IsGoBack = false; // Скрываем кнопку возврата назад
-						LaunchFrame.NavigationService.Navigate(new AccountPage());
-						LastPageType = typeof(AccountPage);
+
+						Account account = await _authorizationService.GetUserAccount();
+						if (account != null)
+						{
+							if (account.accountRole == "Администратор")
+							{
+								LaunchFrame.NavigationService.Navigate(new AccountPage());
+								LastPageType = typeof(AccountPage);
+							}
+							if (account.accountRole == "Модератор")
+							{
+								LaunchFrame.NavigationService.Navigate(new NewsPostPage());
+								LastPageType = typeof(NewsPostPage);
+							}
+						}
 
 						// Закрываем "гамбургер" меню
 						HamburgerMenuEvent.CloseHamburgerMenu();

@@ -25,7 +25,7 @@ namespace CompanyNews.Services
 
 		public async Task<NewsPostExtended?> NewsPostConvert(NewsPost? newsPosts)
 		{
-			return await _newsPostRepository.NewsPostConvert(newsPosts);
+			return _newsPostRepository.NewsPostConvert(newsPosts);
 		}
 
 		public async Task<NewsPost?> NewsPostExtendedConvert(NewsPostExtended? newsPostExtended)
@@ -44,7 +44,7 @@ namespace CompanyNews.Services
 
 		public async Task<IEnumerable<NewsPostExtended>?> GetAllNewsPostsAsync()
 		{
-			return await _newsPostRepository.GetAllNewsPostsAsync();
+			return _newsPostRepository.GetAllNewsPostsAsync();
 		}
 
 		#endregion
@@ -53,13 +53,13 @@ namespace CompanyNews.Services
 
 		public async Task<NewsPost> AddNewsPostAsync(NewsPost newsPost)
 		{
-			var addedNewsPost = await _newsPostRepository.AddNewsPostAsync(newsPost);
+			var addedNewsPost = _newsPostRepository.AddNewsPostAsync(newsPost);
 			return addedNewsPost; // Возвращаем добавленный пост
 		}
 
 		public async Task UpdateNewsPostAsync(NewsPost newsPost)
 		{
-			await _newsPostRepository.UpdateNewsPostAsync(newsPost);
+			 _newsPostRepository.UpdateNewsPostAsync(newsPost);
 		}
 
 		public async Task DeleteNewsPostAsync(int id)

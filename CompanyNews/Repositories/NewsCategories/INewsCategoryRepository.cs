@@ -18,7 +18,7 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// Получение категории поста
 		/// </summary>
 		/// <param name="id">id категории</param>
-		Task<Models.NewsCategory> GetNewsCategoryByIdAsync(int id);
+		Models.NewsCategory GetNewsCategoryByIdAsync(int id);
 
 		/// <summary>
 		/// Получение списка категорий постов

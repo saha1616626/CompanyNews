@@ -24,7 +24,7 @@ namespace CompanyNews.Services
 
 		public async Task<Models.NewsCategory> GetNewsCategoryByIdAsync(int id)
 		{
-			return await _newsCategoryRepository.GetNewsCategoryByIdAsync(id);
+			return _newsCategoryRepository.GetNewsCategoryByIdAsync(id);
 		}
 
 		public async Task<IEnumerable<Models.NewsCategory>> GetAllNewsCategoriesAsync()

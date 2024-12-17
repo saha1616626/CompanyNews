@@ -26,9 +26,9 @@ namespace CompanyNews.Repositories.NewsCategories
 		/// <summary>
 		/// Получение категории поста по идентификатору
 		/// </summary>
-		public async Task<Models.NewsCategory?> GetNewsCategoryByIdAsync(int id)
+		public Models.NewsCategory? GetNewsCategoryByIdAsync(int id)
 		{
-			Models.NewsCategory? newsCategory = await _context.NewsCategories.FindAsync(id);
+			Models.NewsCategory? newsCategory = _context.NewsCategories.FirstOrDefault(category => category.id == id);
 			if (newsCategory == null) { return null; }
 
 			return newsCategory;

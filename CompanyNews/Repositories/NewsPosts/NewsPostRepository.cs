@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using CompanyNews.Repositories.NewsCategory;
+using CompanyNews.Helpers;
 
 namespace CompanyNews.Repositories.NewsPosts
 {
@@ -30,7 +31,7 @@ namespace CompanyNews.Repositories.NewsPosts
 		/// <summary>
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		public async Task<NewsPostExtended?> NewsPostConvert(NewsPost? newsPost)
+		public NewsPostExtended? NewsPostConvert(NewsPost? newsPost)
 		{
 			// Проверяем, не равен ли newsPosts null
 			if (newsPost == null) { return null; }
@@ -39,11 +40,11 @@ namespace CompanyNews.Repositories.NewsPosts
 			newsPostExtended.id = newsPost.id;
 			newsPostExtended.newsCategoryId = newsPost.newsCategoryId;
 			// Получение названия категории по id
-			Models.NewsCategory? newsCategory = await _context.NewsCategories.FirstOrDefaultAsync(nc => nc.id == newsPost.newsCategoryId);
+			Models.NewsCategory? newsCategory = _context.NewsCategories.FirstOrDefault(nc => nc.id == newsPost.newsCategoryId);
 			if (newsCategory == null) { return null; }
 			newsPostExtended.newsCategoryName = newsCategory.name;
 			newsPostExtended.datePublication = newsPost.datePublication;
-			if(newsPost.image != null) { newsPostExtended.image = newsPost.image; }
+			if(newsPost.image != null) { newsPostExtended.image = WorkingWithImage.ResizingPhotos(newsPost.image, 500); }
 			if (newsPost.message != null) { newsPostExtended.message = newsPost.message; }
 			newsPostExtended.isArchived = newsPost.isArchived;
 
@@ -63,7 +64,7 @@ namespace CompanyNews.Repositories.NewsPosts
 			newsPost.id = newsPostExtended.id;
 			newsPost.newsCategoryId = newsPostExtended.newsCategoryId;
 			newsPost.datePublication = newsPostExtended.datePublication;
-			if (newsPostExtended.image != null) { newsPost.image = newsPostExtended.image; }
+			if (newsPostExtended.image != null) { newsPost.image = WorkingWithImage.ConvertingImageForWritingDatabase(newsPostExtended.image); }
 			if (newsPostExtended.message != null) { newsPost.message = newsPostExtended.message; }
 			newsPost.isArchived = newsPostExtended.isArchived;
 
@@ -80,16 +81,16 @@ namespace CompanyNews.Repositories.NewsPosts
 		/// </summary>
 		public async Task<NewsPostExtended?> GetNewsPostByIdAsync(int id)
 		{
-			return await NewsPostConvert(await _context.NewsPosts.FindAsync(id)) ?? 
+			return NewsPostConvert(await _context.NewsPosts.FindAsync(id)) ?? 
 				throw new KeyNotFoundException($"Пост с ID {id} не найден.");
 		}
 
 		/// <summary>
 		/// Получение списка всех постов новостей.
 		/// </summary>
-		public async Task<IEnumerable<NewsPostExtended>?> GetAllNewsPostsAsync()
+		public IEnumerable<NewsPostExtended>? GetAllNewsPostsAsync()
 		{
-			IEnumerable<NewsPost> newsPosts = await _context.NewsPosts.ToListAsync();
+			IEnumerable<NewsPost> newsPosts = _context.NewsPosts.ToList();
 			if (newsPosts == null) { return null; }
 
 			// Список постов
@@ -98,8 +99,8 @@ namespace CompanyNews.Repositories.NewsPosts
 			foreach (var item in newsPosts)
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
-				if(await NewsPostConvert(item) == null) { continue; }
-				NewsPostExtended? newsPostExtended = await NewsPostConvert(item);
+				if(NewsPostConvert(item) == null) { continue; }
+				NewsPostExtended? newsPostExtended = NewsPostConvert(item);
 				newsPostExtendeds.Add(newsPostExtended);
 			}
 
@@ -113,29 +114,29 @@ namespace CompanyNews.Repositories.NewsPosts
 		/// <summary>
 		/// Добавление нового поста.
 		/// </summary>
-		public async Task<NewsPost> AddNewsPostAsync(NewsPost newsPost)
+		public NewsPost AddNewsPostAsync(NewsPost newsPost)
 		{
 			if (newsPost == null) throw new ArgumentNullException(nameof(newsPost));
 
-			await _context.NewsPosts.AddAsync(newsPost);
-			await _context.SaveChangesAsync();
+			 _context.NewsPosts.Add(newsPost);
+			 _context.SaveChanges();
 			return newsPost; // Возвращаем объект с обновленными данными, включая Id
 		}
 
 		/// <summary>
 		/// Обновление существующего поста новости.
 		/// </summary>
-		public async Task UpdateNewsPostAsync(NewsPost newsPost)
+		public void UpdateNewsPostAsync(NewsPost newsPost)
 		{
 			if (newsPost == null) throw new ArgumentNullException(nameof(newsPost));
 
 			// Убедимся, что пост существует
-			var existingPost = await _context.NewsPosts.FindAsync(newsPost.id);
+			var existingPost = _context.NewsPosts.FirstOrDefault(p => p.id == newsPost.id);
 			if (existingPost == null) throw new KeyNotFoundException($"Пост с ID {newsPost.id} не найден.");
 
 			// Обновление данных. Данным методом можно обновить только указанные поля в newsPost
 			_context.Entry(existingPost).CurrentValues.SetValues(newsPost);
-			await _context.SaveChangesAsync();
+		    _context.SaveChanges();
 		}
 
 		/// <summary>

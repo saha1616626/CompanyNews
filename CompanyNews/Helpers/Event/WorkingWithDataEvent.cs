@@ -101,5 +101,35 @@ namespace CompanyNews.Helpers.Event
 		}
 
 		#endregion
+
+		#region NewsPost
+
+		/// <summary>
+		/// Подписка на событие - успешное добавление данных. На странице для работы с постами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasAddedSuccessfullyNewsPost;
+		/// <summary>
+		/// Вызов метода успешного добавление данных. На странице для работы с постами.
+		/// </summary>
+		public static void DataWasAddedSuccessfullyNewsPost()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasAddedSuccessfullyNewsPost?.Invoke(null, new EventAggregator());
+		}
+
+		/// <summary>
+		/// Подписка на событие - успешное изменение данных. На странице для работы с постами.
+		/// </summary>
+		public static event EventHandler<EventAggregator> dataWasChangedSuccessfullyNewsPost;
+		/// <summary>
+		/// Вызов метода успешного изменения данных. На странице для работы с постами.
+		/// </summary>
+		public static void DataWasChangedSuccessfullyNewsPost()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			dataWasChangedSuccessfullyNewsPost?.Invoke(null, new EventAggregator());
+		}
+
+		#endregion
 	}
 }

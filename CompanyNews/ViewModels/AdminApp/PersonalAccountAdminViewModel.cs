@@ -174,6 +174,8 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 		}
 
+
+
 		/// <summary>
 		///  Запуск popup для изменения информации о себе
 		/// </summary>

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace CompanyNews.Models.Extended
 {
@@ -27,7 +28,7 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Фото к посту
 		/// </summary>
-		public byte[]? image { get; set; }
+		public CroppedBitmap? image { get; set; }
 
 		/// <summary>
 		/// Тело сообщения поста

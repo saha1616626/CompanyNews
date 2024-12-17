@@ -6,19 +6,291 @@
       xmlns:local="clr-namespace:CompanyNews.Views.AdminApp"
       xmlns:ViewModel="clr-namespace:CompanyNews.ViewModels.AdminApp"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      PreviewMouseLeftButtonUp="Window_MouseLeftButtonDown"
       mc:Ignorable="d" 
-      MouseLeftButtonDown="Window_MouseLeftButtonDown"
       MinHeight="700" Width="Auto"
       Title="NewsPostPage">
 
-    <Grid>
-        
-        <Grid>
+    <Page.Resources>
 
-            <TextBlock Grid.Row="0" Text="Страница для работы с постами в разработке..." FontSize="24" Foreground="Black"
-VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+        <!--связываем View и ViewModel-->
+        <ViewModel:NewsPostViewModel x:Key="NewsPostViewModel"/>
+
+        <!--анимация подсветки полей-->
+        <Storyboard x:Key="fieldIllumination">
+            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource NewsPostViewModel}" x:Name="mainGrid">
+
+        <!--стили-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="\Dictionary\Table.xaml"/>
+                    <ResourceDictionary Source="\Dictionary\Popup.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid Margin="0,0,0,50">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Заголовок-->
+            <TextBlock Text="Новостные посты" Grid.Row="0" FontSize="30" 
+Foreground="Black" FontWeight="DemiBold"  Margin="50,30,50,10"/>
+
+            <!--Сообщения системы-->
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+    BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
+    HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="400" Margin="0,30,-5,0">
+                <!--Тело сообщения-->
+                <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+Margin="10, 10, 10, 10" 
+FontWeight="Regular" FontSize="18"
+Width="370"
+TextWrapping="Wrap"/>
+            </Border>
+
+            <!--#region Кнопки для взаиомодействия с таблицей-->
+            <Grid Grid.Row="1" Margin="50,30,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                
+                <TextBox  x:Name="Search" 
+                     Height="50" Margin="0,0,0,0"
+                     VerticalAlignment="Center" HorizontalAlignment="Left"
+                     Text="{Binding TextSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     TextChanged="SearchNewsPost"
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                     materialDesign:HintAssist.Hint="Поиск поста" 
+                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                     MaxLength="100" TextWrapping="Wrap" Width="230" />
+
+                <!--выбор категории-->
+                <ComboBox ItemsSource="{Binding ListCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        Grid.Column="0" Grid.Row="1" x:Name="Category" DisplayMemberPath="name"
+                        SelectedValue="{Binding SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsReadOnly="False" VerticalAlignment="Center" Width="200" Margin="10,0,0,0" MinWidth="100" Height="50" 
+                        materialDesign:HintAssist.Hint="Просмотр по категории" IsEditable="True"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                </ComboBox>
+
+                    <ListBox Grid.Row="1" Margin="17,0,0,0" HorizontalAlignment="Center"
+x:Name="RadioButtonGroupChoiceChip" FontSize="16" FontWeight="DemiBold"
+Style="{StaticResource MaterialDesignChoiceChipListBox}">
+
+                        <ListBoxItem Height="50" IsSelected="{Binding DefaultListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="По умолчанию "/>
+                                <materialDesign:PackIcon Kind="FormatListBulleted" />
+                            </StackPanel>
+                        </ListBoxItem>
+
+                        <ListBoxItem Height="50" IsSelected="{Binding ListArchive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Архив "/>
+                                <materialDesign:PackIcon Kind="Archive" />
+                            </StackPanel>
+                        </ListBoxItem>
+                    </ListBox>
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="1" >
+
+                    <Button Content="Добавить" 
+MinWidth="100" Height="35" Background="Gray" Command="{Binding Add}"
+BorderBrush="Black" Margin="10,0,0,0"/>
+
+                    <Button Content="Редктировать" Command="{Binding Edit}"
+MinWidth="100" Height="35" Background="Gray" BorderBrush="Black"
+Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
+
+                    <Button Content="Удалить" MinWidth="100" 
+Height="35" Background="Gray" BorderBrush="Black" Command="{Binding Delete}"
+Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
+                </StackPanel>
+
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Table-->
+
+            <Grid Grid.Row="2" Margin="50,25,50,0">
+                <DataGrid IsReadOnly="True" Height="410" x:Name="MyDataGrid"
+         HorizontalAlignment="Center" FontSize="16"
+         VerticalScrollBarVisibility="Auto"
+         Background="WhiteSmoke"
+         BorderBrush="Black"
+         BorderThickness="1"
+         AutoGenerateColumns="False"
+         ItemsSource="{Binding ListNewsPosts}"
+         SelectedItem="{Binding SelectedNewsPost}"
+         Style="{StaticResource MaterialDesignDataGrid}"
+         ColumnHeaderStyle="{StaticResource ColumnTableHeader}">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="      Дата&#x0A;публикации" 
+             Binding="{Binding datePublication, StringFormat={}{0:dd.MM.yyyy HH:mm}}"
+             Width="15*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Категория" Binding="{Binding newsCategoryName}"  Width="15*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Сообщение" Binding="{Binding message}"  Width="35*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="TextAlignment" Value="Justify" />
+                                    <Setter Property="MaxHeight" Value="100" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Width="20*" Header="Фото">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Height="100" Stretch="Uniform"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="15*" Header="Находится&#x0A;  в архиве">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding isArchived}" HorizontalAlignment="Center" IsEnabled="False" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Grid>
+
+            <!--#endregion-->
 
         </Grid>
-        
+
+        <!--#region Popup-->
+
+        <!--фон для Popup-->
+        <Border x:Name="DarkBackground"
+ Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ Background="#80000000" Panel.ZIndex="1" 
+ Margin="-600,-600,-600,-600"/>
+
+        <!--Popup для удаления данных-->
+        <Popup x:Name="DeleteDataPopup" PlacementTarget="{Binding ElementName=mainGrid}"
+           IsOpen="{Binding StartPoupDeleteData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+           Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+           VerticalOffset="-40" StaysOpen="False" Closed="MyPopup_Closed" 
+           AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <!--фон-->
+            <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
+Style="{StaticResource OutlineOfPopup}">
+                <Grid Width="500" Height="330">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Удаление категории" 
+                                   Margin="0, 20, 0, 0" FontSize="30" FontWeight="Bold"/>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" 
+                                    Height="80" Margin="20,15,20,0">
+                            <TextBlock Text="Вы уверены, что хотите удалить пост? После подтверждения это действие нельзя будет отменить!" FontSize="20" FontWeight="UltraBold" 
+                                       HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" />
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Height="110" Margin="0,-30,0,15">
+                            <TextBlock Text="{Binding DataDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+   TextWrapping="Wrap" x:Name="NameOfOrderDeleted" HorizontalAlignment="Center" 
+   VerticalAlignment="Center" Margin="25,30,25,0"  FontSize="20" TextAlignment="Center" FontWeight="DemiBold"/>
+                        </ScrollViewer>
+
+                        <Grid Grid.Row="3" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+                                    Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
+                            <Button Grid.Row="0" Grid.Column="1" Content="Удалить" Width="150" 
+                                    Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
+
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+            </Border>
+
+        </Popup>
+
+        <!--#endregion-->
+
+        <!--Фрейм страницы для редактирования и добавления данных-->
+        <Frame Content="{Binding PageFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+NavigationUIVisibility="Hidden" />
+
     </Grid>
 </Page>

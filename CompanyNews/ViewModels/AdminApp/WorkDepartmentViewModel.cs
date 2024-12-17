@@ -348,7 +348,9 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		#region View
 
-		// Page для запуска страницы
+		/// <summary>
+		/// Page для запуска страницы
+		/// </summary>
 		private Page _pageFrame { get; set; }
 		public Page PageFrame
 		{

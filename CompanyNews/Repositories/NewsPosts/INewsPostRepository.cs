@@ -18,7 +18,7 @@ namespace CompanyNews.Repositories.NewsCategory
 		/// Получение NewsPostExtended из NewsPost. 
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		Task<NewsPostExtended?> NewsPostConvert(NewsPost? newsPosts);
+		NewsPostExtended? NewsPostConvert(NewsPost? newsPosts);
 
 		/// <summary>
 		/// Получение NewsPost из NewsPostExtended. 
@@ -35,19 +35,19 @@ namespace CompanyNews.Repositories.NewsCategory
 		/// <summary>
 		/// Получение списка всех постов новостей.
 		/// </summary>
-		Task<IEnumerable<NewsPostExtended>?> GetAllNewsPostsAsync();
+		IEnumerable<NewsPostExtended>? GetAllNewsPostsAsync();
 
 		/// <summary>
 		/// Добавление нового поста новости.
 		/// </summary>
 		/// <param name="newsPost">Данные нового поста новости.</param>
-		Task<NewsPost> AddNewsPostAsync(NewsPost newsPost);
+		NewsPost AddNewsPostAsync(NewsPost newsPost);
 
 		/// <summary>
 		/// Обновление существующего поста новости.
 		/// </summary>
 		/// <param name="newsPost">Обновленные данные поста новости.</param>
-		Task UpdateNewsPostAsync(NewsPost newsPost);
+		void UpdateNewsPostAsync(NewsPost newsPost);
 
 		/// <summary>
 		/// Удаление поста новости по идентификатору.
