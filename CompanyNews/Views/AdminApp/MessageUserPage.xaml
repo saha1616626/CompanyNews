@@ -11,10 +11,136 @@
       MinHeight="700" Width="Auto"
       Title="MessageUserPage">
 
-    <Grid>
+    <Page.Resources>
 
-        <TextBlock Grid.Row="0" Text="Страница для работы с сообщениями пользователей в разработке..." FontSize="24" Foreground="Black"
-VerticalAlignment="Center" FontWeight="ExtraBlack" Grid.Column="1" Margin="30,10,0,10"/>
+        <!--связываем View и ViewModel-->
+        <ViewModel:MessageUserViewModel x:Key="MessageUserViewModel"/>
+
+        <!--анимация подсветки полей-->
+        <Storyboard x:Key="fieldIllumination">
+            <ColorAnimation Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
+        </Storyboard>
+
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource MessageUserViewModel}" x:Name="mainGrid">
+
+        <!--стили-->
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="\Dictionary\Table.xaml"/>
+                    <ResourceDictionary Source="\Dictionary\Popup.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Grid Margin="0,0,0,50">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Заголовок-->
+            <TextBlock Text="Сообщения пользователей" Grid.Row="0" FontSize="30" 
+Foreground="Black" FontWeight="DemiBold"  Margin="50,30,50,10"/>
+
+            <!--Сообщения системы-->
+            <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+    BorderThickness="1" x:Name="SystemMessageBorder" Visibility="Hidden"
+    HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="400" Margin="0,30,-5,0">
+                <!--Тело сообщения-->
+                <TextBlock Text="{Binding SystemMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+x:Name="SystemMessage" HorizontalAlignment="Left" VerticalAlignment="Center"
+Margin="10, 10, 10, 10" 
+FontWeight="Regular" FontSize="18"
+Width="370"
+TextWrapping="Wrap"/>
+            </Border>
+
+            <!--#region Кнопки для взаиомодействия с данными-->
+            <Grid Grid.Row="1" Margin="50,30,50,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+
+                    <TextBox  x:Name="Search" 
+                     Height="50" Margin="0,0,0,0"
+                     VerticalAlignment="Center" HorizontalAlignment="Left"
+                     Text="{Binding TextSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     materialDesign:TextFieldAssist.HasClearButton="True"
+                     
+                     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                     materialDesign:HintAssist.Hint="Поиск сообщения" 
+                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                     MaxLength="100" TextWrapping="Wrap" Width="250" />
+
+                    <!--выбор категории-->
+                    <ComboBox ItemsSource="{Binding ListCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        Grid.Column="0" Grid.Row="1" x:Name="Category" DisplayMemberPath="name"
+                        SelectedValue="{Binding SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsReadOnly="False" VerticalAlignment="Center" Width="220" Margin="10,0,0,0" MinWidth="100" Height="50" 
+                        materialDesign:HintAssist.Hint="Поиск поста по категории" IsEditable="True"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                    </ComboBox>
+
+                </StackPanel>
+
+                <ListBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,0" HorizontalAlignment="Right"
+x:Name="RadioButtonGroupChoiceChip" FontSize="16" FontWeight="DemiBold"
+Style="{StaticResource MaterialDesignChoiceChipListBox}">
+
+                    <ListBoxItem Height="50" IsSelected="{Binding FullListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Все  "/>
+                            <materialDesign:PackIcon Kind="FormatListBulletedSquare" Margin="0,2,0,0"/>
+                            <TextBlock Text=" "/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Height="50" IsSelected="{Binding OnVerificationListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="На проверке  "/>
+                            <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,0,0"/>
+                            <TextBlock Text=" "/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Height="50" IsSelected="{Binding VerifiedListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Проверенные  "/>
+                            <materialDesign:PackIcon Kind="CheckboxMarked" Margin="0,2,0,0"/>
+                            <TextBlock Text=" "/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Height="50" IsSelected="{Binding RejectedListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Отклоненные  "/>
+                            <materialDesign:PackIcon Kind="CloseBox" Margin="0,2,0,0"/>
+                            <TextBlock Text=" "/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+            </Grid>
+            <!--#endregion-->
+
+        </Grid>
 
     </Grid>
 </Page>

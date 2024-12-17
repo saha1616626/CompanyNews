@@ -18,41 +18,41 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// Получение MessageUserExtendet из MessageUser. 
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		Task<MessageUserExtended?> MessageUserConvert(MessageUser? messageUser);
+		MessageUserExtended? MessageUserConvert(MessageUser? messageUser);
 
 		/// <summary>
 		/// Получение MessageUser из MessageUserExtendet. 
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
-		Task<MessageUser?> MessageUserExtendetConvert(MessageUserExtended? messageUserExtendet);
+		MessageUser? MessageUserExtendetConvert(MessageUserExtended? messageUserExtendet);
 
 		/// <summary>
 		/// Получение сообщения по идентификатору.
 		/// </summary>
 		/// <param name="id">Идентификатор сообщения.</param>
-		Task<MessageUserExtended?> GetMessageUserByIdAsync(int id);
+		MessageUserExtended? GetMessageUserByIdAsync(int id);
 
 		/// <summary>
 		/// Получение списка всех сообщений.
 		/// </summary>
-		Task<IEnumerable<MessageUserExtended>?> GetAllMessageUserAsync();
+		IEnumerable<MessageUserExtended>? GetAllMessageUserAsync();
 
 		/// <summary>
 		/// Добавление нового сообщения к посту.
 		/// </summary>
 		/// <param name="messageUser">Данные нового сообщения.</param>
-		Task<MessageUser> AddMessageUserAsync(MessageUser messageUser);
+		MessageUser AddMessageUserAsync(MessageUser messageUser);
 
 		/// <summary>
 		/// Обновление существующего комментария.
 		/// </summary>
 		/// <param name="messageUser">Обновленный текст комментария.</param>
-		Task UpdateMessageUserAsync(MessageUser messageUser);
+		void UpdateMessageUserAsync(MessageUser messageUser);
 
 		/// <summary>
 		/// Удаление комментария по идентификатору.
 		/// </summary>
 		/// <param name="id">Идентификатор комментария.</param>
-		Task DeleteMessageUserAsync(int id);
+		void DeleteMessageUserAsync(int id);
 	}
 }

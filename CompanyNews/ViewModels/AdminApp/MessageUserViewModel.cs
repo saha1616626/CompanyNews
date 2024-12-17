@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows;
 
 namespace CompanyNews.ViewModels.AdminApp
 {
@@ -21,32 +22,265 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
 		/// </summary>
+		private readonly NewsPostService _newsPostService;
 		private readonly MessageUserService _messageUserServiceService;
+		private readonly NewsCategoryService _newsCategoryService;
 
 		/// <summary>
 		/// Отображаемый список учетных записей в UI
 		/// </summary>
-		public ObservableCollection<MessageUserExtended> ListMessageUserExtendeds;
+		public ObservableCollection<MessagesNewsPostExtended> ListMessagesNewsPostExtendeds;
 
 		public MessageUserViewModel()
 		{
+			_newsPostService = ServiceLocator.GetService<NewsPostService>();
 			_messageUserServiceService = ServiceLocator.GetService<MessageUserService>();
-			ListMessageUserExtendeds = new ObservableCollection<MessageUserExtended>();
+			_newsCategoryService = ServiceLocator.GetService<NewsCategoryService>();
+			ListMessagesNewsPostExtendeds = new ObservableCollection<MessagesNewsPostExtended>();
+			SettingUpPage(); // Первоначальная настройка страницы
 			LoadMessageUser(); // Выводим список на экран
 		}
 
 		#region CRUD Operations
 
 		/// <summary>
-		/// Вывод списка всех сообщений в UI.
+		/// Вывод списка всех постов и их сообщений в UI.
 		/// </summary>
 		private async Task LoadMessageUser()
 		{
-			var messageUsers = await _messageUserServiceService.GetAllMessageUserAsync();
-			foreach (var messageUser in messageUsers)
+			// Вывод всех сообщений
+			if (FullListSelected)
 			{
-				ListMessageUserExtendeds.Add(messageUser);
+				if(SelectedCategory == null)
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if(messagesNewsPostExtendeds != null)
+					{
+						ListMessagesNewsPostExtendeds = new ObservableCollection<MessagesNewsPostExtended>(messagesNewsPostExtendeds);
+					}
+				}
+				else
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach(var newsPost in messagesNewsPostExtendeds)
+						{
+							if(newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0 && newsPost.NewsPostExtended.newsCategoryId == SelectedCategory.id)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach(var meesage in newsPost.MessageUserExtendeds)
+								{
+									messageUserExtendeds.Add(meesage);
+								}
+								messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+								ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+							}
+						}
+					}
+				}
 			}
+
+			// Ожидают проверки
+			if (OnVerificationListSelected)
+			{
+				if (SelectedCategory == null)
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if(meesage.status == "На проверке")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if(messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0 && newsPost.NewsPostExtended.newsCategoryId == SelectedCategory.id)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if (meesage.status == "На проверке")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if (messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Проверенные
+			if (VerifiedListSelected)
+			{
+				if (SelectedCategory == null)
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if (meesage.status == "Одобрено")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if (messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0 && newsPost.NewsPostExtended.newsCategoryId == SelectedCategory.id)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if (meesage.status == "Одобрено")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if (messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Отклоненные
+			if (RejectedListSelected)
+			{
+				if (SelectedCategory == null)
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if (meesage.status == "Отклонено")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if (messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
+					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					if (messagesNewsPostExtendeds != null)
+					{
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0 && newsPost.NewsPostExtended.newsCategoryId == SelectedCategory.id)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+
+								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								foreach (var meesage in newsPost.MessageUserExtendeds)
+								{
+									if (meesage.status == "Отклонено")
+									{
+										messageUserExtendeds.Add(meesage);
+									}
+								}
+								if (messageUserExtendeds.Count > 0)
+								{
+									messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+									ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+								}
+							}
+						}
+					}
+				}
+			}
+
 		}
 
 		/// <summary>
@@ -54,8 +288,8 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async Task AddMessageUserAsync(MessageUser messageUser)
 		{
-			var addedMessageUser = await _messageUserServiceService.AddMessageUserAsync(messageUser); // Добавление в БД + возврат обновленного объекта
-			ListMessageUserExtendeds.Add(await _messageUserServiceService.MessageUserConvert(addedMessageUser)); // Обновление коллекции
+			//var addedMessageUser = await _messageUserServiceService.AddMessageUserAsync(messageUser); // Добавление в БД + возврат обновленного объекта
+			//ListMessagesNewsPostExtendeds.Add(await _messageUserServiceService.MessageUserConvert(addedMessageUser)); // Обновление коллекции
 		}
 
 		/// <summary>
@@ -63,11 +297,11 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async Task UpdateMessageUserAsync(MessageUser messageUser)
 		{
-			await _messageUserServiceService.UpdateMessageUserAsync(messageUser); // Обновление данных в БД
+			//await _messageUserServiceService.UpdateMessageUserAsync(messageUser); // Обновление данных в БД
 
-			// Находим сообщение в списке для отображения в UI и заменяем объект
-			MessageUserExtended? messageUserExtended = ListMessageUserExtendeds.FirstOrDefault(a => a.id == messageUser.id);
-			if (messageUserExtended != null) { messageUserExtended = await _messageUserServiceService.MessageUserConvert(messageUser); }
+			//// Находим сообщение в списке для отображения в UI и заменяем объект
+			//MessageUserExtended? messageUserExtended = ListMessagesNewsPostExtendeds.FirstOrDefault(a => a.id == messageUser.id);
+			//if (messageUserExtended != null) { messageUserExtended = await _messageUserServiceService.MessageUserConvert(messageUser); }
 		}
 
 		/// <summary>
@@ -75,16 +309,31 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public async Task DeleteMessageUserAsync(MessageUser messageUser)
 		{
-			await _messageUserServiceService.DeleteMessageUserAsync(messageUser.id); // Удаление из БД
+			//await _messageUserServiceService.DeleteMessageUserAsync(messageUser.id); // Удаление из БД
 
-			// Находим сообщение в списке для отображения в UI и удаляем объект
-			MessageUserExtended? messageUserExtended = ListMessageUserExtendeds.FirstOrDefault(a => a.id == messageUser.id);
-			if (messageUserExtended != null) { ListMessageUserExtendeds.Remove(messageUserExtended); }
+			//// Находим сообщение в списке для отображения в UI и удаляем объект
+			//MessageUserExtended? messageUserExtended = ListMessagesNewsPostExtendeds.FirstOrDefault(a => a.id == messageUser.id);
+			//if (messageUserExtended != null) { ListMessagesNewsPostExtendeds.Remove(messageUserExtended); }
 		}
 
 		#endregion
 
 		#region UI RelayCommand Operations
+
+		/// <summary>
+		/// Первоначальная настройка страницы
+		/// </summary>
+		public async void SettingUpPage()
+		{
+			FullListSelected = true; // Список всех значений по умолчанию. Все остальные false
+			OnVerificationListSelected = false;
+			VerifiedListSelected = false;
+			RejectedListSelected = false;
+			DarkBackground = Visibility.Collapsed; // Скрываем фон для Popup
+
+			// Получаем список категорий для фильтрации
+			ListCategory = new List<NewsCategory>(await _newsCategoryService.GetAllNewsCategoriesAsync());
+		}
 
 		/// <summary>
 		/// Кнопка "добавить" сообщение в UI
@@ -163,6 +412,143 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 		}
 
+		/// <summary>
+		/// Блокировка пользователя (писать сообщения)
+		/// </summary>
+		public void BlockAccount(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messageUserExtended.IsBlockAccount = false; // Кнопка заблокировать скрыта
+					messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать видна
+				}
+			}
+		}
+
+		/// <summary>
+		/// Разблокировать пользователя (писать сообщения)
+		/// </summary>
+		public void UnlockAccount(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messageUserExtended.IsBlockAccount = true; // Кнопка заблокировать видна
+					messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать скрыта
+				}
+			}
+		}
+
+		/// <summary>
+		/// Одобрить сообщение пользователя
+		/// </summary>
+		public void ApproveMessage(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messageUserExtended.IsApproveMessage = false; // Кнопка одобрить сообщение скрыта
+					messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
+					messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
+					messageUserExtended.status = "Одобрено";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Отклонить сообщение пользователя
+		/// </summary>
+		public void RejectMessage(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
+					messageUserExtended.IsRejectMessage = false; // Кнопка отклонить сообщение скрыта
+					messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
+					messageUserExtended.status = "Отклонено";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Восстановить сообщение пользователя
+		/// </summary>
+		public void RestoreMessage(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
+					messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
+					messageUserExtended.IsRestoreMessage = false; // Кнопка восстановить сообщение после отклонения скрыта
+					messageUserExtended.status = "На проверке";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Удалить сообщение пользователя
+		/// </summary>
+		public void DeleteMessage(MessageUserExtended messageUserExtended)
+		{
+			// Ищем нужный пост
+			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+			if (messagesNewsPostExtended != null)
+			{
+				// Ищем нужное сообщение
+				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+				if (messageUser != null)
+				{
+					messagesNewsPostExtended.MessageUserExtendeds.Remove(messageUser);
+				}
+			}
+		}
+
 		#endregion
 
 		#region Popup
@@ -188,8 +574,52 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		private async Task ClosePopupWorkingWithData()
 		{
-
+			// Закрываем Popup
+			StartPoupDeleteData = false;
+			DarkBackground = Visibility.Collapsed; // Скрываем фон
 		}
+
+		#region FeaturesPopup
+
+		/// <summary>
+		/// Popup удаления данных
+		/// </summary>
+		private bool _startPoupDeleteData { get; set; }
+		public bool StartPoupDeleteData
+		{
+			get { return _startPoupDeleteData; }
+			set
+			{
+				_startPoupDeleteData = value;
+				OnPropertyChanged(nameof(StartPoupDeleteData));
+			}
+		}
+
+		/// <summary>
+		/// Данные передаются в Popup, как предпросмотр перед удалением
+		/// </summary>
+		private string _dataDeleted { get; set; }
+		public string DataDeleted
+		{
+			get { return _dataDeleted; }
+			set { _dataDeleted = value; OnPropertyChanged(nameof(DataDeleted)); }
+		}
+
+		/// <summary>
+		/// Затемненный фон позади Popup
+		/// </summary>
+		private Visibility _darkBackground { get; set; }
+		public Visibility DarkBackground
+		{
+			get { return _darkBackground; }
+			set
+			{
+				_darkBackground = value;
+				OnPropertyChanged(nameof(DarkBackground));
+			}
+		}
+
+		#endregion
 
 		#endregion
 
@@ -202,10 +632,90 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
-			errorInputPopup = adminViewModelParameters.errorInputPopup;
-			errorInput = adminViewModelParameters.errorInputText;
+			systemMessageBorder = adminViewModelParameters.errorInputBorder;
+			systemMessage = adminViewModelParameters.errorInputText;
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
+
+		#region ListSelected
+
+		/// <summary>
+		/// Выбранная категория
+		/// </summary>
+		private NewsCategory _selectedCategory { get; set; }
+		public NewsCategory SelectedCategory
+		{
+			get { return _selectedCategory; }
+			set { _selectedCategory = value; OnPropertyChanged(nameof(SelectedCategory)); LoadMessageUser(); }
+		}
+
+		/// <summary>
+		/// Список категорий
+		/// </summary>
+		private List<NewsCategory> _listCategory { get; set; }
+		public List<NewsCategory> ListCategory
+		{
+			get { return _listCategory; }
+			set { _listCategory = value; OnPropertyChanged(nameof(ListCategory)); }
+		}
+
+		/// <summary>
+		/// Выбран список всех сообщений в UI
+		/// </summary>
+		private bool _fullListSelected { get; set; }
+		public bool FullListSelected
+		{
+			get { return _fullListSelected; }
+			set
+			{
+				_fullListSelected = value; OnPropertyChanged(nameof(FullListSelected)); LoadMessageUser();
+
+			}
+		}
+
+		/// <summary>
+		/// Выбран список сообщений на проверке в UI
+		/// </summary>
+		private bool _onVerificationListSelected { get; set; }
+		public bool OnVerificationListSelected
+		{
+			get { return _onVerificationListSelected; }
+			set
+			{
+				_onVerificationListSelected = value; OnPropertyChanged(nameof(OnVerificationListSelected));
+
+			}
+		}
+
+		/// <summary>
+		/// Выбран список сообщений проверенных в UI
+		/// </summary>
+		private bool _verifiedListSelected { get; set; }
+		public bool VerifiedListSelected
+		{
+			get { return _verifiedListSelected; }
+			set
+			{
+				_verifiedListSelected = value; OnPropertyChanged(nameof(VerifiedListSelected));
+
+			}
+		}
+
+		/// <summary>
+		/// Выбран список сообщений отклоненных в UI
+		/// </summary>
+		private bool _rejectedListSelected { get; set; }
+		public bool RejectedListSelected
+		{
+			get { return _rejectedListSelected; }
+			set
+			{
+				_rejectedListSelected = value; OnPropertyChanged(nameof(RejectedListSelected));
+
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Выбранное сообщение в UI
@@ -250,12 +760,12 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Вывод ошибки и анимация текста в Popup
 		/// </summary>
-		public TextBlock? errorInputPopup { get; set; }
+		public Border? systemMessageBorder { get; set; }
 
 		/// <summary>
 		/// Вывод ошибки и анимация текста на странице
 		/// </summary>
-		public TextBlock? errorInput { get; set; }
+		public TextBlock? systemMessage { get; set; }
 
 		/// <summary>
 		/// Popup удаления данных
@@ -263,6 +773,133 @@ namespace CompanyNews.ViewModels.AdminApp
 		public Popup? deleteDataPopup { get; set; }
 
 		#endregion
+
+		#endregion
+
+		#region Search
+
+		/// <summary>
+		/// Cписок для фильтров таблицы
+		/// </summary>
+		public ObservableCollection<MessagesNewsPostExtended> ListSearch { get; set; } = new ObservableCollection<MessagesNewsPostExtended>();
+
+		/// <summary>
+		/// Поиск сообщения по ключевому слову
+		/// </summary>
+		public void SearchNewsPost(string searchByValue)
+		{
+			if (!string.IsNullOrWhiteSpace(searchByValue))
+			{
+				LoadMessageUser(); // обновляем список
+				ListSearch.Clear(); // очищаем список поиска данных
+
+				foreach(var item in ListMessagesNewsPostExtendeds)
+				{
+					if(item.MessageUserExtendeds != null && item.MessageUserExtendeds.Count > 0)
+					{
+						MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+						messagesNewsPostExtended.NewsPostExtended = item.NewsPostExtended;
+
+						List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+
+						// Проходимся по списку сообщений
+						foreach (var itemMessage in item.MessageUserExtendeds)
+						{
+							string message = itemMessage.message.ToLower();
+
+							// Если есть совпдаение, то добавляем в список
+							if (message.Contains(searchByValue.ToLowerInvariant()))
+							{
+								messageUserExtendeds.Add(itemMessage);
+							}
+						}
+
+						if(messageUserExtendeds != null && messageUserExtendeds.Count > 0)
+						{
+							messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+							ListSearch.Add(messagesNewsPostExtended);
+						}
+						else
+						{
+							continue;
+						}
+					}
+				}
+
+				ListMessagesNewsPostExtendeds.Clear(); // Очистка список перед заполнением
+				ListMessagesNewsPostExtendeds = new ObservableCollection<MessagesNewsPostExtended>(ListSearch);  // Обновление списка
+
+				if (ListSearch.Count == 0)
+				{
+					if (systemMessage != null && systemMessageBorder != null)
+					{
+						// Оповещениие об отсутствии данных
+						systemMessage.Text = $"Сообщение не найдено.";
+						systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+						// Исчезание сообщения
+						BeginFadeAnimation(systemMessage);
+						BeginFadeAnimation(systemMessageBorder);
+					}
+				}
+
+			}
+			else
+			{
+				ListMessagesNewsPostExtendeds.Clear(); // Очистка список перед заполнением
+				LoadMessageUser(); // обновляем список
+			}
+		}
+
+		#endregion
+
+		#region Animation
+
+		// выводим сообщения об ошибке с анимацией затухания
+		public async void BeginFadeAnimation(TextBlock textBlock)
+		{
+			textBlock.IsEnabled = true;
+			textBlock.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => textBlock.IsEnabled = false;
+			storyboard.Begin(textBlock);
+		}
+
+		public async void BeginFadeAnimation(Border border)
+		{
+			border.IsEnabled = true;
+			border.Opacity = 1.0;
+
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation fadeAnimation = new DoubleAnimation
+			{
+				From = 2.0,
+				To = 0.0,
+				Duration = TimeSpan.FromSeconds(2),
+			};
+			Storyboard.SetTargetProperty(fadeAnimation, new System.Windows.PropertyPath(System.Windows.UIElement.OpacityProperty));
+			storyboard.Children.Add(fadeAnimation);
+			storyboard.Completed += (s, e) => border.IsEnabled = false;
+			storyboard.Begin(border);
+		}
+
+		// запускаем анимации для TextBox (подсвечивание объекта)
+		private void StartFieldIllumination(TextBox textBox)
+		{
+			fieldIllumination.Begin(textBox);
+		}
+		private void StartFieldIllumination(PasswordBox passwordBox)
+		{
+			fieldIllumination.Begin(passwordBox);
+		}
 
 		#endregion
 

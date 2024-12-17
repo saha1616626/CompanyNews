@@ -38,6 +38,11 @@ namespace CompanyNews.Repositories.NewsCategory
 		IEnumerable<NewsPostExtended>? GetAllNewsPostsAsync();
 
 		/// <summary>
+		/// Получение списка всех постов и сообщений к ним.
+		/// </summary>
+		List<MessagesNewsPostExtended>? GettingPostsWithMessages();
+
+		/// <summary>
 		/// Добавление нового поста новости.
 		/// </summary>
 		/// <param name="newsPost">Данные нового поста новости.</param>

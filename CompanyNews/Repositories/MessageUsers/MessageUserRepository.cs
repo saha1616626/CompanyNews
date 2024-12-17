@@ -28,7 +28,7 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Замена идентификатора на соответствующее значение из БД 
 		/// </summary>
-		public async Task<MessageUserExtended?> MessageUserConvert(MessageUser? messageUser)
+		public MessageUserExtended? MessageUserConvert(MessageUser? messageUser)
 		{
 			// Проверяем, не равен ли messageUser null
 			if (messageUser == null) { return null; }
@@ -39,7 +39,7 @@ namespace CompanyNews.Repositories.MessageUsers
 			messageUserExtendet.newsPostId = messageUser.newsPostId;
 			messageUserExtendet.accountId = messageUser.accountId;
 			// Получение аккаунта по id
-			Account? account = await _context.Accounts.FirstOrDefaultAsync(a => a.id == messageUser.id);
+			Account? account = _context.Accounts.FirstOrDefault(a => a.id == messageUser.id);
 			if (account == null) { return null; }
 			messageUserExtendet.Account = account;
 			messageUserExtendet.message = messageUser.message;
@@ -53,7 +53,7 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Замена значения на соответствующий идентификатор из БД 
 		/// </summary>
-		public async Task<MessageUser?> MessageUserExtendetConvert
+		public MessageUser? MessageUserExtendetConvert
 			(MessageUserExtended? messageUserExtendet)
 		{
 			// Проверяем, не равен ли messageUserExtendet null
@@ -79,18 +79,18 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// <summary>
 		/// Получение сообщения по идентификатору.
 		/// </summary>
-		public async Task<MessageUserExtended?> GetMessageUserByIdAsync(int id)
+		public MessageUserExtended? GetMessageUserByIdAsync(int id)
 		{
-			return await MessageUserConvert(await _context.MessageUsers.FindAsync(id)) ??
+			return MessageUserConvert(_context.MessageUsers.FirstOrDefault(m => m.id == id)) ??
 				throw new KeyNotFoundException($"Сообщение с ID {id} не найден.");
 		}
 
 		/// <summary>
 		/// Получение списка всех сообщений.
 		/// </summary>
-		public async Task<IEnumerable<MessageUserExtended>?> GetAllMessageUserAsync()
+		public IEnumerable<MessageUserExtended>? GetAllMessageUserAsync()
 		{
-			IEnumerable<MessageUser> messageUsers = await _context.MessageUsers.ToListAsync();
+			IEnumerable<MessageUser> messageUsers = _context.MessageUsers.ToList();
 			if (messageUsers == null) { return null; }
 
 			// Список сообщений
@@ -99,8 +99,8 @@ namespace CompanyNews.Repositories.MessageUsers
 			foreach (var item in messageUsers)
 			{
 				// Преобразование идентификатора на соответствующие значение из БД
-				if (await MessageUserConvert(item) == null) { continue; }
-				MessageUserExtended? messageUserExtendet = await MessageUserConvert(item);
+				if (MessageUserConvert(item) == null) { continue; }
+				MessageUserExtended? messageUserExtendet = MessageUserConvert(item);
 				messageUsersExtendeds.Add(messageUserExtendet);
 			}
 
@@ -115,12 +115,12 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// Добавление нового сообщения к посту.
 		/// </summary>
 		/// <param name="messageUser">Данные нового сообщения.</param>
-		public async Task<MessageUser> AddMessageUserAsync(MessageUser messageUser)
+		public MessageUser AddMessageUserAsync(MessageUser messageUser)
 		{
 			if (messageUser == null) throw new ArgumentNullException(nameof(messageUser));
 
-			await _context.MessageUsers.AddAsync(messageUser);
-			await _context.SaveChangesAsync();
+			_context.MessageUsers.Add(messageUser);
+			_context.SaveChangesAsync();
 			return messageUser; // Возвращаем объект с обновленными данными, включая Id
 		}
 
@@ -128,30 +128,30 @@ namespace CompanyNews.Repositories.MessageUsers
 		/// Обновление существующего комментария.
 		/// </summary>
 		/// <param name="messageUser">Обновленный текст комментария.</param>
-		public async Task UpdateMessageUserAsync(MessageUser messageUser)
+		public void UpdateMessageUserAsync(MessageUser messageUser)
 		{
 			if (messageUser == null) throw new ArgumentNullException(nameof(messageUser));
 
 			// Убедимся, что комментарий существует
-			var existingMessageUser = await _context.MessageUsers.FindAsync(messageUser);
+			var existingMessageUser = _context.MessageUsers.FirstOrDefault(m => m.id == messageUser.id);
 			if (existingMessageUser == null) throw new KeyNotFoundException($"Комментарий с ID {messageUser.id} не найден.");
 
 			// Обновление данных. Данным методом можно обновить только указанные поля в messageUser
 			_context.Entry(existingMessageUser).CurrentValues.SetValues(messageUser);
-			await _context.SaveChangesAsync();
+			_context.SaveChanges();
 		}
 
 		/// <summary>
 		/// Удаление комментария по идентификатору.
 		/// </summary>
 		/// <param name="id">Идентификатор комментария.</param>
-		public async Task DeleteMessageUserAsync(int id)
+		public void DeleteMessageUserAsync(int id)
 		{
-			var messageUser = await _context.MessageUsers.FindAsync(id);
+			var messageUser = _context.MessageUsers.FirstOrDefault(m => m.id == id);
 			if (messageUser == null) throw new KeyNotFoundException($"Комментарий с ID {id} не найден.");
 
 			_context.MessageUsers.Remove(messageUser);
-			await _context.SaveChangesAsync();
+			_context.SaveChanges();
 		}
 
 		#endregion

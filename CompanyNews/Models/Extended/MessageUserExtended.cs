@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CompanyNews.Models.Extended
 {
-    public class MessageUserExtended
-    {
+    public class MessageUserExtended : INotifyPropertyChanged
+	{
 		public int id { get; set; }
 		public DateTime datePublication { get; set; }
 
@@ -46,5 +48,75 @@ namespace CompanyNews.Models.Extended
 		/// Причина отклонения прохождения модерации
 		/// </summary>
 		public string? rejectionReason { get; set; }
+
+		#region Button
+
+		/// <summary>
+		/// Кнопка заблокировать аккаунт
+		/// </summary>
+		private bool? _isBlockAccount { get; set; }
+		public bool? IsBlockAccount
+		{
+			get { return _isBlockAccount; }
+			set { _isBlockAccount = value; OnPropertyChanged(nameof(IsBlockAccount)); }
+		}
+
+		/// <summary>
+		/// Кнопка разблокировать аккаунт
+		/// </summary>
+		private bool? _isUnlockAccount { get; set; }
+		public bool? IsUnlockAccount
+		{
+			get { return _isUnlockAccount; }
+			set { _isUnlockAccount = value; OnPropertyChanged(nameof(IsUnlockAccount)); }
+		}
+
+		/// <summary>
+		/// Кнопка одобрить сообщение
+		/// </summary>
+		private bool? _isApproveMessage { get; set; }
+		public bool? IsApproveMessage
+		{
+			get { return _isApproveMessage; }
+			set { _isApproveMessage = value; OnPropertyChanged(nameof(IsApproveMessage)); }
+		}
+
+		/// <summary>
+		/// Кнопка отклонить сообщение
+		/// </summary>
+		private bool? _isRejectMessage { get; set; }
+		public bool? IsRejectMessage
+		{
+			get { return _isRejectMessage; }
+			set { _isRejectMessage = value; OnPropertyChanged(nameof(IsRejectMessage)); }
+		}
+
+		/// <summary>
+		/// Кнопка восстановить сообщение после отклонения
+		/// </summary>
+		private bool? _isRestoreMessage { get; set; }
+		public bool? IsRestoreMessage
+		{
+			get { return _isRestoreMessage; }
+			set { _isRestoreMessage = value; OnPropertyChanged(nameof(IsRestoreMessage)); }
+		}
+
+		/// <summary>
+		/// Кнопка удалить сообщение
+		/// </summary>
+		private bool? _isDeleteMessage { get; set; }
+		public bool? IsDeleteMessage
+		{
+			get { return _isDeleteMessage; }
+			set { _isDeleteMessage = value; OnPropertyChanged(nameof(IsDeleteMessage)); }
+		}
+
+		#endregion
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }

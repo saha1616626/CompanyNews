@@ -47,6 +47,11 @@ namespace CompanyNews.Services
 			return _newsPostRepository.GetAllNewsPostsAsync();
 		}
 
+		public async Task<List<MessagesNewsPostExtended>?> GettingPostsWithMessages()
+		{
+			return _newsPostRepository.GettingPostsWithMessages();
+		}
+
 		#endregion
 
 		#region CRUD Operations

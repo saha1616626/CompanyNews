@@ -24,12 +24,12 @@ namespace CompanyNews.Services
 
 		public async Task<MessageUserExtended?> MessageUserConvert(MessageUser? messageUser)
 		{
-			return await _messageUserRepository.MessageUserConvert(messageUser);
+			return _messageUserRepository.MessageUserConvert(messageUser);
 		}
 
 		public async Task<MessageUser?> MessageUserExtendetConvert(MessageUserExtended? messageUserExtendet)
 		{
-			return await _messageUserRepository.MessageUserExtendetConvert(messageUserExtendet);
+			return _messageUserRepository.MessageUserExtendetConvert(messageUserExtendet);
 		}
 
 		#endregion
@@ -38,12 +38,12 @@ namespace CompanyNews.Services
 
 		public async Task<MessageUserExtended?> GetMessageUserByIdAsync(int id)
 		{
-			return await _messageUserRepository.GetMessageUserByIdAsync(id);
+			return _messageUserRepository.GetMessageUserByIdAsync(id);
 		}
 
 		public async Task<IEnumerable<MessageUserExtended>?> GetAllMessageUserAsync()
 		{
-			return await _messageUserRepository.GetAllMessageUserAsync();
+			return _messageUserRepository.GetAllMessageUserAsync();
 		}
 
 		#endregion
@@ -52,18 +52,18 @@ namespace CompanyNews.Services
 
 		public async Task<MessageUser> AddMessageUserAsync(MessageUser messageUser)
 		{
-			var addedMessageUser = await _messageUserRepository.AddMessageUserAsync(messageUser);
+			var addedMessageUser = _messageUserRepository.AddMessageUserAsync(messageUser);
 			return addedMessageUser; // Возвращаем добавленное сообщение
 		}
 
 		public async Task UpdateMessageUserAsync(MessageUser messageUser)
 		{
-			await _messageUserRepository.UpdateMessageUserAsync(messageUser);
+			 _messageUserRepository.UpdateMessageUserAsync(messageUser);
 		}
 
 		public async Task DeleteMessageUserAsync(int id)
 		{
-			await _messageUserRepository.DeleteMessageUserAsync(id);
+			 _messageUserRepository.DeleteMessageUserAsync(id);
 		}
 
 		#endregion

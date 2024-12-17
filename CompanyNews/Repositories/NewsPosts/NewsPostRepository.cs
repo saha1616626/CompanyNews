@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using CompanyNews.Repositories.NewsCategory;
 using CompanyNews.Helpers;
+using System.Windows.Media;
 
 namespace CompanyNews.Repositories.NewsPosts
 {
@@ -105,6 +106,116 @@ namespace CompanyNews.Repositories.NewsPosts
 			}
 
 			return newsPostExtendeds;
+		}
+
+		/// <summary>
+		/// Получение списка всех постов и сообщений к ним.
+		/// </summary>
+		public List<MessagesNewsPostExtended>? GettingPostsWithMessages()
+		{
+			List<NewsPost> newsPosts = _context.NewsPosts.ToList();
+			List<MessageUser> messageUsers = _context.MessageUsers.ToList();
+			List<Account> accounts = _context.Accounts.ToList();
+			if (newsPosts == null) { return null; }
+
+			// Список постов с сообщениями
+			List<MessagesNewsPostExtended> messagesNewsPostExtendeds = new List<MessagesNewsPostExtended>();
+
+			foreach(var item in newsPosts)
+			{
+				NewsPostExtended? newsPostExtended = NewsPostConvert(item);
+				if(newsPostExtended != null)
+				{
+					MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+					messagesNewsPostExtended.NewsPostExtended = newsPostExtended;
+
+					// Поиск сообщений пользователей по данному посту
+					List<MessageUser> messages = messageUsers.Where(m => m.newsPostId == newsPostExtended.id).ToList();
+					if(messages != null)
+					{
+						List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+						// Если сообщения найдены
+						foreach(var message in messages)
+						{
+							// Ищем пользователя, который оставил комментарий
+							Account account = accounts.FirstOrDefault(a => a.id == message.accountId);
+							if(account != null)
+							{
+								MessageUserExtended messageUserExtended = new MessageUserExtended();
+								messageUserExtended.Account = account;
+								messageUserExtended.id = message.id;
+								messageUserExtended.datePublication = message.datePublication;
+								messageUserExtended.newsPostId = message.newsPostId;
+								messageUserExtended.accountId = account.id;
+								messageUserExtended.message = message.message;
+								messageUserExtended.status = message.status;
+								messageUserExtended.dateModeration = message.dateModeration;
+								messageUserExtended.rejectionReason = message.rejectionReason;
+
+								// Устанавливаем свойства для кнопок
+
+								// Бокировка сообщений
+								if(account.isCanLeaveComments) // Сообщения заблокированы
+								{ 
+									messageUserExtended.IsBlockAccount = false; // Кнопка заблокировать скрыта
+									messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать видна
+								}
+								else // Сообщения не заблокированы
+								{ 
+									messageUserExtended.IsBlockAccount = true; // Кнопка заблокировать видна
+									messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать скрыта
+								}
+
+								// Статус проверки сообщения
+								if(message.status == "На проверке")
+								{
+									messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
+									messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
+									messageUserExtended.IsRestoreMessage = false; // Кнопка восстановить сообщение после отклонения скрыта
+								}
+
+								if (message.status == "Одобрено")
+								{
+									messageUserExtended.IsApproveMessage = false; // Кнопка одобрить сообщение скрыта
+									messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
+									messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
+								}
+
+								if (message.status == "Отклонено")
+								{
+									messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
+									messageUserExtended.IsRejectMessage = false; // Кнопка отклонить сообщение скрыта
+									messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
+								}
+
+								messageUserExtended.IsDeleteMessage = true; // Кнопка удалить сообщение видна
+
+								messageUserExtendeds.Add(messageUserExtended); // Добавили в список сообщений текущего поста сообщение
+							}
+							else
+							{
+								continue;
+							}
+						}
+						messagesNewsPostExtended.MessageUserExtendeds = messageUserExtendeds;
+						messagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+						continue;
+					}
+					else
+					{
+						// Возвращаем пост без сообщений
+						messagesNewsPostExtended.MessageUserExtendeds = null;
+						messagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+						continue;
+					}
+				}
+				else
+				{
+					continue;
+				}
+			}
+
+			return messagesNewsPostExtendeds;
 		}
 
 		#endregion
