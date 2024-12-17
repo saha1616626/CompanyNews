@@ -80,7 +80,7 @@ TextWrapping="Wrap"/>
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
 
                         <TextBox  x:Name="Search" 
-                     Height="50" Margin="0,0,0,0"
+                     Height="50" Margin="0,0,0,0" TextChanged="SearchNewsPost"
                      VerticalAlignment="Center" HorizontalAlignment="Left"
                      Text="{Binding TextSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                      materialDesign:TextFieldAssist.HasClearButton="True"
@@ -191,7 +191,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                             </TextBlock>
 
                                             <TextBlock Grid.Row="1" HorizontalAlignment="Left" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Margin="0,10,0,0">
-                                            <Run Text="Категория публикации: " FontSize="16" FontWeight="Bold"/>
+                                            <Run Text="Категория поста: " FontSize="16" FontWeight="Bold"/>
                                             <Run Text="{Binding NewsPostExtended.newsCategoryName,  StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontSize="16" FontWeight="Medium"/>
                                             </TextBlock>
                                         </Grid>
@@ -199,7 +199,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                         <!--Описание поста-->
                                         <TextBlock Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
                                                    MaxHeight="250" Margin="0,10,0,10" Padding="10,0,30,0" VerticalAlignment="Top" TextAlignment="Justify">
-                                            <Run Text="Текст публикации: " FontSize="16" FontWeight="Bold"/>
+                                            <Run Text="Сообщение поста: " FontSize="16" FontWeight="Bold"/>
                                             <Run Text="{Binding NewsPostExtended.message,  StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontSize="16" FontWeight="Medium"/>
                                         </TextBlock>
                                         
@@ -421,13 +421,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                 <!--#region Popup-->
 
-                <!--фон для Popup-->
-                <Border x:Name="DarkBackground"
- Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
- Background="#80000000" Panel.ZIndex="1" 
- Margin="-600,-600,-600,-600"/>
-
-                <!--Popup для удаления данных-->
+                <!--Popup для изменения данных-->
                 <Popup x:Name="DataPopup" PlacementTarget="{Binding ElementName=mainGrid}"
            IsOpen="{Binding StartPoup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
            Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
@@ -449,14 +443,94 @@ Style="{StaticResource OutlineOfPopup}">
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Удаление категории" 
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Работа с данными" 
                                    Margin="0, 20, 0, 0" FontSize="30" FontWeight="Bold"/>
 
                                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" 
-                                    Height="Auto" Margin="0,0,0,0">
+                                    Height="Auto" Margin="10,0,10,0">
                                     <TextBlock Text="{Binding ActionsWithData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="20" FontWeight="UltraBold" 
                                        HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" />
                                 </StackPanel>
+
+                                <Grid Grid.Row="2" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
+                                    Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
+                                    <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
+                                    Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
+
+                                </Grid>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                </Popup>
+
+                <!--Popup для изменения данных-->
+                <Popup x:Name="BlockingPopup" PlacementTarget="{Binding ElementName=mainGrid}"
+           IsOpen="{Binding StartBlockingPoup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+           Placement="Center" Grid.ColumnSpan="4" Grid.RowSpan="4" HorizontalOffset="0" 
+           VerticalOffset="-50" StaysOpen="False" Closed="MyPopup_Closed" 
+           AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                    <!--фон-->
+                    <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
+Style="{StaticResource OutlineOfPopup}">
+                        <Grid Width="500" Height="550">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!--Сообщения системы-->
+                                <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
+         BorderThickness="1" x:Name="PopupMessageBorder" Visibility="Hidden"
+         HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" Width="400" Margin="0,180,0,0">
+                                    <!-- Контейнер для центрирования текста -->
+                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="370">
+                                        <TextBlock Text="{Binding PopupMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                     x:Name="PopupMessage"
+                   FontWeight="Regular" FontSize="18"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   TextWrapping="Wrap"/>
+                                    </Grid>
+                                </Border>
+
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Работа с данными" 
+                                   Margin="0, 20, 0, 0" FontSize="30" FontWeight="Bold"/>
+
+                                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" 
+                                    Height="Auto" Margin="15,30,15,0">
+                                    <TextBlock Text="{Binding ActionsWithData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="20" FontWeight="UltraBold" 
+                                       HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Red" />
+                                </StackPanel>
+
+                                <!--Сообщение-->
+                                <TextBox Grid.Row="2" Height="200" Margin="0,20,0,0" x:Name="DescriptionBlocking"
+                          VerticalAlignment="Center" HorizontalAlignment="Center"
+                          Text="{Binding TextDescriptionBlocking, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                          materialDesign:TextFieldAssist.HasClearButton="True"
+                          Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                          materialDesign:HintAssist.Hint="Причина*"
+                          materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
+                          MaxLength="1000" TextWrapping="Wrap" Width="400"/>
 
                                 <Grid Grid.Row="3" Grid.Column="0" Margin="0,0,0,25" VerticalAlignment="Bottom">
                                     <Grid.ColumnDefinitions>
@@ -470,7 +544,7 @@ Style="{StaticResource OutlineOfPopup}">
 
                                     <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
-                                    <Button Grid.Row="0" Grid.Column="1" Content="Удалить" Width="150" 
+                                    <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
 
                                 </Grid>
@@ -485,5 +559,12 @@ Style="{StaticResource OutlineOfPopup}">
 
             </Grid>
         </ScrollViewer>
+
+        <!--фон для Popup-->
+        <Border x:Name="DarkBackground"
+ Visibility="{Binding DarkBackground, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ Background="#80000000" Panel.ZIndex="1" 
+ Margin="-600,-600,-600,-600"/>
+
     </Grid>
 </Page>

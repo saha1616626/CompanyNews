@@ -41,12 +41,25 @@ namespace CompanyNews.Views.AdminApp
 			};
 
 			_messageUserViewModel = (MessageUserViewModel)this.Resources["MessageUserViewModel"];
-			_messageUserViewModel.InitializeAsync(parameters);
+			_messageUserViewModel.InitializeAsync(parameters, PopupMessage, PopupMessageBorder, DescriptionBlocking);
 		}
 
 		/// <summary>
-        /// Закрываем "гамбургер" меню, если открыто, при нажатии на окно, но не на меню
-        /// </summary>
+		/// Поиск
+		/// </summary>
+		private void SearchNewsPost(object sender, TextChangedEventArgs e)
+		{
+			// Получаем текст из поля при вводе
+			var textInfo = sender as System.Windows.Controls.TextBox;
+			if (textInfo != null)
+			{
+				_messageUserViewModel.SearchNewsPost(textInfo.Text);
+			}
+		}
+
+		/// <summary>
+		/// Закрываем "гамбургер" меню, если открыто, при нажатии на окно, но не на меню
+		/// </summary>
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			HamburgerMenuEvent.CloseHamburgerMenu();

@@ -22,6 +22,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Сервис для взаиодействия с бизнес-логикой
 		/// </summary>
+		private readonly AccountService _accountService;
 		private readonly NewsPostService _newsPostService;
 		private readonly MessageUserService _messageUserServiceService;
 		private readonly NewsCategoryService _newsCategoryService;
@@ -38,6 +39,7 @@ namespace CompanyNews.ViewModels.AdminApp
 
 		public MessageUserViewModel()
 		{
+			_accountService = ServiceLocator.GetService<AccountService>();
 			_newsPostService = ServiceLocator.GetService<NewsPostService>();
 			_messageUserServiceService = ServiceLocator.GetService<MessageUserService>();
 			_newsCategoryService = ServiceLocator.GetService<NewsCategoryService>();
@@ -412,20 +414,41 @@ namespace CompanyNews.ViewModels.AdminApp
 				return _saveData ??
 					(_saveData = new RelayCommand(async (obj) =>
 					{
-
-						if (isAddData) // Логика при добавлении данных
+						if (IsBlockAccount)
 						{
-
+							BlockAccount(messageUserExtended);
 						}
-						else // Логика при редактировании данных
-						{
 
+						if (IsUnlockAccount)
+						{
+							UnlockAccount(messageUserExtended);
+						}
+
+						if (IsApproveMessage)
+						{
+							ApproveMessage(messageUserExtended);
+						}
+
+						if (IsRejectMessage)
+						{
+							RejectMessage(messageUserExtended);
+						}
+
+						if (IsRestoreMessage)
+						{
+							RestoreMessage(messageUserExtended);
+						}
+
+						if (IsDeleteMessage)
+						{
+							DeleteMessage(messageUserExtended);
 						}
 
 					}, (obj) => true));
 			}
 		}
 
+		MessageUserExtended messageUserExtended { get; set; }
 		public bool IsBlockAccount { get; set; }
 		public bool IsUnlockAccount { get; set; }
 		public bool IsApproveMessage { get; set; }
@@ -438,12 +461,20 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckBlockAccount(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = true;
 			IsUnlockAccount = false;
 			IsApproveMessage = false;
 			IsRejectMessage = false;
 			IsRestoreMessage = false;
 			IsDeleteMessage = false;
+
+			// Запускаем Popup
+			StartBlockingPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			descriptionBlocking.Text = ""; // Очищаем поле
+			ActionsWithData = "Вы действительно хотите ограничить возможность пользователю комментировать публикации?";
 		}
 
 		/// <summary>
@@ -451,17 +482,46 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void BlockAccount(MessageUserExtended messageUserExtended)
 		{
-			// Ищем пользователя во всех сообщениях, чтобы изменить кнопку
-			foreach(var post in ListMessagesNewsPostExtendeds)
+			// Проверяем поле на заполнение
+			if (descriptionBlocking != null)
 			{
-				// В посте просматриваем сообщения
-				foreach(var mes in post.MessageUserExtendeds)
+				if (!string.IsNullOrWhiteSpace(descriptionBlocking.Text))
 				{
-					if(mes.Account.id == messageUserExtended.Account.id)
+					// Ищем пользователя во всех сообщениях, чтобы изменить кнопку
+					foreach (var post in ListMessagesNewsPostExtendeds)
 					{
-						mes.IsBlockAccount = false; // Кнопка заблокировать скрыта
-						mes.IsUnlockAccount = true; // Кнопка разблокиовать видна
+						// В посте просматриваем сообщения
+						foreach (var mes in post.MessageUserExtendeds)
+						{
+							if (mes.Account.id == messageUserExtended.Account.id)
+							{
+								mes.IsBlockAccount = false; // Кнопка заблокировать скрыта
+								mes.IsUnlockAccount = true; // Кнопка разблокиовать видна
+							}
+						}
 					}
+
+					Account account = messageUserExtended.Account;
+					account.isCanLeaveComments = true;
+					account.reasonBlockingMessages = descriptionBlocking.Text.Trim();
+					_accountService.UpdateAccountAsync(account);
+
+					ClosePopupWorkingWithData(); // Скрываем Popup
+
+					systemMessage.Text = $"Пользователь успешно заблокирован.";
+					systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(systemMessage);
+					BeginFadeAnimation(systemMessageBorder);
+				}
+				else
+				{
+					StartFieldIllumination(descriptionBlocking); // Подсветка поля
+					popupMessage.Text = "Заполните обязательное поле.";
+					popupMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(popupMessage);
+					BeginFadeAnimation(popupMessageBorder);
 				}
 			}
 		}
@@ -471,12 +531,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckUnlockAccount(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = false;
 			IsUnlockAccount = true;
 			IsApproveMessage = false;
 			IsRejectMessage = false;
 			IsRestoreMessage = false;
 			IsDeleteMessage = false;
+
+			// Запускаем Popup
+			StartPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			ActionsWithData = "Вы действительно хотите разблокировать возможность пользователю комментировать публикации?";
 		}
 
 		/// <summary>
@@ -497,6 +564,19 @@ namespace CompanyNews.ViewModels.AdminApp
 					}
 				}
 			}
+
+			Account account = messageUserExtended.Account;
+			account.isCanLeaveComments = false;
+			account.reasonBlockingMessages = "";
+			_accountService.UpdateAccountAsync(account);
+
+			ClosePopupWorkingWithData(); // Скрываем Popup
+
+			systemMessage.Text = $"Пользователь успешно разблокирован.";
+			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+			// Исчезание сообщения
+			BeginFadeAnimation(systemMessage);
+			BeginFadeAnimation(systemMessageBorder);
 		}
 
 		/// <summary>
@@ -504,12 +584,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckApproveMessage(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = false;
 			IsUnlockAccount = false;
 			IsApproveMessage = true;
 			IsRejectMessage = false;
 			IsRestoreMessage = false;
 			IsDeleteMessage = false;
+
+			// Запускаем Popup
+			StartPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			ActionsWithData = "Подтвердите, что сообщение прошло модерацию.";
 		}
 
 		/// <summary>
@@ -532,6 +619,26 @@ namespace CompanyNews.ViewModels.AdminApp
 					messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
 					messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
 					messageUserExtended.status = "Одобрено";
+
+					MessageUser message = new MessageUser();
+					message.id = messageUserExtended.id;
+					message.datePublication = messageUserExtended.datePublication;
+					message.newsPostId = messageUserExtended.newsPostId;
+					message.accountId = messageUserExtended.accountId;
+					message.message = messageUserExtended.message;
+					message.status = "Одобрено";
+					message.dateModeration = DateTime.Now;
+					message.rejectionReason = "";
+
+					_messageUserServiceService.UpdateMessageUserAsync(message);
+
+					ClosePopupWorkingWithData(); // Скрываем Popup
+
+					systemMessage.Text = $"Сообщение прошло модерацию.";
+					systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(systemMessage);
+					BeginFadeAnimation(systemMessageBorder);
 				}
 			}
 		}
@@ -541,12 +648,20 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckRejectMessage(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = false;
 			IsUnlockAccount = false;
 			IsApproveMessage = false;
 			IsRejectMessage = true;
 			IsRestoreMessage = false;
 			IsDeleteMessage = false;
+
+			// Запускаем Popup
+			descriptionBlocking.Text = ""; // Очищаем поле
+			StartBlockingPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			ActionsWithData = "Подтвердите, что сообщение не прошло модерацию.";
 		}
 
 		/// <summary>
@@ -554,22 +669,58 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void RejectMessage(MessageUserExtended messageUserExtended)
 		{
-			// Ищем нужный пост
-			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
-				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
-
-			if (messagesNewsPostExtended != null)
+			// Проверяем поле на заполнение
+			if (descriptionBlocking != null)
 			{
-				// Ищем нужное сообщение
-				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
-
-				if (messageUser != null)
+				if (!string.IsNullOrWhiteSpace(descriptionBlocking.Text))
 				{
-					messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
-					messageUserExtended.IsRejectMessage = false; // Кнопка отклонить сообщение скрыта
-					messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
-					messageUserExtended.status = "Отклонено";
+					// Ищем нужный пост
+					MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
+					.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
+
+					if (messagesNewsPostExtended != null)
+					{
+						// Ищем нужное сообщение
+						MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
+
+						if (messageUser != null)
+						{
+							messageUserExtended.IsApproveMessage = true; // Кнопка одобрить сообщение видна
+							messageUserExtended.IsRejectMessage = false; // Кнопка отклонить сообщение скрыта
+							messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
+							messageUserExtended.status = "Отклонено";
+
+							MessageUser message = new MessageUser();
+							message.id = messageUserExtended.id;
+							message.datePublication = messageUserExtended.datePublication;
+							message.newsPostId = messageUserExtended.newsPostId;
+							message.accountId = messageUserExtended.accountId;
+							message.message = messageUserExtended.message;
+							message.status = "Отклонено";
+							message.dateModeration = DateTime.Now;
+							message.rejectionReason = descriptionBlocking.Text;
+
+							_messageUserServiceService.UpdateMessageUserAsync(message);
+
+							ClosePopupWorkingWithData(); // Скрываем Popup
+
+							systemMessage.Text = $"Сообщение не прошло модерацию.";
+							systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+							// Исчезание сообщения
+							BeginFadeAnimation(systemMessage);
+							BeginFadeAnimation(systemMessageBorder);
+						}
+					}
 				}
+				else
+				{
+					StartFieldIllumination(descriptionBlocking); // Подсветка поля
+					popupMessage.Text = "Заполните обязательное поле.";
+					popupMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(popupMessage);
+					BeginFadeAnimation(popupMessageBorder);
+				}				
 			}
 		}
 
@@ -578,12 +729,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckRestoreMessage(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = false;
 			IsUnlockAccount = false;
 			IsApproveMessage = false;
 			IsRejectMessage = false;
 			IsRestoreMessage = true;
 			IsDeleteMessage = false;
+
+			// Запускаем Popup
+			StartPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			ActionsWithData = "Подтвердите, что сообщение будет отправлено на проверку.";
 		}
 
 		/// <summary>
@@ -606,6 +764,26 @@ namespace CompanyNews.ViewModels.AdminApp
 					messageUserExtended.IsRejectMessage = true; // Кнопка отклонить сообщение видна
 					messageUserExtended.IsRestoreMessage = false; // Кнопка восстановить сообщение после отклонения скрыта
 					messageUserExtended.status = "На проверке";
+
+					MessageUser message = new MessageUser();
+					message.id = messageUserExtended.id;
+					message.datePublication = messageUserExtended.datePublication;
+					message.newsPostId = messageUserExtended.newsPostId;
+					message.accountId = messageUserExtended.accountId;
+					message.message = messageUserExtended.message;
+					message.status = "На проверке";
+					message.dateModeration = DateTime.Now;
+					message.rejectionReason = "";
+
+					_messageUserServiceService.UpdateMessageUserAsync(message);
+
+					ClosePopupWorkingWithData(); // Скрываем Popup
+
+					systemMessage.Text = $"Сообщение отправлено на проверку.";
+					systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(systemMessage);
+					BeginFadeAnimation(systemMessageBorder);
 				}
 			}
 		}
@@ -615,12 +793,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void CheckDeleteMessage(MessageUserExtended messageUserExtended)
 		{
+			this.messageUserExtended = messageUserExtended;
+
 			IsBlockAccount = false;
 			IsUnlockAccount = false;
 			IsApproveMessage = false;
 			IsRejectMessage = false;
 			IsRestoreMessage = false;
 			IsDeleteMessage = true;
+
+			// Запускаем Popup
+			StartPoup = true;// отображаем Popup
+			DarkBackground = Visibility.Visible; // показать фон
+			ActionsWithData = "Подтвердите, что вы собираетесь удалить сообщение.";
 		}
 
 		/// <summary>
@@ -641,6 +826,16 @@ namespace CompanyNews.ViewModels.AdminApp
 				{
 					messagesNewsPostExtended.MessageUserExtendeds.Remove(messageUser);
 					messageUserExtended.IsDeleteMessage = false; // Кнопка удалить сообщение выключена
+
+					_messageUserServiceService.DeleteMessageUserAsync(messageUserExtended.id);
+
+					ClosePopupWorkingWithData(); // Скрываем Popup
+
+					systemMessage.Text = $"Сообщение успешно удалено.";
+					systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+					// Исчезание сообщения
+					BeginFadeAnimation(systemMessage);
+					BeginFadeAnimation(systemMessageBorder);
 				}
 			}
 		}
@@ -672,13 +867,14 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			// Закрываем Popup
 			StartPoup = false;
+			StartBlockingPoup = false;
 			DarkBackground = Visibility.Collapsed; // Скрываем фон
 		}
 
 		#region FeaturesPopup
 
 		/// <summary>
-		/// Popup для работы с данны
+		/// Popup для работы с данными
 		/// </summary>
 		private bool _startPoup { get; set; }
 		public bool StartPoup
@@ -688,6 +884,17 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				_startPoup = value;
 				OnPropertyChanged(nameof(StartPoup));
+			}
+		}
+
+		private bool _startBlockingPoup { get; set; }
+		public bool StartBlockingPoup
+		{
+			get { return _startBlockingPoup; }
+			set
+			{
+				_startBlockingPoup = value;
+				OnPropertyChanged(nameof(StartBlockingPoup));
 			}
 		}
 
@@ -724,16 +931,25 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Асинхронно получаем информацию из привязанного View
 		/// </summary>
-		public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters)
+		public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters, TextBlock PopupMessage, Border PopupMessageBorder,
+			TextBox DescriptionBlocking)
 		{
 			darkBackground = adminViewModelParameters.darkBackground;
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
 			systemMessageBorder = adminViewModelParameters.errorInputBorder;
 			systemMessage = adminViewModelParameters.errorInputText;
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
+			popupMessage = PopupMessage;
+			popupMessageBorder = PopupMessageBorder;
+			descriptionBlocking = DescriptionBlocking;
 		}
 
 		#region ListSelected
+
+		/// <summary>
+		/// Описание блокировки
+		/// </summary>
+		public TextBox descriptionBlocking {  get; set; }
 
 		/// <summary>
 		/// Выбранная категория
@@ -858,10 +1074,13 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public Border? systemMessageBorder { get; set; }
 
+		public Border? popupMessageBorder { get; set; }
+
 		/// <summary>
 		/// Вывод ошибки и анимация текста на странице
 		/// </summary>
 		public TextBlock? systemMessage { get; set; }
+		public TextBlock? popupMessage { get; set; }
 
 		/// <summary>
 		/// Popup удаления данных
