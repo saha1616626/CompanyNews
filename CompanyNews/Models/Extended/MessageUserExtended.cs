@@ -37,8 +37,12 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Статус модерации сообщения (Модерация, Одобрено и Отклонено)
 		/// </summary>
-		public string status { get; set; }
-
+		private string _status { get; set; }
+		public string status
+		{
+			get { return  _status; }
+			set { _status = value; OnPropertyChanged(nameof(status)); }
+		}
 		/// <summary>
 		/// Дата и время модерации
 		/// </summary>
@@ -47,7 +51,12 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Причина отклонения прохождения модерации
 		/// </summary>
-		public string? rejectionReason { get; set; }
+		private string? _rejectionReason { get; set; }
+		public string? rejectionReason
+		{
+			get { return _rejectionReason; }
+			set { _rejectionReason = value; OnPropertyChanged(nameof(rejectionReason)); }
+		}
 
 		#region Button
 

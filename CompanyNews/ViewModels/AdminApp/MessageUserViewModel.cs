@@ -29,7 +29,12 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Отображаемый список учетных записей в UI
 		/// </summary>
-		public ObservableCollection<MessagesNewsPostExtended> ListMessagesNewsPostExtendeds;
+		private ObservableCollection<MessagesNewsPostExtended> _listMessagesNewsPostExtendeds;
+		public ObservableCollection<MessagesNewsPostExtended> ListMessagesNewsPostExtendeds
+		{
+			get { return _listMessagesNewsPostExtendeds; }
+			set { _listMessagesNewsPostExtendeds = value; OnPropertyChanged(nameof(ListMessagesNewsPostExtendeds)); }
+		}
 
 		public MessageUserViewModel()
 		{
@@ -54,16 +59,25 @@ namespace CompanyNews.ViewModels.AdminApp
 				if(SelectedCategory == null)
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if(messagesNewsPostExtendeds != null)
 					{
-						ListMessagesNewsPostExtendeds = new ObservableCollection<MessagesNewsPostExtended>(messagesNewsPostExtendeds);
+						foreach (var newsPost in messagesNewsPostExtendeds)
+						{
+							if (newsPost.MessageUserExtendeds != null && newsPost.MessageUserExtendeds.Count > 0)
+							{
+								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
+								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
+								messagesNewsPostExtended.MessageUserExtendeds = newsPost.MessageUserExtendeds;
+								ListMessagesNewsPostExtendeds.Add(messagesNewsPostExtended);
+							}
+						}
 					}
 				}
 				else
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach(var newsPost in messagesNewsPostExtendeds)
@@ -73,7 +87,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach(var meesage in newsPost.MessageUserExtendeds)
 								{
 									messageUserExtendeds.Add(meesage);
@@ -92,7 +106,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				if (SelectedCategory == null)
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -102,7 +116,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if(meesage.status == "На проверке")
@@ -122,7 +136,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				else
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -132,7 +146,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if (meesage.status == "На проверке")
@@ -157,7 +171,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				if (SelectedCategory == null)
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -167,7 +181,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if (meesage.status == "Одобрено")
@@ -187,7 +201,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				else
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -197,7 +211,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if (meesage.status == "Одобрено")
@@ -222,7 +236,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				if (SelectedCategory == null)
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -232,7 +246,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if (meesage.status == "Отклонено")
@@ -252,7 +266,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				else
 				{
 					ListMessagesNewsPostExtendeds.Clear(); // Чистка коллекции перед заполнением
-					List<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
+					ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 					if (messagesNewsPostExtendeds != null)
 					{
 						foreach (var newsPost in messagesNewsPostExtendeds)
@@ -262,7 +276,7 @@ namespace CompanyNews.ViewModels.AdminApp
 								MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 								messagesNewsPostExtended.NewsPostExtended = newsPost.NewsPostExtended;
 
-								List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+								ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 								foreach (var meesage in newsPost.MessageUserExtendeds)
 								{
 									if (meesage.status == "Отклонено")
@@ -412,26 +426,57 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 		}
 
+		public bool IsBlockAccount { get; set; }
+		public bool IsUnlockAccount { get; set; }
+		public bool IsApproveMessage { get; set; }
+		public bool IsRejectMessage { get; set; }
+		public bool IsRestoreMessage { get; set; }
+		public bool IsDeleteMessage { get; set; }
+
+		/// <summary>
+		/// Подтверждение блокировки пользователя.
+		/// </summary>
+		public void CheckBlockAccount(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = true;
+			IsUnlockAccount = false;
+			IsApproveMessage = false;
+			IsRejectMessage = false;
+			IsRestoreMessage = false;
+			IsDeleteMessage = false;
+		}
+
 		/// <summary>
 		/// Блокировка пользователя (писать сообщения)
 		/// </summary>
 		public void BlockAccount(MessageUserExtended messageUserExtended)
 		{
-			// Ищем нужный пост
-			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
-				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
-
-			if (messagesNewsPostExtended != null)
+			// Ищем пользователя во всех сообщениях, чтобы изменить кнопку
+			foreach(var post in ListMessagesNewsPostExtendeds)
 			{
-				// Ищем нужное сообщение
-				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
-
-				if (messageUser != null)
+				// В посте просматриваем сообщения
+				foreach(var mes in post.MessageUserExtendeds)
 				{
-					messageUserExtended.IsBlockAccount = false; // Кнопка заблокировать скрыта
-					messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать видна
+					if(mes.Account.id == messageUserExtended.Account.id)
+					{
+						mes.IsBlockAccount = false; // Кнопка заблокировать скрыта
+						mes.IsUnlockAccount = true; // Кнопка разблокиовать видна
+					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Подтверждение разблокировки пользователя.
+		/// </summary>
+		public void CheckUnlockAccount(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = false;
+			IsUnlockAccount = true;
+			IsApproveMessage = false;
+			IsRejectMessage = false;
+			IsRestoreMessage = false;
+			IsDeleteMessage = false;
 		}
 
 		/// <summary>
@@ -439,21 +484,32 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// </summary>
 		public void UnlockAccount(MessageUserExtended messageUserExtended)
 		{
-			// Ищем нужный пост
-			MessagesNewsPostExtended messagesNewsPostExtended = ListMessagesNewsPostExtendeds
-				.FirstOrDefault(post => post.NewsPostExtended.id == messageUserExtended.newsPostId);
-
-			if (messagesNewsPostExtended != null)
+			// Ищем пользователя во всех сообщениях, чтобы изменить кнопку
+			foreach (var post in ListMessagesNewsPostExtendeds)
 			{
-				// Ищем нужное сообщение
-				MessageUserExtended messageUser = messagesNewsPostExtended.MessageUserExtendeds.FirstOrDefault(message => message.id == messageUserExtended.id);
-
-				if (messageUser != null)
+				// В посте просматриваем сообщения
+				foreach (var mes in post.MessageUserExtendeds)
 				{
-					messageUserExtended.IsBlockAccount = true; // Кнопка заблокировать видна
-					messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать скрыта
+					if (mes.Account.id == messageUserExtended.Account.id)
+					{
+						mes.IsBlockAccount = true; // Кнопка заблокировать видна
+						mes.IsUnlockAccount = false; // Кнопка разблокиовать скрыта
+					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Подтверждение одобрения сообщения.
+		/// </summary>
+		public void CheckApproveMessage(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = false;
+			IsUnlockAccount = false;
+			IsApproveMessage = true;
+			IsRejectMessage = false;
+			IsRestoreMessage = false;
+			IsDeleteMessage = false;
 		}
 
 		/// <summary>
@@ -481,6 +537,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
+		/// Подтверждение отклонения сообщения.
+		/// </summary>
+		public void CheckRejectMessage(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = false;
+			IsUnlockAccount = false;
+			IsApproveMessage = false;
+			IsRejectMessage = true;
+			IsRestoreMessage = false;
+			IsDeleteMessage = false;
+		}
+
+		/// <summary>
 		/// Отклонить сообщение пользователя
 		/// </summary>
 		public void RejectMessage(MessageUserExtended messageUserExtended)
@@ -502,6 +571,19 @@ namespace CompanyNews.ViewModels.AdminApp
 					messageUserExtended.status = "Отклонено";
 				}
 			}
+		}
+
+		/// <summary>
+		/// Подтверждение восстановления сообщения.
+		/// </summary>
+		public void CheckRestoreMessage(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = false;
+			IsUnlockAccount = false;
+			IsApproveMessage = false;
+			IsRejectMessage = false;
+			IsRestoreMessage = true;
+			IsDeleteMessage = false;
 		}
 
 		/// <summary>
@@ -529,6 +611,19 @@ namespace CompanyNews.ViewModels.AdminApp
 		}
 
 		/// <summary>
+		/// Подтверждение удаления сообщения.
+		/// </summary>
+		public void CheckDeleteMessage(MessageUserExtended messageUserExtended)
+		{
+			IsBlockAccount = false;
+			IsUnlockAccount = false;
+			IsApproveMessage = false;
+			IsRejectMessage = false;
+			IsRestoreMessage = false;
+			IsDeleteMessage = true;
+		}
+
+		/// <summary>
 		/// Удалить сообщение пользователя
 		/// </summary>
 		public void DeleteMessage(MessageUserExtended messageUserExtended)
@@ -545,6 +640,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				if (messageUser != null)
 				{
 					messagesNewsPostExtended.MessageUserExtendeds.Remove(messageUser);
+					messageUserExtended.IsDeleteMessage = false; // Кнопка удалить сообщение выключена
 				}
 			}
 		}
@@ -575,34 +671,34 @@ namespace CompanyNews.ViewModels.AdminApp
 		private async Task ClosePopupWorkingWithData()
 		{
 			// Закрываем Popup
-			StartPoupDeleteData = false;
+			StartPoup = false;
 			DarkBackground = Visibility.Collapsed; // Скрываем фон
 		}
 
 		#region FeaturesPopup
 
 		/// <summary>
-		/// Popup удаления данных
+		/// Popup для работы с данны
 		/// </summary>
-		private bool _startPoupDeleteData { get; set; }
-		public bool StartPoupDeleteData
+		private bool _startPoup { get; set; }
+		public bool StartPoup
 		{
-			get { return _startPoupDeleteData; }
+			get { return _startPoup; }
 			set
 			{
-				_startPoupDeleteData = value;
-				OnPropertyChanged(nameof(StartPoupDeleteData));
+				_startPoup = value;
+				OnPropertyChanged(nameof(StartPoup));
 			}
 		}
 
 		/// <summary>
 		/// Данные передаются в Popup, как предпросмотр перед удалением
 		/// </summary>
-		private string _dataDeleted { get; set; }
-		public string DataDeleted
+		private string _actionsWithData { get; set; }
+		public string ActionsWithData
 		{
-			get { return _dataDeleted; }
-			set { _dataDeleted = value; OnPropertyChanged(nameof(DataDeleted)); }
+			get { return _actionsWithData; }
+			set { _actionsWithData = value; OnPropertyChanged(nameof(ActionsWithData)); }
 		}
 
 		/// <summary>
@@ -668,8 +764,8 @@ namespace CompanyNews.ViewModels.AdminApp
 			get { return _fullListSelected; }
 			set
 			{
-				_fullListSelected = value; OnPropertyChanged(nameof(FullListSelected)); LoadMessageUser();
-
+				_fullListSelected = value; OnPropertyChanged(nameof(FullListSelected)); 
+				LoadMessageUser();
 			}
 		}
 
@@ -683,7 +779,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			set
 			{
 				_onVerificationListSelected = value; OnPropertyChanged(nameof(OnVerificationListSelected));
-
+				LoadMessageUser();
 			}
 		}
 
@@ -697,7 +793,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			set
 			{
 				_verifiedListSelected = value; OnPropertyChanged(nameof(VerifiedListSelected));
-
+				LoadMessageUser();
 			}
 		}
 
@@ -711,7 +807,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			set
 			{
 				_rejectedListSelected = value; OnPropertyChanged(nameof(RejectedListSelected));
-
+				LoadMessageUser();
 			}
 		}
 
@@ -800,7 +896,7 @@ namespace CompanyNews.ViewModels.AdminApp
 						MessagesNewsPostExtended messagesNewsPostExtended = new MessagesNewsPostExtended();
 						messagesNewsPostExtended.NewsPostExtended = item.NewsPostExtended;
 
-						List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+						ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 
 						// Проходимся по списку сообщений
 						foreach (var itemMessage in item.MessageUserExtendeds)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CompanyNews.Repositories.NewsCategory;
+using System.Collections.ObjectModel;
 
 namespace CompanyNews.Services
 {
@@ -47,7 +48,7 @@ namespace CompanyNews.Services
 			return _newsPostRepository.GetAllNewsPostsAsync();
 		}
 
-		public async Task<List<MessagesNewsPostExtended>?> GettingPostsWithMessages()
+		public async Task<ObservableCollection<MessagesNewsPostExtended>?> GettingPostsWithMessages()
 		{
 			return _newsPostRepository.GettingPostsWithMessages();
 		}

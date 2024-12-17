@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using CompanyNews.Repositories.NewsCategory;
 using CompanyNews.Helpers;
 using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace CompanyNews.Repositories.NewsPosts
 {
@@ -111,7 +112,7 @@ namespace CompanyNews.Repositories.NewsPosts
 		/// <summary>
 		/// Получение списка всех постов и сообщений к ним.
 		/// </summary>
-		public List<MessagesNewsPostExtended>? GettingPostsWithMessages()
+		public ObservableCollection<MessagesNewsPostExtended>? GettingPostsWithMessages()
 		{
 			List<NewsPost> newsPosts = _context.NewsPosts.ToList();
 			List<MessageUser> messageUsers = _context.MessageUsers.ToList();
@@ -119,7 +120,7 @@ namespace CompanyNews.Repositories.NewsPosts
 			if (newsPosts == null) { return null; }
 
 			// Список постов с сообщениями
-			List<MessagesNewsPostExtended> messagesNewsPostExtendeds = new List<MessagesNewsPostExtended>();
+			ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = new ObservableCollection<MessagesNewsPostExtended>();
 
 			foreach(var item in newsPosts)
 			{
@@ -133,7 +134,7 @@ namespace CompanyNews.Repositories.NewsPosts
 					List<MessageUser> messages = messageUsers.Where(m => m.newsPostId == newsPostExtended.id).ToList();
 					if(messages != null)
 					{
-						List<MessageUserExtended> messageUserExtendeds = new List<MessageUserExtended>();
+						ObservableCollection<MessageUserExtended> messageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 						// Если сообщения найдены
 						foreach(var message in messages)
 						{
@@ -163,7 +164,7 @@ namespace CompanyNews.Repositories.NewsPosts
 								else // Сообщения не заблокированы
 								{ 
 									messageUserExtended.IsBlockAccount = true; // Кнопка заблокировать видна
-									messageUserExtended.IsUnlockAccount = true; // Кнопка разблокиовать скрыта
+									messageUserExtended.IsUnlockAccount = false; // Кнопка разблокиовать скрыта
 								}
 
 								// Статус проверки сообщения

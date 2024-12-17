@@ -41,6 +41,7 @@ namespace CompanyNews.Views.AdminApp
 			};
 
 			_messageUserViewModel = (MessageUserViewModel)this.Resources["MessageUserViewModel"];
+			_messageUserViewModel.InitializeAsync(parameters);
 		}
 
 		/// <summary>
@@ -54,6 +55,30 @@ namespace CompanyNews.Views.AdminApp
 		#region ButtonList
 
 		/// <summary>
+		/// Блокировка пользователя (писать сообщения)
+		/// </summary>
+		public void BlockAccount(object sender, RoutedEventArgs e)
+		{
+			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
+			if (currentItem != null)
+			{
+				_messageUserViewModel.CheckBlockAccount(currentItem);
+			}
+		}
+
+		/// <summary>
+		/// Разблокировать пользователя (писать сообщения)
+		/// </summary>
+		public void UnlockAccount(object sender, RoutedEventArgs e)
+		{
+			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
+			if (currentItem != null)
+			{
+				_messageUserViewModel.CheckUnlockAccount(currentItem);
+			}
+		}
+
+		/// <summary>
 		/// Одобрить сообщение пользователя
 		/// </summary>
 		public void ApproveMessage(object sender, RoutedEventArgs e)
@@ -61,7 +86,7 @@ namespace CompanyNews.Views.AdminApp
 			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
 			if (currentItem != null)
 			{
-				_messageUserViewModel.ApproveMessage(currentItem);
+				_messageUserViewModel.CheckApproveMessage(currentItem);
 			}
 		}
 
@@ -73,7 +98,7 @@ namespace CompanyNews.Views.AdminApp
 			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
 			if (currentItem != null)
 			{
-				_messageUserViewModel.RejectMessage(currentItem);
+				_messageUserViewModel.CheckRejectMessage(currentItem);
 			}
 		}
 
@@ -85,7 +110,7 @@ namespace CompanyNews.Views.AdminApp
 			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
 			if (currentItem != null)
 			{
-				_messageUserViewModel.RestoreMessage(currentItem);
+				_messageUserViewModel.CheckRestoreMessage(currentItem);
 			}
 		}
 
@@ -97,8 +122,19 @@ namespace CompanyNews.Views.AdminApp
 			var currentItem = (e.Source as FrameworkElement)?.DataContext as MessageUserExtended;
 			if (currentItem != null)
 			{
-				_messageUserViewModel.DeleteMessage(currentItem);
+				_messageUserViewModel.CheckDeleteMessage(currentItem);
 			}
+		}
+
+		#endregion
+
+
+		#region Popup
+
+		// скрыть фон при скрытие popup
+		private void MyPopup_Closed(object sender, EventArgs e)
+		{
+			DarkBackground.Visibility = Visibility.Collapsed;
 		}
 
 		#endregion

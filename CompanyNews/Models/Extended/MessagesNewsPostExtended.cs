@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,8 +27,8 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Сообщения
 		/// </summary>
-		private List<MessageUserExtended>? _messageUserExtendeds { get; set; }
-		public List<MessageUserExtended>? MessageUserExtendeds
+		private ObservableCollection<MessageUserExtended>? _messageUserExtendeds { get; set; }
+		public ObservableCollection<MessageUserExtended>? MessageUserExtendeds
 		{
 			get { return _messageUserExtendeds; }
 			set {  _messageUserExtendeds = value; OnPropertyChanged(nameof(MessageUserExtendeds)); }
