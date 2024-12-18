@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <Folder Include="Resources\Pictures\" />
-    <Folder Include="ViewModels\ClientApp\" />
   </ItemGroup>
 
   <ItemGroup>

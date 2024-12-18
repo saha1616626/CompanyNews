@@ -4,6 +4,7 @@ using CompanyNews.Models;
 using CompanyNews.Models.Authorization;
 using CompanyNews.Services;
 using CompanyNews.Views.AdminApp;
+using CompanyNews.Views.ClientApp;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,16 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				UserName = $"{account.name} {account.surname}";
 			}
+
+			// Проверка роли польльзователя
+			if(account.accountRole == "Администратор" ||  account.accountRole == "Модератор")
+			{
+				IsHamburgerButton = true;
+			}
+			else
+			{
+				IsHamburgerButton = false;
+			}
 		}
 
 		/// <summary>
@@ -80,6 +91,11 @@ namespace CompanyNews.ViewModels.AdminApp
 				{
 					LaunchFrame.NavigationService.Navigate(new NewsPostPage());
 					LastPageType = typeof(NewsPostPage);
+				}
+				else if (userLoginStatus.accountRole == "Пользователь")
+				{
+					LaunchFrame.NavigationService.Navigate(new ClientHomePage());
+					LastPageType = typeof(ClientHomePage);
 				}
 			}
 		}
@@ -152,6 +168,11 @@ namespace CompanyNews.ViewModels.AdminApp
 							{
 								LaunchFrame.NavigationService.Navigate(new NewsPostPage());
 								LastPageType = typeof(NewsPostPage);
+							}
+							if (account.accountRole == "Пользователь")
+							{
+								LaunchFrame.NavigationService.Navigate(new ClientHomePage());
+								LastPageType = typeof(ClientHomePage);
 							}
 						}
 
@@ -382,6 +403,20 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				_launchFrame = value;
 				OnPropertyChanged(nameof(LaunchFrame));
+			}
+		}
+
+		/// <summary>
+		/// Видимость кнопки "Гамбургер" меню
+		/// </summary>
+		public bool _isHamburgerButton { get; set; }
+		public bool IsHamburgerButton
+		{
+			get { return _isHamburgerButton; }
+			set
+			{
+				_isHamburgerButton = value;
+				OnPropertyChanged(nameof(IsHamburgerButton));
 			}
 		}
 

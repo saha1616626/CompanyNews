@@ -174,14 +174,19 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 			IEnumerable<NewsCategory> newsCategories = await _newsCategoryService.GetAllNewsCategoriesAsync();
 			if(newsCategories != null)
 			{
-				if (isAddData) // При добавлении данных данных
+
+				if (isAddData) // При добавлении данных
 				{
-					return !newsCategories.Any(a => a.name.ToLowerInvariant().Contains(animationName.Text.ToLowerInvariant()));
+					// Проверка, что в названии нет 
+					return !newsCategories.Any(a => a.name.Equals(animationName.Text, StringComparison.OrdinalIgnoreCase)
+													  || a.name.Equals(animationName.Text, StringComparison.OrdinalIgnoreCase));
 				}
 				else // При редактировании данных
 				{
-					return !newsCategories.Where(a => !a.name.Equals(SelectNewsCategory.name, StringComparison.OrdinalIgnoreCase)) // Получение списка с исключенным текущим значением
-						.Any(a => a.name.ToLowerInvariant().Contains(animationName.Text.ToLowerInvariant())); // Поиск в полученном списке совпадения
+					// Получение списка с исключенным текущим значением
+					return !newsCategories.Where(a => !a.name.Equals(SelectNewsCategory.name, StringComparison.OrdinalIgnoreCase)) // Исключаем текущее значение
+						.Any(a => a.name.Equals(animationName.Text, StringComparison.OrdinalIgnoreCase)
+								   || a.name.Equals(animationName.Text, StringComparison.OrdinalIgnoreCase)); // Проверяем на наличие и совпадения
 				}
 			}
 			return true;

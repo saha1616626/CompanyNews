@@ -4,6 +4,7 @@ using CompanyNews.Models.Extended;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 			if (newsCategoriesWorkDepartments == null) { newsCategoriesWorkDepartmentExtended.categories = null; return newsCategoriesWorkDepartmentExtended; }
 
 			// Список доступных категорий
-			List<NewsCategoryExtended> newsCategoryExtendeds = new List<NewsCategoryExtended>();
+			ObservableCollection<NewsCategoryExtended> newsCategoryExtendeds = new ObservableCollection<NewsCategoryExtended>();
 
 			foreach (var item in newsCategoriesWorkDepartments)
 			{
@@ -89,14 +90,14 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 		/// <summary>
 		/// Получение списка всех доступных категорий постов рабочих отделов с группирвокой по отделу
 		/// </summary>
-		public IEnumerable<NewsCategoriesWorkDepartmentExtended>? GetNewsCategoriesWorkDepartmentExtendedAsync()
+		public ObservableCollection<NewsCategoriesWorkDepartmentExtended>? GetNewsCategoriesWorkDepartmentExtendedAsync()
 		{
 			IEnumerable<WorkDepartment> workDepartments = _context.WorkDepartments.ToList();
 			if (workDepartments == null) { return null; }
 
 
 			// Список доступных категорий 
-			List<NewsCategoriesWorkDepartmentExtended> newsCategoriesWorkDepartmentExtendeds = new List<NewsCategoriesWorkDepartmentExtended>();
+			ObservableCollection<NewsCategoriesWorkDepartmentExtended> newsCategoriesWorkDepartmentExtendeds = new ObservableCollection<NewsCategoriesWorkDepartmentExtended>();
 
 			foreach (var workDepartment in workDepartments)
 			{

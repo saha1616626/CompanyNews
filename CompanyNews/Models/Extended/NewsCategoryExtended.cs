@@ -16,7 +16,12 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Идентификатор категории для определенного рабочего отдела (NewsCategoriesWorkDepartment)
 		/// </summary>
-		public int NewsCategoriesWorkDepartmentExtendedId { get; set; }
+		private int _newsCategoriesWorkDepartmentExtendedId { get; set; }
+		public int NewsCategoriesWorkDepartmentExtendedId
+		{
+			get { return _newsCategoriesWorkDepartmentExtendedId; }
+			set {  _newsCategoriesWorkDepartmentExtendedId = value; OnPropertyChanged(); }
+		}
 
 		/// <summary>
 		/// Добавлена категория в список или нет
@@ -36,6 +41,16 @@ namespace CompanyNews.Models.Extended
 		{
 			get { return _isDeleteCategory; }
 			set { _isDeleteCategory = value; OnPropertyChanged(nameof(IsDeleteCategory)); }
+		}
+
+		/// <summary>
+		/// Свойство для определения, выбрана ли категория
+		/// </summary>
+		private bool? _isSelected { get; set; }
+		public bool? IsSelected
+		{
+			get { return _isSelected; }
+			set { _isSelected = value; OnPropertyChanged(nameof(IsSelected)); }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

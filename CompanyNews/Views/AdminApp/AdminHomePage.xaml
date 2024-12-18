@@ -51,14 +51,14 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
         <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Background="#FF80A2E8" MouseLeftButtonDown="Window_MouseLeftButtonDown"/>
 
         <!--гамбургер меню-->
-        <Grid Grid.Column="0" Grid.RowSpan="2" Panel.ZIndex="1">
+        <Grid Grid.Column="0" Grid.RowSpan="2" Panel.ZIndex="1" Visibility="{Binding IsHamburgerButton, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,-25,0">
 
             <control:HamburgerMenu x:Name="HamburgerMenuControl"/>
 
         </Grid>
 
         <!--Название сервиса-->
-        <Grid Grid.Row="0" Grid.Column="1" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        <Grid Grid.Row="0" Grid.Column="1" MouseLeftButtonDown="Window_MouseLeftButtonDown" Margin="25,0,0,0">
             <Button Background="Transparent" BorderThickness="0" BorderBrush="Transparent"
                     materialDesign:RippleAssist.IsDisabled="True" Height="50"
                     VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -206,7 +206,7 @@ Margin="0,5,0,5" Height="40" Padding="20,0,20,0" Visibility="{Binding IsGoBack, 
             VerticalOffset="-40" StaysOpen="False" Closed="PopupClosed" 
             AllowsTransparency="True" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <!--фон-->
-                <Border Background="AliceBlue" BorderBrush="Gray" BorderThickness="5"
+                <Border Background="AliceBlue" BorderBrush="Black" BorderThickness="2"
             Style="{StaticResource OutlineOfPopup}">
                     <!-- Устанавливаем радиус закругления -->
                     <Grid Width="400" Height="250">

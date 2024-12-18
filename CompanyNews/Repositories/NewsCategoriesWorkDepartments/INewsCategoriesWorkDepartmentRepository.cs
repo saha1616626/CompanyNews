@@ -2,6 +2,7 @@
 using CompanyNews.Models.Extended;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace CompanyNews.Repositories.NewsCategoriesWorkDepartments
 		/// <summary>
 		/// Получение списка всех доступных категорий постов рабочих отделов с группирвокой по отделу
 		/// </summary>
-		IEnumerable<NewsCategoriesWorkDepartmentExtended>? GetNewsCategoriesWorkDepartmentExtendedAsync();
+		ObservableCollection<NewsCategoriesWorkDepartmentExtended>? GetNewsCategoriesWorkDepartmentExtendedAsync();
 
 		/// <summary>
 		/// Добавить категорию поста рабочему отделу

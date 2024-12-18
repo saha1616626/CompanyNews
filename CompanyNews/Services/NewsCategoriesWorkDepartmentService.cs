@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace CompanyNews.Services
 {
@@ -49,7 +50,7 @@ namespace CompanyNews.Services
 		/// <summary>
 		/// Получение списка всех доступных категорий постов рабочих отделов с группирвокой по отделу
 		/// </summary>
-		public async Task<IEnumerable<NewsCategoriesWorkDepartmentExtended>?> GetNewsCategoriesWorkDepartmentExtendedAsync()
+		public async Task<ObservableCollection<NewsCategoriesWorkDepartmentExtended>?> GetNewsCategoriesWorkDepartmentExtendedAsync()
 		{
 			return _newsCategoriesWorkDepartmentRepository.GetNewsCategoriesWorkDepartmentExtendedAsync();
 		}

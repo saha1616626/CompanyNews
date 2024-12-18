@@ -123,7 +123,7 @@ namespace CompanyNews.Repositories.Authorizations
 		/// <summary>
 		/// Получить состояние пользователя в системе
 		/// </summary>
-		public async Task<UserLoginStatus?> GetUserStatusInSystem()
+		public UserLoginStatus? GetUserStatusInSystem()
 		{
 			// Чтение из JSON
 			string JSON = File.ReadAllText(authorizationStatusPath);
@@ -138,12 +138,12 @@ namespace CompanyNews.Repositories.Authorizations
 		/// Получить аккаунт авторизованного пользователя
 		/// </summary>
 		/// <remarks>Для работы с правами в системе.</remarks>
-		public async Task<Account> GetUserAccount()
+		public  Account GetUserAccount()
 		{
 			// Получаем данные авторизованного пользователя
 			UserLoginStatus? userLoginStatus = new UserLoginStatus();
-			userLoginStatus = await GetUserStatusInSystem();
-			Account account = await _context.Accounts.FirstOrDefaultAsync(account => account.id == userLoginStatus.accountId);
+			userLoginStatus = GetUserStatusInSystem();
+			Account account = _context.Accounts.FirstOrDefault(account => account.id == userLoginStatus.accountId);
 			if (account == null) throw new KeyNotFoundException($"Учетная запись с ID {account.id} не найдена.");
 			return account;
 		}

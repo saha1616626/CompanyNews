@@ -122,6 +122,16 @@ namespace CompanyNews.Models.Extended
 
 		#endregion
 
+		/// <summary>
+		/// Пользовательское сообщение помечается
+		/// </summary>
+		private bool? _isMessageRight { get; set; }
+		public bool? IsMessageRight
+		{
+			get { return _isMessageRight; }
+			set { _isMessageRight = value; OnPropertyChanged(nameof(IsMessageRight)); }
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{

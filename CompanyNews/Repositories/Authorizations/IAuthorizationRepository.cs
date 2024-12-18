@@ -31,13 +31,13 @@ namespace CompanyNews.Repositories.Authorizations
 		/// <summary>
 		/// Получить состояние пользователя в системе
 		/// </summary>
-		Task<UserLoginStatus> GetUserStatusInSystem();
+		UserLoginStatus GetUserStatusInSystem();
 
 		/// <summary>
 		/// Получить аккаунт авторизованного пользователя
 		/// </summary>
 		/// <remarks>Для работы с правами в системе.</remarks>
-		Task<Account> GetUserAccount();
+		Account GetUserAccount();
 
 		/// <summary>
 		/// Кол-во пользователей сервиса

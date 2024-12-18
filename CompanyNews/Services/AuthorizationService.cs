@@ -50,7 +50,7 @@ namespace CompanyNews.Services
 		/// </summary>
 		public async Task<UserLoginStatus> GetUserStatusInSystem()
 		{
-			return await _authorizationRepository.GetUserStatusInSystem();
+			return _authorizationRepository.GetUserStatusInSystem();
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace CompanyNews.Services
 		/// <remarks>Для работы с правами в системе.</remarks>
 		public async Task<Account> GetUserAccount()
 		{
-			return await _authorizationRepository.GetUserAccount();
+			return _authorizationRepository.GetUserAccount();
 		}
 
 		/// <summary>

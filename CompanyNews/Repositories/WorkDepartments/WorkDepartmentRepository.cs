@@ -26,9 +26,9 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Получение рабочего отдела по id
 		/// </summary>
-		public async Task<WorkDepartment?> GetWorkDepartmentByIdAsync(int id)
+		public WorkDepartment? GetWorkDepartmentByIdAsync(int id)
 		{
-			WorkDepartment? workDepartment = await  _context.WorkDepartments.FirstOrDefaultAsync(wd => wd.id == id);
+			WorkDepartment? workDepartment = _context.WorkDepartments.FirstOrDefault(wd => wd.id == id);
 			if (workDepartment == null) { return null; }
 
 			return workDepartment;

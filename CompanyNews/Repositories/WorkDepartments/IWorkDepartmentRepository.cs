@@ -16,7 +16,7 @@ namespace CompanyNews.Repositories.WorkDepartments
 		/// <summary>
 		/// Получение рабочего отдела
 		/// </summary>
-		Task<WorkDepartment> GetWorkDepartmentByIdAsync(int id);
+		WorkDepartment? GetWorkDepartmentByIdAsync(int id);
 
 		/// <summary>
 		/// Получение списка рабочих отделов

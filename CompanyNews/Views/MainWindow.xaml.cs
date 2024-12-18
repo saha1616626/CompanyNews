@@ -81,7 +81,7 @@ namespace CompanyNews.Views
 				}
 				else
 				{
-					mainFrame.Navigate(clientHomePage = new ClientHomePage());
+					mainFrame.Navigate(adminHomePage = new AdminHomePage());
 				}
 			}
 

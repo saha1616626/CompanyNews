@@ -23,7 +23,7 @@ namespace CompanyNews.Services
 
 		public async Task<WorkDepartment> GetWorkDepartmentByIdAsync(int id)
 		{
-			return await _workDepartmentRepository.GetWorkDepartmentByIdAsync(id);
+			return _workDepartmentRepository.GetWorkDepartmentByIdAsync(id);
 		}
 
 		public async Task<IEnumerable<WorkDepartment>> GetAllWorkDepartmentsAsync()

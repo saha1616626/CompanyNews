@@ -93,8 +93,17 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 
 						animationLogin.Text = accountExtended.login;
 
-						// Рабочий отел
-						SelectedWorkDepartment = await _workDepartmentService.GetWorkDepartmentByIdAsync((int)accountExtended.workDepartmentId);
+						if(accountExtended.workDepartmentId != null)
+						{
+							// Рабочий отел
+							WorkDepartment? workDepartment = await _workDepartmentService.GetWorkDepartmentByIdAsync((int)accountExtended.workDepartmentId);
+							if (workDepartment != null)
+							{
+								SelectedWorkDepartment = workDepartment;
+							}
+						}
+						
+						
 						SelectedRole = accountExtended.accountRole;
 
 						// Блокировка
@@ -308,14 +317,28 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 			IEnumerable<AccountExtended> accounts = await _accountService.GetAllAccountsAsync();
 			if (accounts != null)
 			{
-				if (isAddData) // При добавлении данных данных
+				//if (isAddData) // При добавлении данных данных
+				//{
+				//	return !accounts.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant()));
+				//}
+				//else // При редактировании данных
+				//{
+				//	return !accounts.Where(a => !a.login.Equals(SelectAccountExtended.login, StringComparison.OrdinalIgnoreCase)) // Получение списка с исключенным текущим логином "SelectAccountExtended.login"
+				//		.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant())); // Поиск в полученном списке совпадения
+				//}
+
+				if (isAddData) // При добавлении данных
 				{
-					return !accounts.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant()));
+					// Проверка, что в названии нет символа "1"
+					return !accounts.Any(a => a.login.Equals(animationLogin.Text, StringComparison.OrdinalIgnoreCase)
+													  || a.login.Equals(animationLogin.Text, StringComparison.OrdinalIgnoreCase));
 				}
 				else // При редактировании данных
 				{
-					return !accounts.Where(a => !a.login.Equals(SelectAccountExtended.login, StringComparison.OrdinalIgnoreCase)) // Получение списка с исключенным текущим логином "SelectAccountExtended.login"
-						.Any(a => a.login.ToLowerInvariant().Contains(animationLogin.Text.ToLowerInvariant())); // Поиск в полученном списке совпадения
+					// Получение списка с исключенным текущим значением
+					return !accounts.Where(a => !a.login.Equals(SelectAccountExtended.login, StringComparison.OrdinalIgnoreCase)) // Исключаем текущее значение
+						.Any(a => a.login.Equals(animationLogin.Text, StringComparison.OrdinalIgnoreCase)
+								   || a.login.Equals(animationLogin.Text, StringComparison.OrdinalIgnoreCase)); // Проверяем на наличие и совпадения
 				}
 			}
 			return true;
