@@ -191,7 +191,8 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 									newsPost.newsCategoryId = SelectedCategory.id;
 									newsPost.datePublication = DateTime.Now;
 									newsPost.message = animationMessage.Text.Trim();
-									newsPost.image = WorkingWithImage.ConvertingImageForWritingDatabase(ImagePost);
+									if (ImagePost == null) { newsPost.image = null; }
+									else { newsPost.image = WorkingWithImage.ConvertingImageForWritingDatabase(ImagePost); }
 									newsPost.isArchived = IsAddArchive;
 
 									_newsPostService.AddNewsPostAsync(newsPost);

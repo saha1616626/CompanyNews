@@ -115,7 +115,7 @@ TextWrapping="Wrap"/>
                                 <Border  Grid.Row="0"  Margin="0,0,0,0" BorderBrush="Transparent" BorderThickness="0.5" HorizontalAlignment="Left">
                                     <Button Width="400"  BorderBrush="Transparent" BorderThickness="0" HorizontalContentAlignment="Left"
                                         Padding="0,0,0,0" Height="Auto" materialDesign:RippleAssist.IsDisabled="True" Click="LaunchingCategory">
-                                        <TextBlock Text="{Binding name}" Padding="40,15,40,15" TextWrapping="Wrap" MaxHeight="100" TextTrimming="CharacterEllipsis" FontSize="20" FontWeight="DemiBold" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding name}" Padding="40,15,40,15" TextWrapping="Wrap" Height="Auto" TextTrimming="CharacterEllipsis" FontSize="20" FontWeight="DemiBold" TextAlignment="Left"/>
 
                                         <Button.Style>
                                             <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
@@ -212,7 +212,7 @@ TextWrapping="Wrap"/>
 
                                     <!--Изображение-->
                                     <Image Grid.Row="2" Source="{Binding image}" 
-                    Width="300" Height="300" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,15">
+                    Width="300" Height="300" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,30,0,5">
                                         <Image.Style>
                                             <Style TargetType="Image">
                                                 <Setter Property="Visibility" Value="Visible"/>
@@ -228,6 +228,7 @@ TextWrapping="Wrap"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding image}">
                                                         <Setter Property="Visibility" Value="Visible"/>
+                                                        <Setter Property="Margin" Value="0,20,0,0"/>
                                                         <!-- Показывается, если есть изображение -->
                                                     </DataTrigger>
                                                 </Style.Triggers>

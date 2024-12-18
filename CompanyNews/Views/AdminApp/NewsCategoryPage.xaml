@@ -145,9 +145,10 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
                                     Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                     <Setter Property="TextWrapping" Value="Wrap" />
-                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                    <Setter Property="TextAlignment" Value="Justify" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -155,9 +156,10 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
                         <DataGridTextColumn Header="Описание" Binding="{Binding description}"  Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                     <Setter Property="TextWrapping" Value="Wrap" />
-                                    <Setter Property="Margin" Value="0,0,5,0"/>
+                                    <Setter Property="TextAlignment" Value="Justify" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>

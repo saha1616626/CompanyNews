@@ -489,7 +489,7 @@ Style="{StaticResource OutlineOfPopup}">
 
                                     <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
-                                    <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
+                                    <Button Grid.Row="0" Grid.Column="1" Content="Подтвердить" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
 
                                 </Grid>
@@ -569,7 +569,7 @@ Style="{StaticResource OutlineOfPopup}">
 
                                     <Button Grid.Row="0" Grid.Column="0" Content="Отмена" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Command="{Binding ClosePopup}"/>
-                                    <Button Grid.Row="0" Grid.Column="1" Content="Сохранить" Width="150" 
+                                    <Button Grid.Row="0" Grid.Column="1" Content="Подтвердить" Width="150" 
                                     Height="35" Background="Gray" BorderBrush="Black" Margin="0,0,0,0" Command="{Binding SaveData}"/>
 
                                 </Grid>

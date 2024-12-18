@@ -307,8 +307,10 @@ namespace CompanyNews.ViewModels.ClientApp
 										messageUserExtendet.IsMessageRight = true;
 
 										// Добавляем новый элемент в начало списка
-										ListMessageUserExtendeds.Insert(0, messageUserExtendet);
+										//ListMessageUserExtendeds.Insert(0, messageUserExtendet);
 										//ListMessageUserExtendeds.Add(messageUserExtendet);
+										await Task.Delay(500);
+										LoadMessage();
 									}
 								}
 							}
