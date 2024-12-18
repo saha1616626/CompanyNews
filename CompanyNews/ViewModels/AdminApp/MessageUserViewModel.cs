@@ -689,6 +689,7 @@ namespace CompanyNews.ViewModels.AdminApp
 							messageUserExtended.IsRejectMessage = false; // Кнопка отклонить сообщение скрыта
 							messageUserExtended.IsRestoreMessage = true; // Кнопка восстановить сообщение после отклонения видна
 							messageUserExtended.status = "Отклонено";
+							messageUserExtended.rejectionReason = descriptionBlocking.Text;
 
 							MessageUser message = new MessageUser();
 							message.id = messageUserExtended.id;

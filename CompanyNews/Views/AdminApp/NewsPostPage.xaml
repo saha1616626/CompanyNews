@@ -159,6 +159,7 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
              Width="15*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="HorizontalAlignment" Value="Center" />
                                     <Setter Property="VerticalAlignment" Value="Center" />
                                     <Setter Property="TextWrapping" Value="Wrap" />
@@ -178,9 +179,10 @@ Margin="10,0,0,0" IsEnabled="{Binding IsWorkButtonEnable}"/>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Сообщение" Binding="{Binding message}"  Width="35*" IsReadOnly="True">
+                        <DataGridTextColumn Header="Содержание" Binding="{Binding message}"  Width="35*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="HorizontalAlignment" Value="Center" />
                                     <Setter Property="VerticalAlignment" Value="Center" />
                                     <Setter Property="TextAlignment" Value="Justify" />

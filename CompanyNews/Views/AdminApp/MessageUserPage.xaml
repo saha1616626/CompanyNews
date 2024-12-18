@@ -312,8 +312,8 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                                                                         <StackPanel Orientation="Horizontal">
 
-                                                                            <Button Content="Запретить комментировать" Background="CornflowerBlue" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                Click="BlockAccount" Width="250" Margin="5,0,5,0">
+                                                                            <Button Background="#FF4D4D" BorderBrush="Black" Foreground="White" BorderThickness="1"
+                                                                                Click="BlockAccount" Width="160" Margin="5,0,5,0" ToolTip="Запретить пользователю оставлять комментарии." ToolTipService.InitialShowDelay="800">
                                                                                 <Button.Style>
                                                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
                                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -324,10 +324,14 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                                                                         </Style.Triggers>
                                                                                     </Style>
                                                                                 </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="Заблокировать" />
+                                                                                    <materialDesign:PackIcon Kind="CommentRemove" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
                                                                             </Button>
 
-                                                                            <Button Content="Разрешить комментировать" Background="CornflowerBlue" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                Click="UnlockAccount" Width="250" Margin="5,0,5,0">
+                                                                            <Button Background="#4CAF50" BorderBrush="Black" Foreground="White" BorderThickness="1" ToolTip="Разрешить пользователю оставлять комментарии." ToolTipService.InitialShowDelay="800"
+                                                                                Click="UnlockAccount" Width="160" Margin="5,0,5,0">
                                                                                 <Button.Style>
                                                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
                                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -338,52 +342,15 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                                                                         </Style.Triggers>
                                                                                     </Style>
                                                                                 </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="Разблокировать" />
+                                                                                    <materialDesign:PackIcon Kind="CommentCheck" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
                                                                             </Button>
 
-                                                                            <Button Content="Одобрить" Background="#64dd17" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                    Click="ApproveMessage" Width="150" Margin="5,0,5,0">
-                                                                                <Button.Style>
-                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
-                                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                                        <Style.Triggers>
-                                                                                            <DataTrigger Binding="{Binding IsApproveMessage}" Value="false">
-                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                            </DataTrigger>
-                                                                                        </Style.Triggers>
-                                                                                    </Style>
-                                                                                </Button.Style>
-                                                                            </Button>
 
-                                                                            <Button Content="Отклонить" Background="#ff6b35" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                    Click="RejectMessage" Width="180" Margin="5,0,5,0">
-                                                                                <Button.Style>
-                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
-                                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                                        <Style.Triggers>
-                                                                                            <DataTrigger Binding="{Binding IsRejectMessage}" Value="false">
-                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                            </DataTrigger>
-                                                                                        </Style.Triggers>
-                                                                                    </Style>
-                                                                                </Button.Style>
-                                                                            </Button>
-
-                                                                            <Button Content="На проверку" Background="#ffab00" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                    Click="RestoreMessage" Width="180" Margin="5,0,5,0">
-                                                                                <Button.Style>
-                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
-                                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                                        <Style.Triggers>
-                                                                                            <DataTrigger Binding="{Binding IsRestoreMessage}" Value="false">
-                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                            </DataTrigger>
-                                                                                        </Style.Triggers>
-                                                                                    </Style>
-                                                                                </Button.Style>
-                                                                            </Button>
-
-                                                                            <Button Content="Удалить сообщение" Background="#8e5dff" BorderBrush="Black" Foreground="White" BorderThickness="1"
-                                                                                    Click="DeleteMessage" Width="180" Margin="5,0,5,0">
+                                                                            <Button Background="#546E7A" BorderBrush="Black" Foreground="White" BorderThickness="1" ToolTip="Удалить комментарий без возможности восстановления." ToolTipService.InitialShowDelay="800"
+                                                                                    Click="DeleteMessage" Width="160" Margin="5,0,5,0">
                                                                                 <Button.Style>
                                                                                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
                                                                                         <Setter Property="Visibility" Value="Visible"/>
@@ -394,6 +361,64 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                                                                                         </Style.Triggers>
                                                                                     </Style>
                                                                                 </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="Удалить" />
+                                                                                    <materialDesign:PackIcon Kind="Delete" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
+                                                                            </Button>
+
+                                                                            <Button Background="#2196F3" BorderBrush="Black" Foreground="White" BorderThickness="1" ToolTip="Одобрить модерацию комментария." ToolTipService.InitialShowDelay="800"
+                                                                                    Click="ApproveMessage" Width="160" Margin="5,0,5,0">
+                                                                                <Button.Style>
+                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsApproveMessage}" Value="false">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="Одобрить" />
+                                                                                    <materialDesign:PackIcon Kind="CheckBold" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
+                                                                            </Button>
+
+                                                                            <Button Background="#F44336" BorderBrush="Black" Foreground="White" BorderThickness="1" ToolTip="Отклонить модерацию комментария." ToolTipService.InitialShowDelay="800"
+                                                                                    Click="RejectMessage" Width="160" Margin="5,0,5,0">
+                                                                                <Button.Style>
+                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsRejectMessage}" Value="false">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="Отклонить" />
+                                                                                    <materialDesign:PackIcon Kind="CloseThick" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
+                                                                            </Button>
+
+                                                                            <Button Background="#FF9800" BorderBrush="Black" Foreground="White" BorderThickness="1" ToolTip="Отправить комментарий на проверку." ToolTipService.InitialShowDelay="800"
+                                                                                    Click="RestoreMessage" Width="160" Margin="5,0,5,0">
+                                                                                <Button.Style>
+                                                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}">
+                                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsRestoreMessage}" Value="false">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Button.Style>
+                                                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                                                    <TextBlock Text="На проверку" />
+                                                                                    <materialDesign:PackIcon Kind="BackupRestore" Margin="5,3.3,0,0"/>
+                                                                                </StackPanel>
                                                                             </Button>
 
                                                                         </StackPanel>
