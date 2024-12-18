@@ -211,7 +211,7 @@ namespace CompanyNews.ViewModels.AdminApp
 							{
 								await ClosePopupWorkingWithData(); // Скрываем Popup
 																   // Выводим сообщение об успешном удалении данных
-								systemMessage.Text = $"Категория успешно удалена.";
+								systemMessage.Text = $"Группа успешно удалена.";
 								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 								// Исчезание сообщения
 								BeginFadeAnimation(systemMessage);
@@ -231,7 +231,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void DataWasAddedSuccessfullyNewsCategory(object sender, EventAggregator e)
 		{
 			await Task.Delay(500);
-			systemMessage.Text = $"Категория успешно создана.";
+			systemMessage.Text = $"Группа успешно создана.";
 			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 			// Исчезание сообщения
 			BeginFadeAnimation(systemMessage);
@@ -244,7 +244,7 @@ namespace CompanyNews.ViewModels.AdminApp
 		public async void DataWasChangedSuccessfullyNewsCategory(object sender, EventAggregator e)
 		{
 			await Task.Delay(500);
-			systemMessage.Text = $"Категория успешно изменена.";
+			systemMessage.Text = $"Группа успешно изменена.";
 			systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 			// Исчезание сообщения
 			BeginFadeAnimation(systemMessage);
@@ -475,7 +475,7 @@ namespace CompanyNews.ViewModels.AdminApp
 					if (systemMessage != null && systemMessageBorder != null)
 					{
 						// Оповещениие об отсутствии данных
-						systemMessage.Text = $"Категория не найдена.";
+						systemMessage.Text = $"Группа не найдена.";
 						systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 						// Исчезание сообщения
 						BeginFadeAnimation(systemMessage);

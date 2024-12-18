@@ -22,7 +22,7 @@ namespace CompanyNews.Services
 
 		#region Convert
 
-		public async Task<MessageUserExtended?> MessageUserConvert(MessageUser? messageUser)
+		public MessageUserExtended? MessageUserConvert(MessageUser? messageUser)
 		{
 			return _messageUserRepository.MessageUserConvert(messageUser);
 		}
@@ -50,7 +50,7 @@ namespace CompanyNews.Services
 
 		#region CRUD Operations
 
-		public async Task<MessageUser> AddMessageUserAsync(MessageUser messageUser)
+		public MessageUser AddMessageUserAsync(MessageUser messageUser)
 		{
 			var addedMessageUser = _messageUserRepository.AddMessageUserAsync(messageUser);
 			return addedMessageUser; // Возвращаем добавленное сообщение

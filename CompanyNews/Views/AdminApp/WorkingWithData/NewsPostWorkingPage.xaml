@@ -108,7 +108,7 @@ TextWrapping="Wrap"/>
         x:Name="Category" DisplayMemberPath="name"
         SelectedValue="{Binding SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
         IsReadOnly="False" VerticalAlignment="Center" Width="200" Margin="0,0,0,0" MinWidth="100" Height="50" 
-        materialDesign:HintAssist.Hint="Категория*" IsEditable="True"
+        materialDesign:HintAssist.Hint="Группа*" IsEditable="True"
         Style="{StaticResource MaterialDesignOutlinedComboBox}">
                 </ComboBox>
 

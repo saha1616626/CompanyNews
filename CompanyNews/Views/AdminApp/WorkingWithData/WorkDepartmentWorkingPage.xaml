@@ -112,7 +112,7 @@ TextWrapping="Wrap"/>
             </Grid.RowDefinitions>
 
             <!--#region Кнопки-->
-
+            <TextBlock Text="Управление группами рабочего отдела" Margin="0,0,50,0" FontSize="20" HorizontalAlignment="Right"/>
             <!--Кнопки для работы с таблицами-->
             <Grid Grid.Row="0" Grid.Column="0">
 
@@ -224,7 +224,7 @@ Style="{StaticResource OutlineOfPopup}">
                     </Grid.RowDefinitions>
 
                     <!--название Popup-->
-                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Работа со списоком категорий" FontSize="30"
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Доступные группы" FontSize="30"
     HorizontalAlignment="Center" Foreground="Black" FontWeight="DemiBold" Margin="0,20,0,0"/>
 
                     <!--Сообщения системы-->
@@ -242,18 +242,18 @@ TextWrapping="Wrap"/>
 
                     <!--Поиск Категории-->
                     <TextBox Grid.Row="1" Grid.Column="0" x:Name="CategorySearchText" 
-    Height="50" Margin="100,30,0,0"
+    Height="50" Margin="90,30,0,0"
     VerticalAlignment="Center" HorizontalAlignment="Left"
     Text="{Binding CategorySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
     materialDesign:TextFieldAssist.HasClearButton="True"
     TextChanged="CategorySearch"
     Style="{StaticResource MaterialDesignOutlinedTextBox}" 
-    materialDesign:HintAssist.Hint="Поиск категории" 
+    materialDesign:HintAssist.Hint="Поиск группы" 
     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
     MaxLength="100" TextWrapping="Wrap" Width="300" />
 
                     <!--скролл категорий-->
-                    <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="50,30,50,10" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="2" Grid.Column="0" Margin="50,20,50,10" VerticalScrollBarVisibility="Auto">
 
                         <!--список категорий-->
                         <ItemsControl ItemsSource="{Binding ListAvailableCategories}">

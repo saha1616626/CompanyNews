@@ -49,7 +49,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
             </Grid.RowDefinitions>
 
             <!--Заголовок-->
-            <TextBlock Text="Категории новостных постов" Grid.Row="0" FontSize="30" 
+            <TextBlock Text="Группы" Grid.Row="0" FontSize="30" 
            Foreground="Black" FontWeight="DemiBold"  Margin="50,30,50,10"/>
 
             <!--Сообщения системы-->
@@ -102,7 +102,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                      materialDesign:TextFieldAssist.HasClearButton="True"
                      TextChanged="CategorySearch"
                      Style="{StaticResource MaterialDesignOutlinedTextBox}" 
-                     materialDesign:HintAssist.Hint="Поиск категории" 
+                     materialDesign:HintAssist.Hint="Поиск группы" 
                      materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
                      MaxLength="100" TextWrapping="Wrap" Width="300" />
 

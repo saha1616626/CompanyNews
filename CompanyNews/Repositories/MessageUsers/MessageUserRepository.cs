@@ -39,7 +39,7 @@ namespace CompanyNews.Repositories.MessageUsers
 			messageUserExtendet.newsPostId = messageUser.newsPostId;
 			messageUserExtendet.accountId = messageUser.accountId;
 			// Получение аккаунта по id
-			Account? account = _context.Accounts.FirstOrDefault(a => a.id == messageUser.id);
+			Account? account = _context.Accounts.FirstOrDefault(a => a.id == messageUser.accountId);
 			if (account == null) { return null; }
 			messageUserExtendet.Account = account;
 			messageUserExtendet.message = messageUser.message;

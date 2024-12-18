@@ -23,162 +23,228 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
 
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
+    <Grid>
 
-        <Grid DataContext="{StaticResource PostViewModel}"  Background="AliceBlue">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <Grid DataContext="{StaticResource PostViewModel}"  Background="AliceBlue">
 
-            <!--Кнопка возврата-->
-            <Button Width="80" Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderBrush="Transparent"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--Кнопка возврата-->
+                <Button Width="80" Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderBrush="Transparent"
                     Margin="5,20,0,0" Command="{Binding ReturnHome}">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
-                        <Setter Property="Background" Value="Black"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="FontSize" Value="16"/>
-                        <Setter Property="FontWeight" Value="Regular"/>
-                        <Setter Property="Opacity" Value="1"/>
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedSecondaryButton}">
+                            <Setter Property="Background" Value="Black"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="FontWeight" Value="Regular"/>
+                            <Setter Property="Opacity" Value="1"/>
 
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <SolidColorBrush Color="Red"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Foreground" Value="Red"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="Red"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Foreground" Value="Red"/>
 
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <materialDesign:PackIcon Kind="ArrowLeftCircle" Width="50" Height="50"/>
-            </Button>
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.7" Duration="0:0:0.2" AutoReverse="True"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <materialDesign:PackIcon Kind="ArrowLeftCircle" Width="50" Height="50"/>
+                </Button>
 
-            <!--Пост-->
-            <Border Grid.Row="0" Width="600" Margin="0,50,0,0" BorderBrush="Black" BorderThickness="1.0" CornerRadius="10" Background="FloralWhite">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <!--Пост-->
+                <Border Grid.Row="0" Width="600" Margin="0,50,0,0" BorderBrush="Black" BorderThickness="1.0" CornerRadius="10" Background="FloralWhite">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <!--дата-->
-                    <TextBlock Grid.Row="0" HorizontalAlignment="Left" 
+                        <!--дата-->
+                        <TextBlock Grid.Row="0" HorizontalAlignment="Left" 
      FontSize="13" Margin="50,15,0,0" TextWrapping="Wrap">
      <Run Text="Опубликовано -" FontWeight="DemiBold"/>
      <Run Text="{Binding DatePublication, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontStyle="Italic" FontWeight="UltraLight"/>
-                    </TextBlock>
+                        </TextBlock>
 
-                    <Border Height="1" Background="Gray" Margin="25,45,41.5,0" Panel.ZIndex="1"
+                        <Border Height="1" Background="Gray" Margin="25,45,41.5,0" Panel.ZIndex="1"
 VerticalAlignment="Top"/>
 
-                    <!--Текст-->
-                    <TextBlock Grid.Row="1" HorizontalAlignment="Left" 
+                        <!--Текст-->
+                        <TextBlock Grid.Row="1" HorizontalAlignment="Left" 
    FontSize="18" Margin="30,10,30,10" TextWrapping="Wrap" TextAlignment="Justify">
     <Run Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontStyle="Italic" FontWeight="Light"/>
-                    </TextBlock>
+                        </TextBlock>
 
-                    <Image Grid.Row="2" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        <Image Grid.Row="2" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
 Width="300" Height="300" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,15">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <!-- Скрыто по умолчанию -->
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Image}" Value="">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <!--  Скрыто, если пусто -->
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Image}" Value="{x:Null}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <!--  Скрыто, если null -->
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Image}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                        <!-- Показывается, если есть изображение -->
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <!-- Скрыто по умолчанию -->
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Image}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <!--  Скрыто, если пусто -->
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Image}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <!--  Скрыто, если null -->
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Image}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <!-- Показывается, если есть изображение -->
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
 
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
 
-            <!--Сообщение если нет комментариев-->
-            <TextBlock Grid.Row="1" Text="Нет комментариев" HorizontalAlignment="Center" Margin="0,50,0,0" FontSize="20"
+                <!--Сообщение если нет комментариев-->
+                <TextBlock Grid.Row="1" Text="Нет комментариев" HorizontalAlignment="Center" Margin="0,30,0,0" FontSize="20"
                        Visibility="{Binding IsNoComments, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-            <!--Фильтр. новые и старые-->
-            <ListBox Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Center"
+                <!--Фильтр. новые и старые-->
+                <ListBox Grid.Row="1" Margin="0,30,0,0" HorizontalAlignment="Center"
 x:Name="RadioButtonGroupChoiceChip" FontSize="16" FontWeight="DemiBold" Visibility="{Binding IsVisibleListBox, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}"
 Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
-                <ListBoxItem Height="50" IsSelected="{Binding NewMessagesFirstSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Сначала новые  "/>
-                        <materialDesign:PackIcon Kind="SortCalendarDescending" Margin="0,2,0,0"/>
+                    <ListBoxItem Height="50" IsSelected="{Binding NewMessagesFirstSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Сначала новые  "/>
+                            <materialDesign:PackIcon Kind="SortCalendarDescending" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+
+                    <ListBoxItem Height="50" IsSelected="{Binding OldMessagesFirstSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Сначала старые  "/>
+                            <materialDesign:PackIcon Kind="SortCalendarAscending"  Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+
+                <!--Поле для ввода и отправки-->
+                <Grid Grid.Row="2" Background="Transparent" Height="70" VerticalAlignment="Bottom" Margin="50,30,50,0">
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBox Grid.Column="0" x:Name="Search" 
+                                Height="70" Margin="0,0,0,0" Panel.ZIndex="1"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Text="{Binding MessageUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                materialDesign:TextFieldAssist.HasClearButton="True"
+                                TextChanged="TextMessage"
+                                Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                                materialDesign:HintAssist.Hint="Введите сообщение" 
+                                materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                                MaxLength="990" TextWrapping="Wrap" Width="400" />
+
+
+                        <Button Background="Transparent" BorderBrush="Transparent" Foreground="Black" x:Name="SendMessage"
+                                Height="80" Width="80" VerticalAlignment="Center" Command="{Binding SendMessage}"
+                                Visibility="{Binding IsSendMessage, Mode=TwoWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <materialDesign:PackIcon Kind="Send" Height="50" Width="50" />
+                        </Button>
                     </StackPanel>
-                </ListBoxItem>
 
-                <ListBoxItem Height="50" IsSelected="{Binding OldMessagesFirstSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Сначала старые  "/>
-                        <materialDesign:PackIcon Kind="SortCalendarAscending"  Margin="0,2,0,0"/>
-                    </StackPanel>
-                </ListBoxItem>
-            </ListBox>
+                </Grid>
 
-            <!--Сообщения-->
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding ListMessageUserExtendeds}" Margin="0,60,0,0">
-                <!--расположение элементов раскрывающегося списка-->
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical"  HorizontalAlignment="Center"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+                <!--Сообщения-->
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding ListMessageUserExtendeds}" Margin="50,20,0,150">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMessageRight}" Value="true">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
 
-                <!--дизайн макет карточек-->
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <!--размеры и отступы карточек-->
-                        <Border Width="800" Margin="0,20,0,0" BorderBrush="Black" BorderThickness="0.5">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+                    <!--расположение элементов раскрывающегося списка-->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Vertical"  HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                                <!--дата-->
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Left" 
-                                    FontSize="13" Margin="50,15,0,0" TextWrapping="Wrap">
-                                    <Run Text="{Binding datePublication, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontStyle="Italic" FontWeight="UltraLight"/>
-                                </TextBlock>
+                    <!--дизайн макет карточек-->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!--размеры и отступы карточек-->
+                            <Border Width="350" Margin="0,15,0,0" BorderBrush="Black" BorderThickness="0.5" CornerRadius="10">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMessageRight}" Value="true">
+                                                <Setter Property="Background" Value="#dad9db"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-                                
-                                
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                
-            </ItemsControl>
+                                    <!--Автор-->
+                                    <TextBlock Grid.Row="0" HorizontalAlignment="Left" 
+                                    FontSize="15" Margin="30,10,30,5" TextWrapping="Wrap" TextAlignment="Justify">
+                                     <Run Text="{Binding Account.name}" FontStyle="Italic" FontWeight="SemiBold"/>
+                                    <Run Text="{Binding Account.surname}" FontStyle="Italic" FontWeight="SemiBold"/>
+                                    </TextBlock>
 
-        </Grid>
+                                    <!--Текст-->
+                                    <TextBlock Grid.Row="1" HorizontalAlignment="Left" 
+   FontSize="18" Margin="30,0,30,0" TextWrapping="Wrap" TextAlignment="Justify">
+    <Run Text="{Binding message}" FontStyle="Italic" FontWeight="Light"/>
+                                    </TextBlock>
 
-    </ScrollViewer>
+                                    <!--дата-->
+                                    <TextBlock Grid.Row="2" HorizontalAlignment="Left" Opacity="0.7"
+                                    FontSize="13" Margin="30,5,0,10" TextWrapping="Wrap">
+                                    <Run Text="{Binding datePublication, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" FontStyle="Italic" FontWeight="SemiBold"/>
+                                    </TextBlock>
+
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </Grid>
+
+        </ScrollViewer>
+
+    </Grid>
 </Page>

@@ -104,7 +104,10 @@ namespace CompanyNews.ViewModels.ClientApp
 				{
 					foreach(var item in newsCategoriesWorkDepartmentExtended.categories)
 					{
-						ListAvailableCategories.Add(item);
+						if (!item.isArchived)
+						{
+							ListAvailableCategories.Add(item);
+						}
 					}
 				}
 			}
@@ -126,7 +129,10 @@ namespace CompanyNews.ViewModels.ClientApp
 				{
 					if(item.newsCategoryId == newsCategoryExtended.id) // Проверяем категорию поста
 					{
-						ListNewsPostExtendeds.Add(item);
+						if (!item.isArchived)
+						{
+							ListNewsPostExtendeds.Add(item);
+						}
 					}
 				}
 			}

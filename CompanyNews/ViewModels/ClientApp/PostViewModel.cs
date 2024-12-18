@@ -3,6 +3,7 @@ using CompanyNews.Helpers.Event;
 using CompanyNews.Models;
 using CompanyNews.Models.Extended;
 using CompanyNews.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,6 +26,7 @@ namespace CompanyNews.ViewModels.ClientApp
 		/// </summary>
 		private readonly AuthorizationService _authorizationService;
 		private readonly NewsPostService _newsPostService;
+		private readonly MessageUserService _messageUserService;
 
 		/// <summary>
 		/// Сообщения
@@ -40,9 +42,10 @@ namespace CompanyNews.ViewModels.ClientApp
 		{
 			_authorizationService = ServiceLocator.GetService<AuthorizationService>();
 			_newsPostService = ServiceLocator.GetService<NewsPostService>();
+			_messageUserService = ServiceLocator.GetService<MessageUserService>();
 			ListMessageUserExtendeds = new ObservableCollection<MessageUserExtended>();
 			LoadMessage();
-
+			IsSendMessage = false;
 		}
 
 		#region WorkingWithPages
@@ -60,11 +63,11 @@ namespace CompanyNews.ViewModels.ClientApp
 			{
 				DatePublication = newsPostExtended.datePublication;
 			}
-			if(newsPostExtended.message != null)
+			if (newsPostExtended.message != null)
 			{
 				Message = newsPostExtended.message;
 			}
-			if(newsPostExtended.image != null)
+			if (newsPostExtended.image != null)
 			{
 				Image = newsPostExtended.image;
 			}
@@ -80,27 +83,30 @@ namespace CompanyNews.ViewModels.ClientApp
 
 				foreach (var post in messagesNewsPostExtendeds)
 				{
-					if(post.NewsPostExtended.id == newsPostExtended.id)
+					if (post.NewsPostExtended.id == newsPostExtended.id)
 					{
-						if(post.MessageUserExtendeds != null)
+						if (post.MessageUserExtendeds != null)
 						{
-							foreach(var message in post.MessageUserExtendeds.Reverse())
+							foreach (var message in post.MessageUserExtendeds.Reverse())
 							{
-								if(account != null)
+								if (message.status == "На проверке" || message.status == "Одобрено")
 								{
-									if (message.accountId == account.id)
+									if (account != null)
 									{
-										message.IsMessageRight = true; // Пользовательское сообщение находится справа
-										ListMessageUserExtendeds.Add(message);
+										if (message.accountId == account.id)
+										{
+											message.IsMessageRight = true; // Пользовательское сообщение находится справа
+											ListMessageUserExtendeds.Add(message);
+										}
+										else
+										{
+											ListMessageUserExtendeds.Add(message);
+										}
 									}
 									else
 									{
 										ListMessageUserExtendeds.Add(message);
 									}
-								}
-								else
-								{
-									ListMessageUserExtendeds.Add(message);
 								}
 							}
 						}
@@ -109,7 +115,7 @@ namespace CompanyNews.ViewModels.ClientApp
 			}
 
 			// Если нет комментариев, отображаем табличку
-			if(ListMessageUserExtendeds.Count == 0)
+			if (ListMessageUserExtendeds.Count == 0)
 			{
 				IsNoComments = true;
 				IsVisibleListBox = false; // Скрываем фильтрацию
@@ -117,7 +123,7 @@ namespace CompanyNews.ViewModels.ClientApp
 			else
 			{
 				IsNoComments = false;
-				IsVisibleListBox = true; 
+				IsVisibleListBox = true;
 			}
 		}
 
@@ -144,22 +150,26 @@ namespace CompanyNews.ViewModels.ClientApp
 							{
 								foreach (var message in post.MessageUserExtendeds.Reverse())
 								{
-									if (account != null)
+									if (message.status == "На проверке" || message.status == "Одобрено")
 									{
-										if (message.accountId == account.id)
+										if (account != null)
 										{
-											message.IsMessageRight = true; // Пользовательское сообщение находится справа
-											ListMessageUserExtendeds.Add(message);
+											if (message.accountId == account.id)
+											{
+												message.IsMessageRight = true; // Пользовательское сообщение находится справа
+												ListMessageUserExtendeds.Add(message);
+											}
+											else
+											{
+												ListMessageUserExtendeds.Add(message);
+											}
 										}
 										else
 										{
 											ListMessageUserExtendeds.Add(message);
 										}
 									}
-									else
-									{
-										ListMessageUserExtendeds.Add(message);
-									}
+
 								}
 							}
 						}
@@ -185,22 +195,27 @@ namespace CompanyNews.ViewModels.ClientApp
 							{
 								foreach (var message in post.MessageUserExtendeds)
 								{
-									if (account != null)
+									if (message.status == "На проверке" || message.status == "Одобрено")
 									{
-										if (message.accountId == account.id)
+										if (account != null)
 										{
-											message.IsMessageRight = true; // Пользовательское сообщение находится справа
-											ListMessageUserExtendeds.Add(message);
+											if (message.accountId == account.id)
+											{
+												message.IsMessageRight = true; // Пользовательское сообщение находится справа
+												ListMessageUserExtendeds.Add(message);
+											}
+											else
+											{
+												ListMessageUserExtendeds.Add(message);
+											}
 										}
 										else
 										{
 											ListMessageUserExtendeds.Add(message);
 										}
 									}
-									else
-									{
-										ListMessageUserExtendeds.Add(message);
-									}
+
+
 								}
 							}
 						}
@@ -230,9 +245,113 @@ namespace CompanyNews.ViewModels.ClientApp
 			}
 		}
 
+		/// <summary>
+		/// Ввод текста в поле
+		/// </summary>
+		public void TextMessage(string text)
+		{
+			if (!string.IsNullOrWhiteSpace(text))
+			{
+				IsSendMessage = true; // Включаем кнопку для отправки, если не пустое поле
+			}
+			else
+			{
+				IsSendMessage = false;
+			}
+		}
+
+		/// <summary>
+		/// Отправить сообщение
+		/// </summary>
+		private RelayCommand _sendMessage { get; set; }
+		public RelayCommand SendMessage
+		{
+			get
+			{
+				return _sendMessage ??
+					(_sendMessage = new RelayCommand(async (obj) =>
+					{
+						if (MessageUser.Trim() != "")
+						{
+							Account account = await _authorizationService.GetUserAccount();
+
+							if (account != null)
+							{
+								if (newsPostExtendedSelected != null)
+								{
+									MessageUser messageUser = new MessageUser();
+									messageUser.datePublication = DateTime.Now;
+									messageUser.newsPostId = newsPostExtendedSelected.id;
+									messageUser.accountId = account.id;
+									messageUser.message = MessageUser.Trim();
+									messageUser.status = "На проверке";
+
+									messageUser = _messageUserService.AddMessageUserAsync(messageUser);
+
+									MessageUser = "";
+									IsNoComments = false;
+									IsVisibleListBox = true;
+
+									if (messageUser != null)
+									{
+										MessageUserExtended messageUserExtendet = new MessageUserExtended();
+										messageUserExtendet.id = messageUser.id;
+										messageUserExtendet.datePublication = messageUser.datePublication;
+										messageUserExtendet.newsPostId = messageUser.newsPostId;
+										messageUserExtendet.accountId = messageUser.accountId;
+										messageUserExtendet.Account = account;
+										messageUserExtendet.message = messageUser.message;
+										messageUserExtendet.status = messageUser.status;
+										if (messageUser.dateModeration != null) { messageUserExtendet.dateModeration = messageUser.dateModeration; }
+										if (messageUser.rejectionReason != null) { messageUserExtendet.rejectionReason = messageUser.rejectionReason; }
+										messageUserExtendet.IsMessageRight = true;
+
+										// Добавляем новый элемент в начало списка
+										ListMessageUserExtendeds.Insert(0, messageUserExtendet);
+										//ListMessageUserExtendeds.Add(messageUserExtendet);
+									}
+								}
+							}
+						}
+					}, (obj) => true));
+			}
+		}
+
+
 		#endregion
 
 		#region Features
+
+		/// <summary>
+		/// Сообщение
+		/// </summary>
+		private string _messageUser { get; set; }
+
+		public string MessageUser
+		{
+			get { return _messageUser; }
+			set
+			{
+				_messageUser = value;
+				OnPropertyChanged(nameof(MessageUser));
+			}
+		}
+
+
+		/// <summary>
+		/// Видимость кнопки отправить сообщение
+		/// </summary>
+		private bool _isSendMessage { get; set; }
+
+		public bool IsSendMessage
+		{
+			get { return _isSendMessage; }
+			set
+			{
+				_isSendMessage = value;
+				OnPropertyChanged(nameof(IsSendMessage));
+			}
+		}
 
 		// Выбранный пост
 		public NewsPostExtended newsPostExtendedSelected = new NewsPostExtended();
@@ -270,21 +389,21 @@ namespace CompanyNews.ViewModels.ClientApp
 		/// <summary>
 		/// Если данные не найдены
 		/// </summary>
-		private bool _isNoComments {  get; set; }
+		private bool _isNoComments { get; set; }
 		public bool IsNoComments
 		{
 			get { return _isNoComments; }
-			set { _isNoComments = value;  OnPropertyChanged(nameof(IsNoComments)); }
+			set { _isNoComments = value; OnPropertyChanged(nameof(IsNoComments)); }
 		}
 
 		/// <summary>
 		/// Дата публикации
 		/// </summary>
-		private DateTime _datePublication {  get; set; }
+		private DateTime _datePublication { get; set; }
 		public DateTime DatePublication
 		{
 			get { return _datePublication; }
-			set { _datePublication = value; OnPropertyChanged(nameof(DatePublication)); } 
+			set { _datePublication = value; OnPropertyChanged(nameof(DatePublication)); }
 		}
 
 		/// <summary>

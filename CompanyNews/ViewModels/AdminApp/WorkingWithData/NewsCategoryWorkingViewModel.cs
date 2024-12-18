@@ -38,11 +38,11 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 
 			if (IsAddData) // Режим добавления данных
 			{
-				HeadingPage = "Создание категори";
+				HeadingPage = "Создание группы";
 			}
 			else
 			{
-				HeadingPage = "Изменение категории";
+				HeadingPage = "Изменение группы";
 
 				if(newsCategory != null)
 				{
@@ -114,7 +114,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 									else
 									{
 										StartFieldIllumination(animationName); // Подсветка поля
-										systemMessage.Text = "Категория уже существует.";
+										systemMessage.Text = "Группа уже существует.";
 										systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 										// Исчезание сообщения
 										BeginFadeAnimation(systemMessage);
@@ -139,7 +139,7 @@ namespace CompanyNews.ViewModels.AdminApp.WorkingWithData
 									else
 									{
 										StartFieldIllumination(animationName); // Подсветка поля
-										systemMessage.Text = "Категория уже существует.";
+										systemMessage.Text = "Группа уже существует.";
 										systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 										// Исчезание сообщения
 										BeginFadeAnimation(systemMessage);
