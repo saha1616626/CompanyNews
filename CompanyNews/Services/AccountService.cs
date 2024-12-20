@@ -59,7 +59,7 @@ namespace CompanyNews.Services
 
 		public async Task UpdateAccountAsync(Account account)
 		{
-			await _accountRepository.UpdateAccountAsync(account);
+			 _accountRepository.UpdateAccountAsync(account);
 		}
 
 		public async Task DeleteAccountAsync(int id)

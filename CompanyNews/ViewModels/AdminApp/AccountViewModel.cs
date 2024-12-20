@@ -110,7 +110,7 @@ namespace CompanyNews.ViewModels.AdminApp
 				var accounts = await _accountService.GetAllAccountsAsync();
 				foreach (var account in accounts.Reverse())
 				{
-					if(account.isProfileBlocked) 
+					if (account.isProfileBlocked)
 						ListAccountExtendeds.Add(account);
 				}
 			}
@@ -217,8 +217,8 @@ namespace CompanyNews.ViewModels.AdminApp
 					{
 						StartPoupDeleteData = true; // отображаем Popup
 						DarkBackground = Visibility.Visible; // показать фон
-						
-						if(SelectedAccount != null)
+
+						if (SelectedAccount != null)
 						{
 							DataDeleted = $"Имя и фамилия: {SelectedAccount.name} {SelectedAccount.surname}\nРоль: \"{SelectedAccount.accountRole}\"\nЛогин: \"{SelectedAccount.login}\"";
 						}
@@ -260,10 +260,10 @@ namespace CompanyNews.ViewModels.AdminApp
 						{
 							await DeleteAccountAsync(account);
 
-							if(systemMessage != null && systemMessageBorder != null)
+							if (systemMessage != null && systemMessageBorder != null)
 							{
 								await ClosePopupWorkingWithData(); // Скрываем Popup
-								// Выводим сообщение об успешном удалении данных
+																   // Выводим сообщение об успешном удалении данных
 								systemMessage.Text = $"Пользователь успешно удален.";
 								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
 								// Исчезание сообщения
@@ -272,7 +272,7 @@ namespace CompanyNews.ViewModels.AdminApp
 							}
 
 						}
-						
+
 
 					}, (obj) => true));
 			}
@@ -436,7 +436,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			{
 				_selectedAccount = value; OnPropertyChanged(nameof(SelectedAccount));
 				OnPropertyChanged(nameof(IsWorkButtonEnableEdit));
-				OnPropertyChanged(nameof(IsWorkButtonEnableDelete)); 
+				OnPropertyChanged(nameof(IsWorkButtonEnableDelete));
 			}
 		}
 

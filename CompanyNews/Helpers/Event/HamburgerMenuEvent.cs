@@ -91,6 +91,19 @@ namespace CompanyNews.Helpers.Event
 			openPageMessageUser?.Invoke(null, new EventAggregator());
 		}
 
+		/// <summary>
+		/// Событие — переход на страницу для работы с пользователями.
+		/// </summary>
+		public static event EventHandler<EventAggregator> openPageAccountModerator;
+		/// <summary>
+		/// Вызов метода для перехода на страницу для работы с пользователями.
+		/// </summary>
+		public static void OpenPageAccountModerator()
+		{
+			// Проверяем, есть ли подписчики на событие и вызываем их
+			openPageAccountModerator?.Invoke(null, new EventAggregator());
+		}
+
 		#endregion
 
 		/// <summary>

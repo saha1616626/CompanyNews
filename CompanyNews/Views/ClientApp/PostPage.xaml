@@ -147,9 +147,14 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
                     </ListBoxItem>
                 </ListBox>
 
+                <!--Запрещено писать сообщения-->
+                <TextBlock Grid.Row="2" Text="Запрещено комментировать. Причина указана в личном кабинете." FontSize="17" 
+                           TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50,30,50,0"
+                           Visibility="{Binding IsBlockMessageBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!--Поле для ввода и отправки-->
-                <Grid Grid.Row="2" Background="Transparent" Height="70" VerticalAlignment="Bottom" Margin="50,30,50,0">
+                <Grid Grid.Row="2" Background="Transparent" Height="70" VerticalAlignment="Bottom" Margin="50,30,50,0"
+                      Visibility="{Binding IsSendMessageBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <TextBox Grid.Column="0" x:Name="Search" 

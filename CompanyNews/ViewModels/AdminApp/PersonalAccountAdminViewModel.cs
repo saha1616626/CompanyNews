@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -57,6 +58,16 @@ namespace CompanyNews.ViewModels.AdminApp
 					{
 						ProfilePicture = WorkingWithImage.ConvertImageCroppedBitmap(
 						   new BitmapImage(new Uri("../../../Resources/Pictures/user.png", UriKind.Relative)), 200);
+					}
+
+					// Смена парооля в зависимости от роли. 
+					if(account.accountRole == "Модератор" || account.accountRole == "Пользователь")
+					{
+						IsEditPassword = true;
+					}
+					else
+					{
+						IsEditPassword = false;
 					}
 				}
 			}
@@ -128,6 +139,124 @@ namespace CompanyNews.ViewModels.AdminApp
 			}
 
 			return formattedNumber;
+		}
+
+		/// <summary>
+		///	Смена пароля
+		/// </summary>
+		private RelayCommand _editPassword { get; set; }
+		public RelayCommand EditPassword
+		{
+			get
+			{
+				return _editPassword ??
+					(_editPassword = new RelayCommand(async (obj) =>
+					{
+						// Проверка полей
+						if(oldPassword != null && newPassword != null && repeatNewPassword != null)
+						{
+							if(!string.IsNullOrWhiteSpace(oldPassword.Password) && !string.IsNullOrWhiteSpace(newPassword.Password)
+							&& !string.IsNullOrWhiteSpace(repeatNewPassword.Password))
+							{
+								// Проверка старого пароля
+								Account account = await _authorizationService.GetUserAccount();
+								if(account != null)
+								{
+									if(PasswordHasher.VerifyPassword(oldPassword.Password.Trim(), account.password))
+									{
+										// Проверка нового пароля
+										if(newPassword.Password.Trim() == repeatNewPassword.Password.Trim())
+										{
+											// Проверка сложности пароля
+											// Валидация пароля
+											// Проверка на минимальную длину
+											if (newPassword.Password.Length < 8)
+											{
+												StartFieldIllumination(newPassword); // Подсветка полей
+												StartFieldIllumination(repeatNewPassword);
+												systemMessage.Text = "Пароль должен содержать не менее 8 символов.";
+												systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+												// Исчезание сообщения
+												BeginFadeAnimation(systemMessage);
+												BeginFadeAnimation(systemMessageBorder);
+											}
+											else
+											{
+												if (!Regex.IsMatch(newPassword.Password, @"^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_\-+=\[\]{};':""\\|,.<>\/?]).+$"))
+												{
+													StartFieldIllumination(newPassword); // Подсветка полей
+													StartFieldIllumination(repeatNewPassword);
+													systemMessage.Text = "Пароль должен содержать цифры, латинские буквы и специальные символы.";
+													systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+													// Исчезание сообщения
+													BeginFadeAnimation(systemMessage);
+													BeginFadeAnimation(systemMessageBorder);
+
+												}
+												else
+												{
+													// Обновляем данные
+													account.password = PasswordHasher.HashPassword(newPassword.Password.Trim());
+													await _accountService.UpdateAccountAsync(account);
+
+													systemMessage.Text = "Пароли успешнно сменен.";
+													systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+													BeginFadeAnimation(systemMessage); // Исчезание сообщения
+													BeginFadeAnimation(systemMessageBorder);
+												}
+											}
+
+										}
+										else
+										{
+											StartFieldIllumination(newPassword); // Подсветка поля
+											StartFieldIllumination(repeatNewPassword); // Подсветка поля
+
+											systemMessage.Text = "Пароли не совпадают.";
+											systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+											BeginFadeAnimation(systemMessage); // Исчезание сообщения
+											BeginFadeAnimation(systemMessageBorder);
+										}
+									}
+									else
+									{
+										StartFieldIllumination(oldPassword); // Подсветка поля
+
+										systemMessage.Text = "Старый пароль не верный.";
+										systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+										BeginFadeAnimation(systemMessage); // Исчезание сообщения
+										BeginFadeAnimation(systemMessageBorder);
+									}
+								}
+							}
+							else
+							{
+								// Сообщение об завершении операции
+								systemMessage.Text = "Заполните обязательные поля.";
+								systemMessageBorder.Visibility = System.Windows.Visibility.Visible;
+
+								if (string.IsNullOrWhiteSpace(oldPassword.Password))
+								{
+									StartFieldIllumination(oldPassword); // Подсветка поля
+								}
+
+								if (string.IsNullOrWhiteSpace(newPassword.Password))
+								{
+									StartFieldIllumination(newPassword); // Подсветка поля
+								}
+
+								if (string.IsNullOrWhiteSpace(repeatNewPassword.Password))
+								{
+									StartFieldIllumination(repeatNewPassword); // Подсветка поля
+								}
+
+								BeginFadeAnimation(systemMessage); // Исчезание сообщения
+								BeginFadeAnimation(systemMessageBorder);
+							}
+						}
+
+					}, (obj) => true));
+			}
 		}
 
 		#endregion
@@ -391,12 +520,41 @@ namespace CompanyNews.ViewModels.AdminApp
 		/// <summary>
 		/// Асинхронно получаем информацию из привязанного View
 		/// </summary>
-		public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters)
+		public async Task InitializeAsync(AdminViewModelParameters adminViewModelParameters, PasswordBox OldPassword, PasswordBox NewPassword,
+			PasswordBox RepeatNewPassword)
 		{
 			fieldIllumination = adminViewModelParameters.fieldIllumination;
 			systemMessage = adminViewModelParameters.errorInputText;
 			systemMessageBorder = adminViewModelParameters.errorInputBorder;
+			oldPassword = OldPassword;
+			newPassword = NewPassword;
+			repeatNewPassword = RepeatNewPassword;
 		}
+
+		/// <summary>
+		/// Видимость функции смены пароля
+		/// </summary>
+		private bool _isEditPassword {  get; set; }
+		public bool IsEditPassword
+		{
+			get { return _isEditPassword; }
+			set { _isEditPassword = value; OnPropertyChanged(nameof(IsEditPassword)); }
+		}
+
+		/// <summary>
+		/// Повтор нового пароля
+		/// </summary>
+		PasswordBox? repeatNewPassword {  get; set; }
+
+		/// <summary>
+		/// Поле нового пароля
+		/// </summary>
+		PasswordBox? newPassword {  get; set; }
+
+		/// <summary>
+		/// Поле старого пароля
+		/// </summary>
+		PasswordBox? oldPassword {  get; set; }
 
 		/// <summary>
 		/// Изображение профиля

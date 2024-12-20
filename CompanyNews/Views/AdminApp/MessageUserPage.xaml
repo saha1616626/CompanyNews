@@ -107,7 +107,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                         <ListBoxItem Height="50" IsSelected="{Binding FullListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                             <StackPanel Orientation="Horizontal" ToolTip="Отображаются публикации с сообщениями, которые могут быть в любом статусе модерации."
-              ToolTipService.InitialShowDelay="500">
+              ToolTipService.InitialShowDelay="600">
                                 <TextBlock Text="Все  "/>
                                 <materialDesign:PackIcon Kind="FormatListBulletedSquare" Margin="0,2,0,0"/>
                                 <TextBlock Text=" "/>
@@ -116,7 +116,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                         <ListBoxItem Height="50" IsSelected="{Binding OnVerificationListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                             <StackPanel Orientation="Horizontal" ToolTip="Отображаются публикации с сообщениями, которые имеют статус модерации «На проверке»."
-              ToolTipService.InitialShowDelay="500">
+              ToolTipService.InitialShowDelay="600">
                                 <TextBlock Text="На проверке  "/>
                                 <materialDesign:PackIcon Kind="ClockOutline" Margin="0,2,0,0"/>
                                 <TextBlock Text=" "/>
@@ -125,7 +125,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                         <ListBoxItem Height="50" IsSelected="{Binding VerifiedListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                             <StackPanel Orientation="Horizontal" ToolTip="Отображаются публикации с сообщениями, которые имеют статус модерации «Проверенные»."
-              ToolTipService.InitialShowDelay="500">
+              ToolTipService.InitialShowDelay="600">
                                 <TextBlock Text="Проверенные  "/>
                                 <materialDesign:PackIcon Kind="CheckboxMarked" Margin="0,2,0,0"/>
                                 <TextBlock Text=" "/>
@@ -134,7 +134,7 @@ Style="{StaticResource MaterialDesignChoiceChipListBox}">
 
                         <ListBoxItem Height="50" IsSelected="{Binding RejectedListSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                             <StackPanel Orientation="Horizontal" ToolTip="Отображаются публикации с сообщениями, которые имеют статус модерации «Отклоненные»."
-              ToolTipService.InitialShowDelay="500">
+              ToolTipService.InitialShowDelay="600">
                                 <TextBlock Text="Отклоненные  "/>
                                 <materialDesign:PackIcon Kind="CloseBox" Margin="0,2,0,0"/>
                                 <TextBlock Text=" "/>
@@ -526,7 +526,7 @@ Style="{StaticResource OutlineOfPopup}">
                                 <!--Сообщения системы-->
                                 <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Background="#FFEACBC0" CornerRadius="5" BorderBrush="Black" 
          BorderThickness="1" x:Name="PopupMessageBorder" Visibility="Hidden"
-         HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" Width="400" Margin="0,180,0,0">
+         HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" Width="400" Margin="0,190,0,0">
                                     <!-- Контейнер для центрирования текста -->
                                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="370">
                                         <TextBlock Text="{Binding PopupMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  

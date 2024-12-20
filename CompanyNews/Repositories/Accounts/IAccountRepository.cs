@@ -49,7 +49,7 @@ namespace CompanyNews.Repositories.Accounts
 		/// Изменить аккаунт
 		/// </summary>
 		/// <param name="account">Измененные данные</param>
-		Task UpdateAccountAsync(Account account);
+		void UpdateAccountAsync(Account account);
 
 		/// <summary>
 		/// Удалить аккаунт

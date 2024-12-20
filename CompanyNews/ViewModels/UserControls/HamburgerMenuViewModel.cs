@@ -152,6 +152,22 @@ namespace CompanyNews.ViewModels.UserControls
 			}
 		}
 
+		/// <summary>
+		/// Переход на страницу "Учетные записи" для модератора
+		/// </summary>
+		private RelayCommand _openPageUsers { get; set; }
+		public RelayCommand OpenPageUsers
+		{
+			get
+			{
+				return _openPageUsers ??
+					(_openPageUsers = new RelayCommand((obj) =>
+					{
+						HamburgerMenuEvent.OpenPageAccountModerator();
+					}, (obj) => true));
+			}
+		}
+
 		#endregion
 
 		#region Features

@@ -356,6 +356,7 @@ namespace CompanyNews.ViewModels.AdminApp
 			deleteDataPopup = adminViewModelParameters.deleteDataPopup;
 		}
 
+
 		/// <summary>
 		/// Выбран список сортировки по умолчанию в UI
 		/// </summary>

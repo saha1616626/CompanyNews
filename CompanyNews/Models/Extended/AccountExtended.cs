@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -12,8 +14,8 @@ namespace CompanyNews.Models.Extended
 	/// Расширенная модель учетной записи. Идентификаторы в базовой 
 	/// модели заменены на соответствующие значения
 	/// </summary>
-	public class AccountExtended
-    {
+	public class AccountExtended : INotifyPropertyChanged
+	{
 		public int id { get; set; }
 		[Required(ErrorMessage = "Логин обязателен для заполнения!")]
 		public string login { get; set; }
@@ -69,11 +71,28 @@ namespace CompanyNews.Models.Extended
 		/// <summary>
 		/// Можно оставлять комментарии пользователю?
 		/// </summary>
-		public bool isCanLeaveComments { get; set; }
+		public bool _isCanLeaveComments { get; set; }
+		public bool isCanLeaveComments
+		{
+			get { return _isCanLeaveComments; }
+			set { _isCanLeaveComments = value; OnPropertyChanged(nameof(isCanLeaveComments)); }
+		}
 
 		/// <summary>
 		/// Причина запрета комментирования постов
 		/// </summary>
-		public string? reasonBlockingMessages { get; set; }
+		public string? _reasonBlockingMessages { get; set; }
+		public string reasonBlockingMessages
+		{
+			get { return _reasonBlockingMessages; }
+			set { _reasonBlockingMessages = value; OnPropertyChanged(nameof(reasonBlockingMessages)); }
+		}
+
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }

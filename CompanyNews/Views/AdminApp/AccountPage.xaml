@@ -154,7 +154,7 @@ From="#de6d6d" To="Transparent" Duration="0:0:3" AutoReverse="False"/>
                         <DataGridTextColumn Header="Рабочий отдел" Binding="{Binding workDepartmentName}"  Width="*" IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
                                     <Setter Property="TextWrapping" Value="Wrap" />
                                     <Setter Property="Margin" Value="0,0,5,0"/>
                                 </Style>

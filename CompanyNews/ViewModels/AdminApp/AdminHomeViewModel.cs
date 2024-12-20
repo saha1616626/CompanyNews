@@ -42,6 +42,8 @@ namespace CompanyNews.ViewModels.AdminApp
 			HamburgerMenuEvent.openPageNewsPost += OpenPageNewsPost;
 			// Подписываемся на событие — переход на страницу для работы с сообщениями пользователей.
 			HamburgerMenuEvent.openPageMessageUser += OpenPageMessageUser;
+			// Подписываемся на событие — переход на страницу для работы с пользователями (блокировкой сообщений)
+			HamburgerMenuEvent.openPageAccountModerator += OpenPageAccountModerator;
 		}
 
 		#region WorkingWithPages
@@ -243,6 +245,18 @@ namespace CompanyNews.ViewModels.AdminApp
 		{
 			LaunchFrame.NavigationService.Navigate(new MessageUserPage());
 			LastPageType = typeof(MessageUserPage);
+
+			// Закрываем "гамбургер" меню
+			HamburgerMenuEvent.CloseHamburgerMenu();
+		}
+
+		/// <summary>
+		/// Переход на страницу для работы с возможностью блокировкой пользователя
+		/// </summary>
+		public async void OpenPageAccountModerator(object sender, EventAggregator e)
+		{
+			LaunchFrame.NavigationService.Navigate(new AccountModeratorPage());
+			LastPageType = typeof(AccountModeratorPage);
 
 			// Закрываем "гамбургер" меню
 			HamburgerMenuEvent.CloseHamburgerMenu();

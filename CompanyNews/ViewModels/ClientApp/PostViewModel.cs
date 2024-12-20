@@ -75,6 +75,21 @@ namespace CompanyNews.ViewModels.ClientApp
 			ListMessageUserExtendeds.Clear(); // Очистка списка перед заполнением
 			Account account = await _authorizationService.GetUserAccount(); // Получаем пользователя
 
+			if (account != null)
+			{
+				if (account.isCanLeaveComments)
+				{
+					// Если профиль заблокирован
+					IsSendMessageBox = false;
+					IsBlockMessageBox = true;
+				}
+				else
+				{
+					IsSendMessageBox = true;
+					IsBlockMessageBox = false;
+				}
+			}
+
 			// Загружаем пост и сообщения (сообщения сначала новые)
 			ObservableCollection<MessagesNewsPostExtended> messagesNewsPostExtendeds = await _newsPostService.GettingPostsWithMessages();
 			if (messagesNewsPostExtendeds.Any())
@@ -323,6 +338,32 @@ namespace CompanyNews.ViewModels.ClientApp
 		#endregion
 
 		#region Features
+
+		/// <summary>
+		/// Сообщение о блокировки
+		/// </summary>
+		private bool _isBlockMessageBox { get; set; }
+		public bool IsBlockMessageBox
+		{
+			get { return _isBlockMessageBox; }
+			set
+			{
+				_isBlockMessageBox = value; OnPropertyChanged(nameof(IsBlockMessageBox));
+			}
+		}
+
+		/// <summary>
+		/// Видимость поля для отправки сообщения
+		/// </summary>
+		private bool _isSendMessageBox { get; set; }
+		public bool IsSendMessageBox
+		{
+			get { return _isSendMessageBox; }
+			set
+			{
+				_isSendMessageBox = value; OnPropertyChanged(nameof(IsSendMessageBox));
+			}
+		}
 
 		/// <summary>
 		/// Сообщение

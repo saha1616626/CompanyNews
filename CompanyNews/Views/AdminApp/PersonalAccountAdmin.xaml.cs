@@ -40,7 +40,7 @@ namespace CompanyNews.Views.AdminApp
 				fieldIllumination = (Storyboard)FindResource("fieldIllumination")
 			};
 
-			_personalAccountAdminViewModel.InitializeAsync(parameters);
+			_personalAccountAdminViewModel.InitializeAsync(parameters, OldPassword, NewPassword, RepeatNewPassword);
 		}
 
 

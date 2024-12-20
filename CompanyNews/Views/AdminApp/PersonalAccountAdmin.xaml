@@ -353,6 +353,42 @@ HorizontalAlignment="Right" VerticalAlignment="Top" Height="Auto" Width="300" Ma
        TextWrapping="Wrap"/>
                 </Border>
 
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="0" Grid.RowSpan="5" Grid.Column="3" VerticalAlignment="Center" Margin="0,100,0,0"
+                            Visibility="{Binding IsEditPassword, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                    <!--поля для нового пароля-->
+                    <PasswordBox Grid.Row="3" Grid.Column="2" Height="50" Margin="0,10,0,0" x:Name="OldPassword"
+                                     VerticalAlignment="Center" HorizontalAlignment="Center"  
+                                     materialDesign:TextFieldAssist.HasClearButton="True"
+                                     Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}" 
+                                     materialDesign:HintAssist.Hint="Старый пароль" 
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                                     MaxLength="100" Width="300"/>
+
+                    <!--поля для ввода нового пароля повторно-->
+                    <PasswordBox Grid.Row="4" Grid.Column="2" Height="50" Margin="0,10,0,0" x:Name="NewPassword"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"  
+                                    materialDesign:TextFieldAssist.HasClearButton="True"
+                                    Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"
+                                    materialDesign:HintAssist.Hint="Новый пароль" 
+                                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                                    MaxLength="100" Width="300"/>
+
+                    <!--поля для ввода нового пароля повторно-->
+                    <PasswordBox Grid.Row="4" Grid.Column="2" Height="50" Margin="0,10,0,0" x:Name="RepeatNewPassword"
+                VerticalAlignment="Center" HorizontalAlignment="Center"  
+                materialDesign:TextFieldAssist.HasClearButton="True"
+                Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"
+                materialDesign:HintAssist.Hint="Повтор пароля" 
+                materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden"
+                MaxLength="100" Width="300"/>
+
+                    <!--кнопка для изменения пароля-->
+                    <Button Grid.Row="5" Grid.Column="2" Content="Изменить пароль"
+                                Width="150" Height="35" HorizontalAlignment="Center"
+                                Background="Gray" BorderBrush="Black" Margin="0,20,0,0" Command="{Binding EditPassword}"/>
+                </StackPanel>
+                
             </Grid>
 
         </ScrollViewer>
